@@ -2,7 +2,7 @@
   <img src="assets/banner.jpg" alt="Solus EnergyOrb — Energy Pyramid Simulator" width="100%">
 </p>
 
-# ☀️ Solus EnergyOrb
+# ☀️ Helios Trophicus 
 
 ### *Energy Pyramid Simulator*
 
