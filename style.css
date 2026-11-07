@@ -846,3 +846,17 @@
     border:1px solid var(--panel-border); background:var(--panel-bg); transition:opacity .6s ease .8s; pointer-events:none; }
   .model-load.done{ opacity:0; }
   body.view-chain .model-load{ display:none; }
+
+  /* food chain walkthrough (foodchain.js) */
+  .fc-start{ margin-top:12px; border-color:rgba(143,227,199,.55); color:var(--accent); }
+  .fc-steps{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; }
+  .fc-step-btn{ width:36px; height:36px; border-radius:999px; border:1px solid var(--panel-border); background:transparent; color:var(--text); font:inherit; font-size:20px; line-height:1; cursor:pointer; }
+  .fc-step-btn:hover:not(:disabled){ border-color:rgba(143,227,199,.7); color:var(--accent); }
+  .fc-step-btn:disabled{ opacity:.35; cursor:default; }
+  .fc-step-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  @media (pointer:coarse){ .fc-step-btn{ width:44px; height:44px; } }
+  .fc-step-n{ font-size:12px; color:var(--text-dim); letter-spacing:.06em; font-variant-numeric:tabular-nums; }
+  .fc-step-chip{ --tl:#8fe3c7; }
+  .fc-pass{ margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(198,234,90,.10); color:#d8ef8f; font-size:12.5px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .fc-tag, .fc-pct, .fc-sun-tag{ transition:opacity .35s ease; }
+  .fc-tag.dim, .fc-pct.dim, .fc-sun-tag.dim{ opacity:.28; }

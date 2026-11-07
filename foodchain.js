@@ -44,7 +44,7 @@
 
   var ready = false, building = false, active = false, raf = 0;
   var root, view, canvasHost, labelsHost, infoEl, statusEl;
-  var scene, camera, renderer, world, clock, mixers = [], pulses = [], heat = [], arrows = [];
+  var scene, camera, renderer, world, clock, mixers = [], pulses = [], heat = [], arrows = [], arcs = [];
   var yaw = 0, pitch = 0.32, zoom = 1, fitDist = 20, selected = null, glowTex, sunHolder, sunHalo, flow, arrowMat;
 
   // ---------------------------------------------------------------- helpers
@@ -88,11 +88,52 @@
     document.getElementById("fcResetBtn").addEventListener("click", resetView);
     showIntro();
   }
+  // ---------------------------------------------------------------- step-by-step walkthrough
+  // step 0 = overview (everything flows); 1 = sunlight -> grass; 2..5 = one feeding link each; 6 = summary.
+  // On a link step only that arrow and its two organisms stay lit; heat rises most from the one passing energy on.
+  var step = 0;
+  var STEPS = [null,
+    { arc:-1, to:0, title:"Sunlight → Grass", pass:"Fixed 100 · respired ~50 · stored ~50",
+      text:"Grass, a producer, captures sunlight in photosynthesis and fixes <b>100 rel. J</b> (GPP). It uses about half in its own respiration, lost as <span class='fc-heat'>heat</span>. The rest, about 50 (NPP), is stored as plant biomass: the food for every level above." },
+    { arc:0, from:0, to:1, title:"Grass → Grasshopper", pass:"Passed on 10 · lost 90",
+      text:"About <b>10 rel. J</b> reaches the grasshopper: 10% of the 100 fixed by the grass. The other 90 never reaches it: the grass's own respiration (<span class='fc-heat'>heat</span>), parts that are not eaten, and leaves that die and fall as litter for decomposers." },
+    { arc:1, from:1, to:2, title:"Grasshopper → Frog", pass:"Passed on 1 · lost 9",
+      text:"The frog gets about <b>1 rel. J</b>. The grasshopper spent most of its 10 staying alive (moving, hopping, keeping its cells working), and that energy left as <span class='fc-heat'>heat</span>. Food it could not digest passed out as droppings." },
+    { arc:2, from:2, to:3, title:"Frog → Snake", pass:"Passed on 0.1 · lost 0.9",
+      text:"Only <b>0.1 rel. J</b> reaches the snake. The same pattern repeats at every link: about 90% is lost, mostly as <span class='fc-heat'>heat</span> from respiration." },
+    { arc:3, from:3, to:4, title:"Snake → Eagle", pass:"Passed on 0.01 · lost 0.09",
+      text:"The eagle at the top receives about <b>0.01 rel. J</b>, one ten-thousandth of what the grass fixed. Nothing eats the eagle in this chain; when it dies, decomposers use what remains." },
+    { title:"Why food chains are short", pass:"100 → 10 → 1 → 0.1 → 0.01",
+      text:"Each link keeps only about 10%, so after four or five links too little energy is left to support another level. This is also why there are many grasshoppers and very few eagles: the energy pyramid." }
+  ];
+  var LAST_STEP = STEPS.length - 1;
+  function stepNav(){
+    return '<div class="fc-steps"><button type="button" class="fc-step-btn" data-go="-1" aria-label="Previous step"' + (step <= 0 ? ' disabled' : '') + '>‹</button>' +
+      '<span class="fc-step-n">' + (step ? step + ' / ' + LAST_STEP : 'Overview') + '</span>' +
+      '<button type="button" class="fc-step-btn" data-go="1" aria-label="Next step"' + (step >= LAST_STEP ? ' disabled' : '') + '>›</button></div>';
+  }
+  function bindStepNav(){
+    infoEl.querySelectorAll("[data-go]").forEach(function(b){ b.addEventListener("click", function(){ goStep(step + (+b.getAttribute("data-go"))); }); });
+    var start = document.getElementById("fcStartBtn"); if (start) start.addEventListener("click", function(){ goStep(1); });
+    var back = document.getElementById("fcOverviewBtn"); if (back) back.addEventListener("click", function(){ goStep(0); });
+  }
+  function goStep(n){ step = Math.max(0, Math.min(LAST_STEP, n)); selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); }
+  function focusOf(){ var S = STEPS[step]; return (S && S.arc !== undefined) ? S : null; }   // null: everything lit
+
   function showIntro(){
+    if (step > 0){
+      var S = STEPS[step];
+      infoEl.innerHTML = '<div class="fc-info-title"><span class="fc-chip fc-step-chip">Step ' + step + '</span>' + S.title + '</div>' +
+        '<p>' + S.text + '</p><div class="fc-pass">' + S.pass + '</div>' + stepNav() +
+        (step === LAST_STEP ? '<button type="button" class="fc-back" id="fcOverviewBtn">Back to overview</button>' : '');
+      bindStepNav(); return;
+    }
     infoEl.innerHTML = '<div class="fc-info-title">Energy flows one way</div>' +
       '<p>Each arrow points from the food to the animal that eats it. Only about <b>10%</b> of the energy at one level reaches the next (Lindeman’s 10% law).</p>' +
       '<p>The other ~90% is used in respiration and lost as <span class="fc-heat">heat</span>, or passes to decomposers in waste and remains. That is why food chains rarely have more than four or five links.</p>' +
-      '<p class="fc-dim">Tap an organism to learn about it.</p>';
+      '<p class="fc-dim">Tap an organism to learn about it.</p>' +
+      '<button type="button" class="fc-back fc-start" id="fcStartBtn">Walk through it step by step ›</button>';
+    bindStepNav();
   }
   function select(o){
     selected = o;
@@ -103,7 +144,7 @@
       '<dl><dt>Food</dt><dd>' + o.food + '</dd><dt>Eaten by</dt><dd>' + o.eatenBy + '</dd>' +
       '<dt>Energy</dt><dd>' + (prev ? fmt(o.energy) + UNIT + ': about 10% of the ' + fmt(prev.energy) + UNIT + ' in the ' + prev.name.toLowerCase() + ' level below.'
                                      : fmt(o.energy) + UNIT + ' fixed by photosynthesis (GPP). About half is used in the grass’s own respiration; the rest (NPP) is stored as plant biomass, of which about 10 reaches herbivores.') + '</dd></dl>' +
-      '<button type="button" class="fc-back" id="fcBackBtn">Back to overview</button>';
+      '<button type="button" class="fc-back" id="fcBackBtn">' + (step ? 'Back to step ' + step : 'Back to overview') + '</button>';
     document.getElementById("fcBackBtn").addEventListener("click", function(){ selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); });
   }
 
@@ -154,13 +195,14 @@
     ORGS.forEach(function(o, i){ var p = layout.pos(i); o.x = p[0]; o.y = p[1]; o.group.position.set(o.x, o.y, 0);
       o.anchor = new THREE.Vector3(o.x, o.y + (o.fly ? o.fly + 0.4 : 0.6), 0); });
     ORGS.sun = new THREE.Vector3().fromArray(layout.sun); sunHolder.position.copy(ORGS.sun); sunHalo.position.copy(ORGS.sun);
-    while (flow.children.length){ var c = flow.children.pop(); if (c.geometry) c.geometry.dispose(); if (c.material && c.material !== arrowMat) c.material.dispose(); }
+    while (flow.children.length){ var c = flow.children.pop(); if (c.geometry) c.geometry.dispose(); if (c.material) c.material.dispose(); }
     pulses.length = 0; buildArrows(glowTex);
   }
 
   function buildArrows(glow){
-    var mat = arrowMat || (arrowMat = new THREE.MeshBasicMaterial({ color:ENERGY_COLOR, transparent:true, opacity:0.85 })), L = layout.lift, world = flow;
-    function arc(a, b, lift, radius, nPulse, label){
+    var L = layout.lift, world = flow; arcs.length = 0;
+    function arc(a, b, lift, radius, nPulse, label, idx){
+      var mat = new THREE.MeshBasicMaterial({ color:ENERGY_COLOR, transparent:true, opacity:0.85 }), rec = { idx:idx, mat:mat, label:label, glow:1 };
       var mid = a.clone().add(b).multiplyScalar(0.5); mid.x += L[0] * lift; mid.y += L[1] * lift; mid.z += L[2];
       var curve = new THREE.QuadraticBezierCurve3(a, mid, b);
       var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, radius, 10, false), mat); world.add(tube);
@@ -169,8 +211,9 @@
       head.position.copy(end).addScaledVector(tan, -radius * 4); head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), tan); world.add(head);
       for (var k = 0; k < nPulse; k++){
         var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:ENERGY_COLOR, transparent:true, opacity:0.95, depthWrite:false, blending:THREE.AdditiveBlending }));
-        var s = radius * 9; sp.scale.set(s, s, 1); world.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, speed:0.32 });
+        var s = radius * 9; sp.scale.set(s, s, 1); world.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, speed:0.32, arc:rec });
       }
+      arcs.push(rec);
       if (label) label.pos = curve.getPoint(0.5).add(new THREE.Vector3(0, radius * 6 + 0.25, 0));
       return curve;
     }
@@ -178,7 +221,7 @@
     var sd = Math.sign(ORGS[0].x - ORGS.sun.x) || 1;
     var sunEnd = ORGS[0].anchor.clone().add(new THREE.Vector3(-0.35 * sd, 0.65, 0));
     var sunStart = ORGS.sun.clone().add(new THREE.Vector3(0.75 * sd, -0.35, 0.4));
-    arc(sunStart, sunEnd, 0.45, 0.06, 4, null);
+    arc(sunStart, sunEnd, 0.45, 0.06, 4, null, -1);
     ORGS.sunTagPos = ORGS.sun.clone().add(new THREE.Vector3(0, -1.35, 0.6));
     // one arrow per link; thinner and fainter as less energy is passed on
     for (var i = 0; i < ORGS.length - 1; i++){
@@ -186,7 +229,7 @@
       var a = ORGS[i].anchor.clone().add(new THREE.Vector3(0.75 * dir, 0.15, 0.2));
       var b = ORGS[i+1].anchor.clone().add(new THREE.Vector3(-0.85 * dir, 0.15, 0.2));
       var r = 0.085 - i * 0.017;
-      arc(a, b, 1, r, 5 - i, arrows[i].label);
+      arc(a, b, 1, r, 5 - i, arrows[i].label, i);
     }
   }
 
@@ -315,12 +358,20 @@
       }
       o.ring.material.color.setHex(o.color); o.ring.scale.setScalar(on ? 1.06 + Math.sin(t * 4) * 0.02 : 1);
     });
-    pulses.forEach(function(p){ p.t = (p.t + dt * p.speed) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = Math.sin(p.t * Math.PI) * 0.95; });
+    var F = focusOf();
+    arcs.forEach(function(a){
+      var lit = !F || F.arc === a.idx; a.glow += ((lit ? 1 : 0.12) - a.glow) * 0.12;
+      a.mat.opacity = 0.85 * a.glow; if (a.label) a.label.classList.toggle("dim", !lit);
+    });
+    if (ORGS.sunTag) ORGS.sunTag.classList.toggle("dim", !!F && F.arc !== -1);
+    ORGS.forEach(function(o, i){ o.tag.classList.toggle("dim", !!F && i !== F.from && i !== F.to); });
+    pulses.forEach(function(p){ p.t = (p.t + dt * p.speed) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = Math.sin(p.t * Math.PI) * 0.95 * (p.arc.glow > 0.5 ? p.arc.glow : 0); });
     heat.forEach(function(h){
       h.t += dt * h.speed; if (h.t > 1){ h.t = 0; h.dx = (Math.random() - 0.5) * 0.7; h.dz = (Math.random() - 0.5) * 0.5; }
       var o = h.o, base = o.y + (o.fly ? o.fly + 0.2 : 0.5);   // a thin warm column rising off each organism
       h.sprite.position.set(o.x + h.dx + Math.sin(t * 2 + h.ph) * 0.12 * h.t, base + h.t * 1.7, h.dz);
-      h.sprite.material.opacity = Math.sin(h.t * Math.PI) * 0.55; var s = 0.14 + h.t * 0.22; h.sprite.scale.set(s, s, 1);
+      var idx = ORGS.indexOf(o), hf = !F ? 1 : idx === F.from ? 1.7 : idx === F.to ? 0.9 : 0.15;   // the organism passing energy on shows its heat loss most
+      h.sprite.material.opacity = Math.min(0.9, Math.sin(h.t * Math.PI) * 0.55 * hf); var s = 0.14 + h.t * 0.22; h.sprite.scale.set(s, s, 1);
     });
 
     renderer.render(scene, camera);
