@@ -77,7 +77,7 @@ The grass is also used in the food chain view; the grasshopper, frog, eagle and 
 | | Organism | Model | Creator | Licence |
 |:-:|:--|:--|:--|:--|
 | ☀️ | Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |
-| 🦗 | Grasshopper | [Grasshopper](https://sketchfab.com/3d-models/grasshopper-77b2f1cfcc9b4e3eac0cef026b2ec674) | Chaitanya Krishnan | CC BY 4.0 |
+| 🦗 | Grasshopper | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
 | 🐸 | Frog | [Realistic Frog](https://sketchfab.com/3d-models/realistic-frog-81a49956c5944279abfb2ccaa791f7d8) | maksroberthut | CC BY 4.0 |
 | 🐍 | Snake | [Snake Model](https://sketchfab.com/3d-models/snake-model-ce642db7a44b4cbb9bbae22b977df0ae) | dercruz926 | CC BY 4.0 |
 | 🦅 | Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |

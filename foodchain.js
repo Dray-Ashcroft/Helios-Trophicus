@@ -23,7 +23,7 @@
     { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:10000, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
       eatenBy:"Grasshopper" },
-    { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:1000, file:"grasshopper.glb", size:1.7, yaw:Math.PI-0.55,
+    { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:1000, file:"grasshopper.glb", size:1.7, yaw:0.55,
       food:"Grass (a producer).", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:100, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Grasshoppers and other insects.", eatenBy:"Snake" },
