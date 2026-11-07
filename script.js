@@ -918,11 +918,17 @@
   });
 
   var fadeColor = new THREE.Color();
+  function pictureKey(url){ var u = url || ""; try { u = decodeURIComponent(u); } catch (e) {} return u.replace(/^.*Solus-Assets\//, ""); }
+  // A teacher who sets their own picture for an organism (long-press or the editor) sees that picture
+  // instead of the model; "Original" / "Restore placeholders" bring the model back.
+  function hasCustomPicture(asset){ return !!asset.imageUrl && pictureKey(asset.imageUrl) !== pictureKey(defaultOrganismUrls[asset.id]); }
   function updateOrganismModels(elapsedTime, delta){
     Object.keys(organismModels).forEach(function(id){
       var m = organismModels[id], sp = m.slot.sprite, cfg = m.cfg, layer = layers[m.slot.asset.trophicLevel - 1];
-      m.root.visible = sp.visible;
-      if (!sp.visible) return;
+      var custom = hasCustomPicture(m.slot.asset);
+      m.slot.material.colorWrite = custom;   // the card is drawn only when it carries the teacher's own picture
+      m.root.visible = sp.visible && !custom;
+      if (!m.root.visible) return;
       var y = cfg.fly ? layer.yBottom + (layer.yTop - layer.yBottom) * cfg.fly + Math.sin(elapsedTime * 1.3 + m.phase) * 0.08 : layer.yBottom + 0.04;
       var inward = cfg.fly ? 0.6 : 1;   // birds hover nearer the tier's centre line so they stay over their small top tier
       m.root.position.set(sp.position.x * inward, y, sp.position.z * inward);
