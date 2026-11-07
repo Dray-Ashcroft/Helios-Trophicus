@@ -15,6 +15,7 @@
   var MODEL_DIR = "Solus-Assets/FoodChain/";
   var MODEL_DIR_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/FoodChain/";
   var LOADER_URL = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
+  var MESHOPT_URL = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js";   // models are meshopt-compressed
   var ENERGY_COLOR = 0xc6ea5a, HEAT_COLOR = 0xff9b54, BG = 0x05070d;
 
   // size = largest dimension in scene units (not to scale: a grasshopper would vanish next to an eagle)
@@ -60,6 +61,7 @@
   }
   function loadGLB(file){
     var loader = new THREE.GLTFLoader();
+    if (window.MeshoptDecoder) loader.setMeshoptDecoder(window.MeshoptDecoder);
     function from(base){ return new Promise(function(res, rej){ loader.load(base + file, res, undefined, rej); }); }
     return from(MODEL_DIR).catch(function(){ return from(MODEL_DIR_FALLBACK); });
   }
@@ -331,7 +333,7 @@
   function build(){
     if (ready || building) return Promise.resolve(); building = true;
     buildDom(); statusEl.textContent = "Loading 3D organisms…"; statusEl.hidden = false;
-    var loaderReady = THREE.GLTFLoader ? Promise.resolve() : loadScript(LOADER_URL);
+    var loaderReady = Promise.all([ THREE.GLTFLoader ? null : loadScript(LOADER_URL), window.MeshoptDecoder ? null : loadScript(MESHOPT_URL) ]);
     return loaderReady.then(function(){
       buildScene(); resize(); bindInput();
       var jobs = ORGS.filter(function(o){ return o.file; }).map(function(o){

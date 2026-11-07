@@ -840,3 +840,9 @@
     .fc-legend{ display:none; }
     .fc-panel{ top:auto; bottom:max(12px, env(safe-area-inset-bottom)); max-height:34vh; overflow:auto; }
   }
+
+  /* "Loading 3D organisms n/N" (script.js), fades out when every model has arrived */
+  .model-load{ margin:6px auto 0; width:max-content; padding:3px 10px; border-radius:999px; font-size:11.5px; color:var(--text-dim);
+    border:1px solid var(--panel-border); background:var(--panel-bg); transition:opacity .6s ease .8s; pointer-events:none; }
+  .model-load.done{ opacity:0; }
+  body.view-chain .model-load{ display:none; }

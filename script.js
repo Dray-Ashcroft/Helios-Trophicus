@@ -856,20 +856,37 @@
   var modelFill = new THREE.DirectionalLight(0x88aaff, 0.45); modelFill.position.set(-12, 6, -9); modelScene.add(modelFill);
   var organismModels = {};
 
+  // Models are meshopt-compressed with WebP textures (about half the download); the decoder is a small script.
   var gltfLoaderReady = null;
+  function addScript(src){ return new Promise(function(res, rej){ var tag = document.createElement("script"); tag.src = src; tag.onload = res; tag.onerror = rej; document.head.appendChild(tag); }); }
+  // "Loading 3D organisms n/N" under the solar status, so a slow classroom connection does not look like a fault
+  var modelLoad = { total:0, done:0, el:null };
+  function updateModelLoadPill(){
+    if (!modelLoad.el){
+      modelLoad.el = document.createElement("div"); modelLoad.el.className = "model-load"; modelLoad.el.setAttribute("aria-live", "polite");
+      var anchor = document.getElementById("solarStatus"); if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(modelLoad.el, anchor.nextSibling);
+    }
+    modelLoad.el.textContent = "Loading 3D organisms " + modelLoad.done + "/" + modelLoad.total;
+    modelLoad.el.classList.toggle("done", modelLoad.done >= modelLoad.total);
+  }
   function loadPyramidGLB(file){
     if (!gltfLoaderReady){
-      gltfLoaderReady = THREE.GLTFLoader ? Promise.resolve() : new Promise(function(res, rej){
-        var tag = document.createElement("script");
-        tag.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
-        tag.onload = res; tag.onerror = rej; document.head.appendChild(tag);
-      });
+      var base = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/";
+      gltfLoaderReady = Promise.all([
+        THREE.GLTFLoader ? null : addScript(base + "loaders/GLTFLoader.js"),
+        window.MeshoptDecoder ? null : addScript(base + "libs/meshopt_decoder.js")
+      ]);
     }
-    return gltfLoaderReady.then(function(){
+    modelLoad.total++; updateModelLoadPill();
+    var job = gltfLoaderReady.then(function(){
       var loader = new THREE.GLTFLoader();
+      if (window.MeshoptDecoder) loader.setMeshoptDecoder(window.MeshoptDecoder);
       function get(url){ return new Promise(function(res, rej){ loader.load(url, res, undefined, rej); }); }
       return get(MODEL_BASE + file).catch(function(){ return get(MODEL_FALLBACK + file); });
     });
+    job.then(finish, finish);
+    function finish(){ modelLoad.done++; updateModelLoadPill(); }
+    return job;
   }
 
   Object.keys(ORGANISM_MODELS).forEach(function(id){
