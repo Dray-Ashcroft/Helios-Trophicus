@@ -25,7 +25,7 @@
       eatenBy:"Grasshopper" },
     { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:1000, file:"grasshopper.glb", size:1.7, yaw:Math.PI-0.55,
       food:"Grass (a producer).", eatenBy:"Frog" },
-    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:100, file:"frog.glb", size:1.45, yaw:0.55,
+    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:100, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Grasshoppers and other insects.", eatenBy:"Snake" },
     { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:10, file:"snake.glb", size:1.75, yaw:0.9,
       food:"Frogs.", eatenBy:"Eagle" },
@@ -202,7 +202,7 @@
     obj.traverse(function(n){
       if (!n.isMesh) return;
       n.frustumCulled = false;
-      if (!n.geometry.getAttribute("normal")) n.geometry.computeVertexNormals();   // the frog carries colour per vertex, no normals
+      if (!n.geometry.getAttribute("normal")) n.geometry.computeVertexNormals();   // models with baked vertex colours carry no normals
       var mats = Array.isArray(n.material) ? n.material : [n.material];
       mats.forEach(function(m){ if (m.map) m.map.anisotropy = 4; });
     });
