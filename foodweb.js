@@ -146,27 +146,33 @@
     ORGS_SUN_LINKS(glow);
     // Links run on a plane behind the plinths: each leaves the top of its food's plinth going up and bends
     // smoothly into the feeder's plinth from below, so no arrow crosses an animal or a label.
+    // One unbroken straight line per link: it rises from the centre of the food's plinth (from behind the animal)
+    // and ends at the front of the feeder's plinth, just above its label, so nothing cuts it into pieces.
     LINKS.forEach(function(l){
-      var a = byId[l[0]], b = byId[l[1]], lift = a.tl === b.tl ? 1.05 : 0;   // same-row link (frog -> snake) runs just above the plinths
-      var p0 = new THREE.Vector3(a.x, a.y + 0.3 + lift, Z_BACK), p1 = new THREE.Vector3(b.x, b.y + (lift ? 0.3 + lift : 0.05), Z_BACK);
-      var d = p1.clone().sub(p0).normalize(); p0.addScaledVector(d, 0.35); p1.addScaledVector(d, -0.35);
-      addArrow(new THREE.LineCurve3(p0, p1), { from:a, to:b }, glow, 0.016);
+      var a = byId[l[0]], b = byId[l[1]];
+      if (a.tl === b.tl){   // same row (frog -> snake): a bracket over the row, up, across, down
+        var h = a.y + layout.row * 0.52, p = [new THREE.Vector3(a.x, a.y + 0.05, -0.2), new THREE.Vector3(a.x, h, -0.2), new THREE.Vector3(b.x, h, -0.2), new THREE.Vector3(b.x, b.y + 1.2, -0.2)];   // stays below the TL4 labels
+        var path = new THREE.CurvePath(); for (var i = 0; i < 3; i++) path.add(new THREE.LineCurve3(p[i], p[i + 1]));
+        addArrow(path, { from:a, to:b }, glow, 0.02, [1, 0.5, 1]);
+        return;
+      }
+      addArrow(new THREE.LineCurve3(new THREE.Vector3(a.x, a.y + 0.05, -0.2), new THREE.Vector3(b.x, b.y - 0.18, 0.95)), { from:a, to:b }, glow, 0.02);
     });
   }
-  var Z_BACK = -1.25;
   function ORGS_SUN_LINKS(glow){
     NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams, also behind the plinths
-      var p1 = new THREE.Vector3(n.x - 0.35, n.y + 0.4, Z_BACK), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
-      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.011);
+      var p1 = new THREE.Vector3(n.x - 0.95, n.y + 0.1, 0.1), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
+      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.014);
     });
   }
   function addArrow(curve, meta, glow, r){
     var nPulse = meta.sun ? 1 : 2;
     var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0.3, depthWrite:false });
-    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 2, r, 6, false), mat); flow.add(tube);
-    // a small chevron halfway along shows the direction (food -> feeder) without crowding either end
-    var tan = curve.getTangent(0.5), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
-    head.position.copy(curve.getPoint(0.5)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
+    var segs = curve.curves ? curve.curves.length * 2 : 2;
+    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, segs, r, 8, false), mat); flow.add(tube);
+    // a small chevron shows the direction (food -> feeder): halfway along, or on the last leg of a bracket
+    var at = curve.curves ? 0.86 : 0.5, tan = curve.getTangent(at), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
+    head.position.copy(curve.getPoint(at)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
     var rec = { meta:meta, mat:mat, glow:0.3 };
     for (var k = 0; k < nPulse; k++){
       var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:mat.color, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
@@ -180,13 +186,20 @@
     var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
     var bones = new THREE.Box3(), bp = new THREE.Vector3();
     obj.traverse(function(o){ if (o.isBone){ o.getWorldPosition(bp); bones.expandByPoint(bp); } });
-    if (n.posedBox){   // measure as the skeleton draws it (the lizard stores mesh and skeleton at different scales)
+    if (n.posedBox){   // measure as the skeleton draws it, across the whole animation (lizard, running beetle)
       box.makeEmpty();
-      obj.traverse(function(o){
-        if (!o.isSkinnedMesh) return; o.skeleton.update();
-        var pos = o.geometry.getAttribute("position"), step = Math.max(1, Math.floor(pos.count / 1500));
-        for (var i = 0; i < pos.count; i += step){ o.boneTransform(i, bp); bp.applyMatrix4(o.matrixWorld); box.expandByPoint(bp); }
-      });
+      var clip0 = gltf.animations && gltf.animations[0];
+      if (clip0 && n.clipName) gltf.animations.forEach(function(a){ if (a.name.toLowerCase().indexOf(n.clipName) !== -1) clip0 = a; });
+      var tm = clip0 ? new THREE.AnimationMixer(obj) : null; if (tm) tm.clipAction(clip0).play();
+      for (var f = 0; f < (tm ? 8 : 1); f++){
+        if (tm){ tm.setTime(clip0.duration * f / 8); obj.updateMatrixWorld(true); }
+        obj.traverse(function(o){
+          if (!o.isSkinnedMesh) return; o.skeleton.update();
+          var pos = o.geometry.getAttribute("position"), step = Math.max(1, Math.floor(pos.count / 1500));
+          for (var i = 0; i < pos.count; i += step){ o.boneTransform(i, bp); bp.applyMatrix4(o.matrixWorld); box.expandByPoint(bp); }
+        });
+      }
+      if (tm){ tm.stopAllAction(); tm.uncacheRoot(obj); }
       box.getSize(size); box.getCenter(c); obj.position.set(-c.x, -box.min.y, -c.z);
     } else if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, n.fly ? -bc.y : -bones.min.y, -bc.z); }
     else obj.position.set(-c.x, n.fly ? -c.y : -box.min.y - (n.sink || 0) * size.y, -c.z);

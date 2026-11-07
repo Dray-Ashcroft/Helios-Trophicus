@@ -901,13 +901,20 @@
       var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
       var bones = new THREE.Box3(), bp = new THREE.Vector3();
       obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
-      if (cfg.posedBox){   // measure the mesh as the skeleton actually draws it
+      if (cfg.posedBox){   // measure the mesh as the skeleton actually draws it, across the whole animation
         box.makeEmpty();
-        obj.traverse(function(n){
-          if (!n.isSkinnedMesh) return; n.skeleton.update();
-          var pos = n.geometry.getAttribute("position"), step = Math.max(1, Math.floor(pos.count / 1500));
-          for (var vi = 0; vi < pos.count; vi += step){ n.boneTransform(vi, bp); bp.applyMatrix4(n.matrixWorld); box.expandByPoint(bp); }
-        });
+        var clip0 = gltf.animations && gltf.animations[0];
+        if (clip0 && cfg.clipName) gltf.animations.forEach(function(a){ if (a.name.toLowerCase().indexOf(cfg.clipName) !== -1) clip0 = a; });
+        var tm = clip0 ? new THREE.AnimationMixer(obj) : null; if (tm) tm.clipAction(clip0).play();
+        for (var fi = 0; fi < (tm ? 8 : 1); fi++){
+          if (tm){ tm.setTime(clip0.duration * fi / 8); obj.updateMatrixWorld(true); }
+          obj.traverse(function(n){
+            if (!n.isSkinnedMesh) return; n.skeleton.update();
+            var pos = n.geometry.getAttribute("position"), step = Math.max(1, Math.floor(pos.count / 1500));
+            for (var vi = 0; vi < pos.count; vi += step){ n.boneTransform(vi, bp); bp.applyMatrix4(n.matrixWorld); box.expandByPoint(bp); }
+          });
+        }
+        if (tm){ tm.stopAllAction(); tm.uncacheRoot(obj); }
         box.getSize(size); box.getCenter(c);
         obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y, -c.z);
       } else if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
