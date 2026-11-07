@@ -67,8 +67,8 @@ Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog →
 | 🐛 | Caterpillar (TL2) | [Emperor Moth Caterpillar](https://sketchfab.com/3d-models/emperor-moth-caterpillar-3f65338c382c4d07b558e4f43ccfb9e1) | The Watt Institution | CC BY 4.0 |
 | 🦌 | Deer (TL2) | Deer | *credit to be added* | |
 | 🐍 | Snake (TL3) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
-| 🦎 | Lizard (TL3) | Lizard run | *credit to be added* | |
-| 🦅 | Hawk (TL4) | [Osprey – Flying Raptor Rigged Bird](https://sketchfab.com/3d-models/osprey-flying-raptor-rigged-bird-9e65ce0542a24ea388e81e3e6e9c9054) | Pigcraft | CC BY 4.0 |
+| 🦎 | Lizard (TL3) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
+| 🦅 | Hawk (TL4) | Hawk in Full Wingspan | *credit to be added* | |
 
 The grass is also used in the food chain view; the grasshopper, frog, eagle and Sun are shared with it (below).
 

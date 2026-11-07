@@ -841,9 +841,9 @@
     "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"z",  turn:30 },
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.62, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"-x", turn:20 },
-    "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, scuttle:true },
+    "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, clipName:"idle", posedBox:true },   // its mesh and skeleton are stored at different scales
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
-    "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.23, facing:"x",  turn:25,  fly:0.72 }
+    "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.3,  facing:"z",  turn:25,  fly:0.72 }
   };
   var CAMERA_FACING = 30;   // START_THETA: the default view looks from +z, a little from +x
   var modelScene = new THREE.Scene();
@@ -877,7 +877,16 @@
       var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
       var bones = new THREE.Box3(), bp = new THREE.Vector3();
       obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
-      if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
+      if (cfg.posedBox){   // measure the mesh as the skeleton actually draws it
+        box.makeEmpty();
+        obj.traverse(function(n){
+          if (!n.isSkinnedMesh) return; n.skeleton.update();
+          var pos = n.geometry.getAttribute("position"), step = Math.max(1, Math.floor(pos.count / 1500));
+          for (var vi = 0; vi < pos.count; vi += step){ n.boneTransform(vi, bp); bp.applyMatrix4(n.matrixWorld); box.expandByPoint(bp); }
+        });
+        box.getSize(size); box.getCenter(c);
+        obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y, -c.z);
+      } else if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
       else obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y - (cfg.sink || 0) * size.y, -c.z);
       var pivot = new THREE.Group(); pivot.add(obj);
       var k = cfg.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k);
@@ -896,6 +905,7 @@
       var entry = { cfg:cfg, slot:slot, root:root, pivot:pivot, mats:mats, mixer:null, action:null, phase:Math.random() * 6.28, faded:false };
       if (gltf.animations && gltf.animations.length){
         var clip = gltf.animations[0];
+        if (cfg.clipName) gltf.animations.forEach(function(a){ if (a.name.toLowerCase().indexOf(cfg.clipName) !== -1) clip = a; });   // e.g. the lizard's "idle", not its attack
         if (cfg.clip && THREE.AnimationUtils.subclip) clip = THREE.AnimationUtils.subclip(clip, "calm", Math.round(cfg.clip[0] * 30), Math.round(cfg.clip[1] * 30), 30);
         entry.mixer = new THREE.AnimationMixer(obj); entry.action = entry.mixer.clipAction(clip); entry.action.play();
       }
