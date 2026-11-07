@@ -20,7 +20,7 @@
   // size = largest dimension in scene units (not to scale: a grasshopper would vanish next to an eagle)
   // yaw  = turn applied after loading so each animal faces its food (towards the left) and a little towards the viewer
   var ORGS = [
-    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:10000, file:"grass.glb", size:2.7, yaw:0, sink:0.3,
+    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:10000, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
       eatenBy:"Grasshopper" },
     { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:1000, file:"grasshopper.glb", size:1.7, yaw:Math.PI-0.55,
@@ -218,6 +218,14 @@
     pivot.scale.setScalar(k); pivot.rotation.y = o.yaw; o.k = k;
     if (o.fly) pivot.position.y = o.fly + 0.3;
     o.holder.add(pivot); o.pivot = pivot;
+    if (o.tufts){   // the grass: a few tufts spread over the plinth instead of one clump
+      o.tufts.forEach(function(t, i){
+        var p = i ? pivot.clone() : pivot;
+        p.position.set(t[0], 0, t[1]); p.scale.setScalar(k * t[2]); p.rotation.y = t[3];
+        if (i) o.holder.add(p);
+      });
+      o.k = k; pivot.userData.tuft = true;
+    }
     if (gltf.animations && gltf.animations.length){
       var mixer = new THREE.AnimationMixer(obj); var act = mixer.clipAction(gltf.animations[0]); act.timeScale = 0.75; act.play(); mixers.push(mixer);
     }
@@ -295,7 +303,7 @@
     ORGS.forEach(function(o){
       var on = selected === o, s = on ? 1.08 : 1;
       if (o.pivot){
-        var cur = o.pivot.scale.x; cur += (o.k * s - cur) * 0.15; o.pivot.scale.setScalar(cur);          // selected one grows a little
+        var cur = o.pivot.scale.x; if (!o.tufts){ cur += (o.k * s - cur) * 0.15; o.pivot.scale.setScalar(cur); }   // selected one grows a little
         if (o.id === "frog") o.pivot.scale.y = cur * (1 + Math.sin(t * 3.1) * 0.015);                       // breathing
         if (o.id === "grasshopper") o.pivot.position.y = Math.max(0, Math.sin(t * 2.2)) * 0.04;
         if (o.id === "snake") o.pivot.rotation.y = o.yaw + Math.sin(t * 0.8) * 0.08;

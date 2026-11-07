@@ -822,8 +822,8 @@
   // 3D organism models. Each model stands in its slot's tier and *follows that slot's sprite*
   // every frame: its visibility, its fade and tint while dying (mortality), its position.
   // The sprite stays as the invisible tap / long-press target, so mortality, remains, the
-  // profile panel and the editor keep working unchanged. Slots without a model (wildflower,
-  // young tree) and any model that fails to load keep their picture card.
+  // profile panel and the editor keep working unchanged. Any model that fails to load
+  // keeps its picture card.
   // Models are drawn in a second pass on top of the near-opaque tiers, as the cards were.
   // =========================================================
   var MODEL_BASE = "Solus-Assets/";
@@ -833,6 +833,8 @@
   // turn = extra yaw so they do not all stare the same way. fly = hovers at this fraction of its tier's height instead of standing on the floor.
   var ORGANISM_MODELS = {
     "tl1-grass-cluster":      { file:"Pyramid/grass.glb",        size:2.21,  facing:"z",  turn:0 },
+    "tl1-wildflower-cluster": { file:"Pyramid/lupine.glb",       size:1.5,  facing:"z",  turn:0 },
+    "tl1-young-tree":         { file:"Pyramid/tree.glb",         size:2.35, facing:"z",  turn:0,   sink:0.07 },   // roots partly in the soil
     "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"x",  turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.1, facing:"x",  turn:75 },   // side-on, so its length and colours show
@@ -876,7 +878,7 @@
       var bones = new THREE.Box3(), bp = new THREE.Vector3();
       obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
       if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
-      else obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y, -c.z);
+      else obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y - (cfg.sink || 0) * size.y, -c.z);
       var pivot = new THREE.Group(); pivot.add(obj);
       var k = cfg.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k);
       var base = { "z":0, "x":-90, "-x":90 }[cfg.facing] || 0;
