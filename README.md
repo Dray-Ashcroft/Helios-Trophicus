@@ -56,6 +56,22 @@ Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog →
 
 ## 🧩 3D Model Credits
 
+**Energy pyramid**
+
+| | Organism | Model | Creator | Licence |
+|:-:|:--|:--|:--|:--|
+| 🌾 | Grass (TL1) | [Grass](https://sketchfab.com/3d-models/grass-f2f2bddb2728483a9105c5f5114eb15e) | Cosmic_dust | CC BY 4.0 |
+| 🐿️ | Squirrel (TL2) | [Curious Squirrel](https://sketchfab.com/3d-models/curious-squirrel-0b5e2372910c4bd18e5c2fe2f1ee0b4c) | iRahulRajput | CC BY 4.0 |
+| 🐛 | Caterpillar (TL2) | [Emperor Moth Caterpillar](https://sketchfab.com/3d-models/emperor-moth-caterpillar-3f65338c382c4d07b558e4f43ccfb9e1) | The Watt Institution | CC BY 4.0 |
+| 🦌 | Deer (TL2) | Deer | *credit to be added* | |
+| 🐍 | Snake (TL3) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
+| 🦎 | Lizard (TL3) | Lizard run | *credit to be added* | |
+| 🦅 | Hawk (TL4) | [Osprey – Flying Raptor Rigged Bird](https://sketchfab.com/3d-models/osprey-flying-raptor-rigged-bird-9e65ce0542a24ea388e81e3e6e9c9054) | Pigcraft | CC BY 4.0 |
+
+The grasshopper, frog, eagle and Sun are shared with the food chain view (below).
+
+**Food chain view and shared models**
+
 | | Organism | Model | Creator | Licence |
 |:-:|:--|:--|:--|:--|
 | ☀️ | Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |

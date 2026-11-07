@@ -658,7 +658,7 @@
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
     { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Producers/Tree.png",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
-    { id:"tl2-rabbit", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
+    { id:"tl2-rabbit", label:"TL2 · Squirrel", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
     { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
@@ -817,6 +817,119 @@
     loadOrganismImage(asset, organismSlots[asset.id]);
   }
   ORGANISM_ASSETS.forEach(addOrganismAsset);
+
+  // =========================================================
+  // 3D organism models. Each model stands in its slot's tier and *follows that slot's sprite*
+  // every frame: its visibility, its fade and tint while dying (mortality), its position.
+  // The sprite stays as the invisible tap / long-press target, so mortality, remains, the
+  // profile panel and the editor keep working unchanged. Slots without a model (wildflower,
+  // young tree) and any model that fails to load keep their picture card.
+  // Models are drawn in a second pass on top of the near-opaque tiers, as the cards were.
+  // =========================================================
+  var MODEL_BASE = "Solus-Assets/";
+  var MODEL_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/";
+  var D2R = Math.PI / 180;
+  // size = largest dimension (scene units; not to scale). facing = the model's own forward axis.
+  // turn = extra yaw so they do not all stare the same way. fly = hovers at this fraction of its tier's height instead of standing on the floor.
+  var ORGANISM_MODELS = {
+    "tl1-grass-cluster":      { file:"Pyramid/grass.glb",        size:2.21,  facing:"z",  turn:0 },
+    "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
+    "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"x",  turn:35 },
+    "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.1, facing:"x",  turn:75 },   // side-on, so its length and colours show
+    "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"z",  turn:30 },
+    "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.62, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
+    "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"-x", turn:20 },
+    "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, scuttle:true },
+    "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
+    "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.23, facing:"x",  turn:25,  fly:0.72 }
+  };
+  var CAMERA_FACING = 30;   // START_THETA: the default view looks from +z, a little from +x
+  var modelScene = new THREE.Scene();
+  modelScene.fog = scene.fog;
+  modelScene.add(new THREE.HemisphereLight(0xeef3ff, 0x3a3226, 1.7));
+  var modelKey = new THREE.DirectionalLight(0xffffff, 1.4); modelKey.position.set(10, 18, 10); modelScene.add(modelKey);
+  var modelFill = new THREE.DirectionalLight(0x88aaff, 0.45); modelFill.position.set(-12, 6, -9); modelScene.add(modelFill);
+  var organismModels = {};
+
+  var gltfLoaderReady = null;
+  function loadPyramidGLB(file){
+    if (!gltfLoaderReady){
+      gltfLoaderReady = THREE.GLTFLoader ? Promise.resolve() : new Promise(function(res, rej){
+        var tag = document.createElement("script");
+        tag.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
+        tag.onload = res; tag.onerror = rej; document.head.appendChild(tag);
+      });
+    }
+    return gltfLoaderReady.then(function(){
+      var loader = new THREE.GLTFLoader();
+      function get(url){ return new Promise(function(res, rej){ loader.load(url, res, undefined, rej); }); }
+      return get(MODEL_BASE + file).catch(function(){ return get(MODEL_FALLBACK + file); });
+    });
+  }
+
+  Object.keys(ORGANISM_MODELS).forEach(function(id){
+    var cfg = ORGANISM_MODELS[id], slot = organismSlots[id];
+    if (!slot) return;
+    loadPyramidGLB(cfg.file).then(function(gltf){
+      var obj = gltf.scene; obj.updateMatrixWorld(true);
+      var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+      var bones = new THREE.Box3(), bp = new THREE.Vector3();
+      obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
+      if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
+      else obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y, -c.z);
+      var pivot = new THREE.Group(); pivot.add(obj);
+      var k = cfg.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k);
+      var base = { "z":0, "x":-90, "-x":90 }[cfg.facing] || 0;
+      pivot.rotation.y = (base + CAMERA_FACING + cfg.turn) * D2R;
+      var root = new THREE.Group(); root.add(pivot); root.visible = false; modelScene.add(root);
+      var mats = [];
+      obj.traverse(function(n){
+        if (!n.isMesh) return;
+        n.frustumCulled = false;
+        if (!n.geometry.getAttribute("normal")) n.geometry.computeVertexNormals();   // the hawk carries colour per vertex, no normals
+        (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
+          m.userData.baseColor = m.color.clone(); m.userData.baseOpacity = m.opacity; m.userData.baseTransparent = m.transparent; mats.push(m);
+        });
+      });
+      var entry = { cfg:cfg, slot:slot, root:root, pivot:pivot, mats:mats, mixer:null, action:null, phase:Math.random() * 6.28, faded:false };
+      if (gltf.animations && gltf.animations.length){
+        var clip = gltf.animations[0];
+        if (cfg.clip && THREE.AnimationUtils.subclip) clip = THREE.AnimationUtils.subclip(clip, "calm", Math.round(cfg.clip[0] * 30), Math.round(cfg.clip[1] * 30), 30);
+        entry.mixer = new THREE.AnimationMixer(obj); entry.action = entry.mixer.clipAction(clip); entry.action.play();
+      }
+      organismModels[id] = entry;
+      slot.material.colorWrite = false;   // the picture card becomes an invisible tap target
+    }).catch(function(e){ console.warn("Organism model unavailable, keeping the picture card:", cfg.file, e); });
+  });
+
+  var fadeColor = new THREE.Color();
+  function updateOrganismModels(elapsedTime, delta){
+    Object.keys(organismModels).forEach(function(id){
+      var m = organismModels[id], sp = m.slot.sprite, cfg = m.cfg, layer = layers[m.slot.asset.trophicLevel - 1];
+      m.root.visible = sp.visible;
+      if (!sp.visible) return;
+      var y = cfg.fly ? layer.yBottom + (layer.yTop - layer.yBottom) * cfg.fly + Math.sin(elapsedTime * 1.3 + m.phase) * 0.08 : layer.yBottom + 0.04;
+      var inward = cfg.fly ? 0.6 : 1;   // birds hover nearer the tier's centre line so they stay over their small top tier
+      m.root.position.set(sp.position.x * inward, y, sp.position.z * inward);
+      // mirror the card's fade and tint (mortality dims and desaturates it before it dies)
+      var fade = THREE.MathUtils.clamp(sp.material.opacity / (m.slot.baseOpacity || 1), 0, 1), dimming = fade < 0.995;
+      fadeColor.copy(sp.material.color);
+      for (var i = 0; i < m.mats.length; i++){
+        var mat = m.mats[i];
+        mat.color.copy(mat.userData.baseColor).multiply(fadeColor);
+        mat.opacity = mat.userData.baseOpacity * fade;
+        var wantTransparent = mat.userData.baseTransparent || dimming;
+        if (mat.transparent !== wantTransparent){ mat.transparent = wantTransparent; mat.needsUpdate = true; }
+      }
+      if (m.mixer){
+        if (cfg.scuttle){   // the lizard rests, then scuttles for half a second every few seconds
+          var cyc = (elapsedTime + m.phase) % 6;
+          m.action.paused = cyc > 0.6;
+        }
+        m.mixer.update(delta);
+      }
+    });
+  }
 
   function updateOrganismAssetUrl(id, url){
     var asset = ORGANISM_ASSETS.filter(function(item){ return item.id === id; })[0];
@@ -1449,18 +1562,7 @@
   // ---------------------------------------------------------
   var sunModel = null, sunModelMats = [];
   (function loadSunModel(){
-    var file = "Solus-Assets/FoodChain/sun.glb";
-    var fallback = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/" + file;
-    var loaderReady = THREE.GLTFLoader ? Promise.resolve() : new Promise(function(res, rej){
-      var tag = document.createElement("script");
-      tag.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
-      tag.onload = res; tag.onerror = rej; document.head.appendChild(tag);
-    });
-    loaderReady.then(function(){
-      var loader = new THREE.GLTFLoader();
-      function get(url){ return new Promise(function(res, rej){ loader.load(url, res, undefined, rej); }); }
-      return get(file).catch(function(){ return get(fallback); });
-    }).then(function(gltf){
+    loadPyramidGLB("FoodChain/sun.glb").then(function(gltf){
       var obj = gltf.scene; obj.updateMatrixWorld(true);
       var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
       var pivot = new THREE.Group(); obj.position.set(-c.x, -c.y, -c.z); pivot.add(obj);
@@ -4650,6 +4752,10 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     checkLongPressFire();
 
     renderer.render(scene, camera);
+    updateOrganismModels(elapsed, delta);
+    renderer.autoClear = false; renderer.clearDepth();   // models on top of the near-opaque tiers, like the old cards
+    renderer.render(modelScene, camera);
+    renderer.autoClear = true;
   }
 
   selectLayer(1);
