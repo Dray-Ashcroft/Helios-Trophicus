@@ -27,7 +27,7 @@
       food:"Grass (a producer).", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:100, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Grasshoppers and other insects.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:10, file:"snake.glb", size:1.75, yaw:0.9,
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:10, file:"../Pyramid/snake.glb", size:2.0, yaw:-1.0, clip:[3, 9],
       food:"Frogs.", eatenBy:"Eagle" },
     { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:1, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }
@@ -212,8 +212,8 @@
     var pivot = new THREE.Group(); pivot.add(obj);
     var bones = new THREE.Box3(), bp = new THREE.Vector3();
     obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
-    if (!bones.isEmpty()){   // rigged (the eagle): the skeleton, not the raw mesh box, says where the bird is drawn
-      var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, -bc.y, -bc.z);
+    if (!bones.isEmpty()){   // rigged (eagle, snake): the skeleton, not the raw mesh box, says where the animal is drawn
+      var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, o.fly ? -bc.y : -bones.min.y, -bc.z);
     } else obj.position.set(-c.x, -box.min.y - (o.sink || 0) * size.y, -c.z);   // centred, standing on the plinth (the grass mat sits a little into it, hiding its cut edge)
     pivot.scale.setScalar(k); pivot.rotation.y = o.yaw; o.k = k;
     if (o.fly) pivot.position.y = o.fly + 0.3;
@@ -227,7 +227,9 @@
       o.k = k; pivot.userData.tuft = true;
     }
     if (gltf.animations && gltf.animations.length){
-      var mixer = new THREE.AnimationMixer(obj); var act = mixer.clipAction(gltf.animations[0]); act.timeScale = 0.75; act.play(); mixers.push(mixer);
+      var clip = gltf.animations[0];   // the snake loops only its calm rear-and-sway stretch (same as the pyramid)
+      if (o.clip && THREE.AnimationUtils.subclip) clip = THREE.AnimationUtils.subclip(clip, "calm", Math.round(o.clip[0] * 30), Math.round(o.clip[1] * 30), 30);
+      var mixer = new THREE.AnimationMixer(obj); var act = mixer.clipAction(clip); act.timeScale = o.clip ? 1 : 0.75; act.play(); mixers.push(mixer);
     }
   }
 
@@ -306,7 +308,6 @@
         var cur = o.pivot.scale.x; if (!o.tufts){ cur += (o.k * s - cur) * 0.15; o.pivot.scale.setScalar(cur); }   // selected one grows a little
         if (o.id === "frog") o.pivot.scale.y = cur * (1 + Math.sin(t * 3.1) * 0.015);                       // breathing
         if (o.id === "grasshopper") o.pivot.position.y = Math.max(0, Math.sin(t * 2.2)) * 0.04;
-        if (o.id === "snake") o.pivot.rotation.y = o.yaw + Math.sin(t * 0.8) * 0.08;
         if (o.fly) o.pivot.position.y = o.fly + 0.3 + Math.sin(t * 1.4) * 0.12;
       }
       o.ring.material.color.setHex(o.color); o.ring.scale.setScalar(on ? 1.06 + Math.sin(t * 4) * 0.02 : 1);
