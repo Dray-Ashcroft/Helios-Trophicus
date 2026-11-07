@@ -9,6 +9,24 @@
 
 <div id="canvas-container"></div>
 
+<div id="foodChainView" hidden>
+  <div class="fc-canvas"></div>
+  <div class="fc-labels" aria-hidden="false"></div>
+  <div class="fc-status" role="status" hidden></div>
+  <div class="fc-panel" id="fcInfo" aria-live="polite"></div>
+  <div class="fc-side">
+    <div class="fc-legend">
+      <div class="row"><span class="sw" style="background:#c6ea5a"></span>Energy flow: food → feeder, ~10% passed on</div>
+      <div class="row"><span class="sw" style="background:#ff9b54"></span>Heat lost in respiration</div>
+      <div class="row fc-dim">Organisms not to scale</div>
+    </div>
+    <button class="reset-btn" id="fcResetBtn" type="button" title="Reset camera view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>
+      Reset view
+    </button>
+  </div>
+</div>
+
 <div id="ui">
   <div class="header">
     <div class="title-row">
@@ -31,6 +49,14 @@
       <div class="brand-text"><div class="title">Helios Trophicus</div><div class="subtitle">Biomass and Energy Pyramid Simulator</div></div>
     </div>
     <div class="solar-status" id="solarStatus" aria-live="polite"><span class="dot"></span><span id="solarStatusText">Solar input off — tap the Sun</span></div>
+    <div class="view-switch" role="group" aria-label="View">
+      <button class="view-btn active" type="button" data-view="pyramid" aria-pressed="true" title="Energy pyramid">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 21.5 20h-19z"></path><path d="M7.3 12.5h9.4M5 16.5h14"></path></svg>Pyramid
+      </button>
+      <button class="view-btn" type="button" data-view="chain" aria-pressed="false" title="Food chain">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="17" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="20" cy="7" r="2"></circle><path d="M6 15.8 10 13.2M14 10.8 18 8.2"></path></svg>Food chain
+      </button>
+    </div>
     <div class="header-tools">
       <div id="organismLockStatus" class="sr-only" aria-live="polite"></div>
       <button class="tool-btn organism-editor-toggle" id="organismEditorToggle" type="button" aria-label="Edit organisms (hold 15 seconds to unlock)" title="Edit organisms (hold 15 seconds to unlock)" aria-expanded="false" aria-controls="organismEditorPanel">
@@ -236,4 +262,5 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
+<script src="foodchain.js"></script>
 </body></html>
