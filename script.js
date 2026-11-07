@@ -4733,7 +4733,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
 
   function animate(now){
     requestAnimationFrame(animate);
-    if (document.body.classList.contains("view-chain")) { lastTime = now; return; }   // food-chain view is showing: pause the pyramid
+    if (document.body.classList.contains("view-chain") || document.body.classList.contains("view-web")) { lastTime = now; return; }   // another view is showing: pause the pyramid
     var delta = Math.min((now - lastTime)/1000, 0.05);
     lastTime = now;
     elapsed += delta;

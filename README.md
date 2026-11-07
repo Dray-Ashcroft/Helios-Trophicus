@@ -32,7 +32,10 @@ Visualize detritus, decomposition, and nutrient return to producers.
 Follow a seven-step visualization of energy and matter movement.
 
 **🔗 Food Chain View**  
-Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog → Snake → Eagle**, across five trophic levels. Arrows run from food to feeder, carry about 10% of the energy onward (100 → 0.01 rel. J, the same scale as the pyramid), and heat rises from every organism. Tap an organism to see what it eats, what eats it and how much energy reaches it.
+Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog → Snake → Eagle**, across five trophic levels. Arrows run from food to feeder, carry about 10% of the energy onward (100 → 0.01 rel. J, the same scale as the pyramid), and heat rises from every organism. Tap an organism to see what it eats, what eats it and how much energy reaches it, or walk through the chain one link at a time.
+
+**🕸️ Food Web View**  
+A third view links all the pyramid's organisms by who eats whom: producers, herbivores, carnivores and top predators across four trophic levels. Tap an organism to see only its links (the snake, for example, feeds at two trophic levels), or light up the food chain hidden inside the web.
 
 ---
 

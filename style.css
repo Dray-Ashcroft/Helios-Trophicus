@@ -790,6 +790,8 @@
   @media (pointer:coarse){ .view-btn{ height:40px; padding:0 16px; font-size:13.5px; } }
 
   /* while the food chain is shown, the pyramid and its controls step aside */
+  body.view-web #canvas-container, body.view-web #ui .bottom-row, body.view-web #solarStatus, body.view-web #ui .header-tools,
+  body.view-web #profilePanel, body.view-web #organismEditorPanel, body.view-web #organismUrlBox, body.view-web #introOverlay, body.view-web .model-load,
   body.view-chain #canvas-container,
   body.view-chain #ui .bottom-row,
   body.view-chain #solarStatus,
@@ -799,10 +801,11 @@
   body.view-chain #organismUrlBox,
   body.view-chain #introOverlay{ display:none !important; }
 
-  #foodChainView{ position:fixed; inset:0; z-index:0; background:var(--bg); }
-  #foodChainView[hidden]{ display:none; }
-  #foodChainView .fc-canvas{ position:absolute; inset:0; }
-  #foodChainView .fc-canvas canvas{ display:block; }
+  #foodChainView, #foodWebView{ position:fixed; inset:0; z-index:0; background:var(--bg); }
+  #foodChainView[hidden], #foodWebView[hidden]{ display:none; }
+  #foodChainView .fc-canvas, #foodWebView .fc-canvas{ position:absolute; inset:0; }
+  #foodChainView .fc-canvas canvas, #foodWebView .fc-canvas canvas{ display:block; }
+  .fw-tag{ min-width:0; padding:4px 9px 5px; }
   .fc-labels{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
   .fc-tag{ position:absolute; left:0; top:0; display:flex; flex-direction:column; align-items:center; gap:1px; min-width:96px; padding:6px 10px 7px; border-radius:10px;
     border:1px solid color-mix(in srgb, var(--tl) 45%, transparent); background:rgba(10,14,22,0.72); color:var(--text); font:inherit; cursor:pointer; pointer-events:auto;
@@ -860,3 +863,5 @@
   .fc-pass{ margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(198,234,90,.10); color:#d8ef8f; font-size:12.5px; font-weight:600; font-variant-numeric:tabular-nums; }
   .fc-tag, .fc-pct, .fc-sun-tag{ transition:opacity .35s ease; }
   .fc-tag.dim, .fc-pct.dim, .fc-sun-tag.dim{ opacity:.28; }
+
+  @media (max-width:640px){ .view-btn{ padding:0 10px; font-size:12px; gap:4px; } .view-btn svg{ display:none; } }

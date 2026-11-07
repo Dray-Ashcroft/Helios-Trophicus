@@ -9,6 +9,24 @@
 
 <div id="canvas-container"></div>
 
+<div id="foodWebView" hidden>
+  <div class="fc-canvas"></div>
+  <div class="fc-labels"></div>
+  <div class="fc-status" role="status" hidden></div>
+  <div class="fc-panel" id="fwInfo" aria-live="polite"></div>
+  <div class="fc-side">
+    <div class="fc-legend">
+      <div class="row"><span class="sw" style="background:#c6ea5a"></span>Feeding link: food → feeder</div>
+      <div class="row"><span class="sw" style="background:#ffd479"></span>Sunlight to producers</div>
+      <div class="row fc-dim">Organisms not to scale</div>
+    </div>
+    <button class="reset-btn" id="fwResetBtn" type="button" title="Reset camera view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>
+      Reset view
+    </button>
+  </div>
+</div>
+
 <div id="foodChainView" hidden>
   <div class="fc-canvas"></div>
   <div class="fc-labels" aria-hidden="false"></div>
@@ -55,6 +73,9 @@
       </button>
       <button class="view-btn" type="button" data-view="chain" aria-pressed="false" title="Food chain">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="17" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="20" cy="7" r="2"></circle><path d="M6 15.8 10 13.2M14 10.8 18 8.2"></path></svg>Food chain
+      </button>
+      <button class="view-btn" type="button" data-view="web" aria-pressed="false" title="Food web">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="18" r="2"></circle><circle cx="19" cy="18" r="2"></circle><circle cx="12" cy="11" r="2"></circle><circle cx="7" cy="4.5" r="1.8"></circle><circle cx="17" cy="4.5" r="1.8"></circle><path d="M6.4 16.5 10.6 12.5M17.6 16.5 13.4 12.5M7 16 7 6.5M11.2 9.2 8 6M12.8 9.2 16 6"></path></svg>Food web
       </button>
     </div>
     <div class="header-tools">
@@ -263,4 +284,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
 <script src="foodchain.js"></script>
+<script src="foodweb.js"></script>
 </body></html>
