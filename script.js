@@ -2771,6 +2771,13 @@
       ribLen: 0.15, bodyW: 0.13, bodyH: 0.075, pelvisW: 0.14, toes: 4, tissueHex: 0x8a7458, target: 0.95,
       limbs: [[[0.10, 0.30], [0.19, 0.24], [0.22, 0.42], [0.22, 0.52], true, 0.014], [[0.12, -0.34], [0.30, -0.18], [0.30, -0.52], [0.28, -0.66], false, 0.018]] });
   }
+  // Squirrel (a rodent, not a lagomorph): rounder skull with a shorter snout, gnawing incisors,
+  // a long tail of ~22 vertebrae (about body length), and hind legs less elongated than a rabbit's.
+  function buildSquirrelRemains(){
+    return buildTetrapodRemains({ skullZ: 0.56, cran: [0.056, 0.046, 0.075], snout: 0.07, incisors: true, neck: 7, trunk: 13, lumbar: 6, tailStart: -0.30, tailN: 22, tailStep: 0.03, tailSway: 0.05,
+      ribLen: 0.13, bodyW: 0.11, bodyH: 0.065, pelvisW: 0.12, toes: 4, tissueHex: 0x8a6a4a, target: 0.95,
+      limbs: [[[0.09, 0.28], [0.17, 0.22], [0.20, 0.36], [0.21, 0.45], true, 0.012], [[0.10, -0.28], [0.24, -0.18], [0.26, -0.40], [0.25, -0.50], false, 0.014]] });
+  }
   function buildDeerRemains(){
     return buildTetrapodRemains({ skullZ: 0.78, cran: [0.06, 0.048, 0.11], snout: 0.16, incisors: false, neck: 7, trunk: 13, lumbar: 6, tailStart: -0.5, tailN: 6, tailStep: 0.024, tailSway: 0.0,
       ribLen: 0.19, bodyW: 0.16, bodyH: 0.085, pelvisW: 0.16, toes: 2, tissueHex: 0x8b6a45, target: 1.05,
@@ -2883,7 +2890,7 @@
     "tl1-grass-cluster": function(){ return buildPlantRemains("grass"); },
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
-    "tl2-rabbit": buildRabbitRemains, "tl2-herbivorous-insect": buildInsectRemains,
+    "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds the squirrel
     "tl2-caterpillar": buildCaterpillarRemains, "tl2-deer": buildDeerRemains,
     "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains,
     "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains
