@@ -65,7 +65,7 @@ Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog →
 | 🌳 | Young tree (TL1) | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
 | 🐿️ | Squirrel (TL2) | [Curious Squirrel](https://sketchfab.com/3d-models/curious-squirrel-0b5e2372910c4bd18e5c2fe2f1ee0b4c) | iRahulRajput | CC BY 4.0 |
 | 🐛 | Caterpillar (TL2) | [Emperor Moth Caterpillar](https://sketchfab.com/3d-models/emperor-moth-caterpillar-3f65338c382c4d07b558e4f43ccfb9e1) | The Watt Institution | CC BY 4.0 |
-| 🦌 | Deer (TL2) | Deer | *credit to be added* | |
+| 🦌 | Deer (TL2) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🐍 | Snake (TL3) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🦎 | Lizard (TL3) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
 | 🦅 | Hawk (TL4) | [Hawk In Full Wingspan](https://skfb.ly/pKvNF) | restore50 | CC BY 4.0 |

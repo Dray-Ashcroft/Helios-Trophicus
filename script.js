@@ -838,7 +838,7 @@
     "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"x",  turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.1, facing:"x",  turn:75 },   // side-on, so its length and colours show
-    "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"z",  turn:30 },
+    "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"x",  turn:30 },
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.62, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
     "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, clipName:"idle", posedBox:true },   // its mesh and skeleton are stored at different scales
