@@ -837,7 +837,7 @@
     "tl1-young-tree":         { file:"Pyramid/tree.glb",         size:2.35, facing:"z",  turn:0,   sink:0.07 },   // roots partly in the soil
     "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"x",  turn:35 },
-    "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.1, facing:"x",  turn:75 },   // side-on, so its length and colours show
+    "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.3, facing:"z",  turn:-30 },   // black swallowtail larva on its food-plant stem
     "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"x",  turn:30 },
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.62, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
