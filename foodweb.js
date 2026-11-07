@@ -26,11 +26,13 @@
       note:"The larva of a butterfly or moth; it feeds almost nonstop on leaves." },
     { id:"squirrel",    name:"Squirrel",    tl:2, x: 2.1, file:"Pyramid/squirrel.glb",     size:1.2, facing:"z", turn:-20 },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"Pyramid/deer.glb",         size:1.8, facing:"x", turn:25,
-      note:"In a real forest a tiger or leopard would hunt it; no predator of the deer is shown here yet." },
-    { id:"frog",        name:"Frog",        tl:3, x:-4.6, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
-    { id:"lizard",      name:"Lizard",      tl:3, x: 0.0, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
-    { id:"snake",       name:"Snake",       tl:3, x: 4.6, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
+      note:"In Indian forests deer such as chital and sambar are a main prey of leopards and tigers." },
+    { id:"frog",        name:"Frog",        tl:3, x:-6.3, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
+    { id:"lizard",      name:"Lizard",      tl:3, x:-2.1, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
+    { id:"snake",       name:"Snake",       tl:3, x: 2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
       note:"It eats squirrels (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a squirrel, TL4 when it eats a frog." },
+    { id:"leopard",     name:"Leopard",     tl:3, x: 6.3, file:"Pyramid/leopard.glb",      size:1.8, facing:"z", turn:-30,
+      note:"A big cat of forests across India. Deer are among its main prey; nothing hunts an adult leopard here." },
     { id:"hawk",        name:"Hawk",        tl:4, x:-2.4, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95 },
     { id:"eagle",       name:"Eagle",       tl:4, x: 2.4, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:0.95 }
   ];
@@ -38,7 +40,7 @@
   var LINKS = [
     ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["tree","squirrel"], ["lupine","caterpillar"],
     ["grasshopper","frog"], ["grasshopper","lizard"], ["caterpillar","frog"], ["caterpillar","lizard"], ["squirrel","snake"],
-    ["frog","snake"], ["lizard","hawk"], ["snake","eagle"]
+    ["frog","snake"], ["lizard","hawk"], ["snake","eagle"], ["deer","leopard"]
   ];
   var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller

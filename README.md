@@ -35,7 +35,7 @@ Follow a seven-step visualization of energy and matter movement.
 Switch from the pyramid to a 3D food chain, **Grass → Grasshopper → Frog → Snake → Eagle**, across five trophic levels. Arrows run from food to feeder, carry about 10% of the energy onward (100 → 0.01 rel. J, the same scale as the pyramid), and heat rises from every organism. Tap an organism to see what it eats, what eats it and how much energy reaches it, or walk through the chain one link at a time.
 
 **🕸️ Food Web View**  
-A third view links all the pyramid's organisms by who eats whom: producers, herbivores, carnivores and top predators across four trophic levels. Tap an organism to see only its links (the snake, for example, feeds at two trophic levels), or light up the food chain hidden inside the web.
+A third view links all the pyramid's organisms by who eats whom: producers, herbivores, carnivores and top predators across four trophic levels. Tap an organism to see only its links (the snake, for example, feeds at two trophic levels, and the leopard hunts the deer), or light up the food chain hidden inside the web.
 
 ---
 
@@ -71,6 +71,7 @@ A third view links all the pyramid's organisms by who eats whom: producers, herb
 | 🦌 | Deer (TL2) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🐍 | Snake (TL3) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🦎 | Lizard (TL3) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
+| 🐆 | Leopard (TL3) | [Prowling Leopard 3D Model Free](https://skfb.ly/pKHxA) | iRahulRajput | CC BY 4.0 |
 | 🦅 | Hawk (TL4) | [Hawk In Full Wingspan](https://skfb.ly/pKvNF) | restore50 | CC BY 4.0 |
 
 The grass and snake are also used in the food chain view; the grasshopper, frog, eagle and Sun are shared with it (below).
