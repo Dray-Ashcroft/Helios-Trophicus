@@ -67,7 +67,7 @@ A third view links all the pyramid's organisms by who eats whom: producers, herb
 | 🪻 | Wildflower: lupine (TL1) | [Lupine Plant](https://sketchfab.com/3d-models/lupine-plant-bf30f1110c174d4baedda0ed63778439) | rufusrockwell | CC BY 4.0 |
 | 🌳 | Young tree (TL1) | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
 | 🐿️ | Squirrel (TL2) | [Curious Squirrel](https://sketchfab.com/3d-models/curious-squirrel-0b5e2372910c4bd18e5c2fe2f1ee0b4c) | iRahulRajput | CC BY 4.0 |
-| 🐛 | Caterpillar (TL2) | [Black Swallowtail Caterpillar (Smoothie 3D)](https://skfb.ly/DoGS) | Thomas Flynn | CC BY 4.0 |
+| 🪲 | Horned beetle (TL2) | [Insect Horn Run](https://skfb.ly/pHTMx) | LostBoyz2078 | CC BY-NC 4.0 (non-commercial use only) |
 | 🦌 | Deer (TL2) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🐍 | Snake (TL3) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🦎 | Lizard (TL3) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |

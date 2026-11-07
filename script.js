@@ -664,7 +664,7 @@
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
     { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
-    { id:"tl2-caterpillar", label:"TL2 · Caterpillar", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
+    { id:"tl2-caterpillar", label:"TL2 · Horned beetle", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
     { id:"tl2-deer", label:"TL2 · Deer", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
@@ -843,7 +843,7 @@
     "tl1-young-tree":         { file:"Pyramid/tree.glb",         size:2.35, facing:"z",  turn:0,   sink:0.07 },   // roots partly in the soil
     "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
-    "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.3, facing:"z",  turn:-30 },   // black swallowtail larva on its food-plant stem
+    "tl2-caterpillar":        { file:"Pyramid/caterpillar.glb",  size:1.0, facing:"x",  turn:-30, posedBox:true },   // horned beetle ("Insect Horn Run"), running loop
     "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"x",  turn:30 },
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
@@ -2937,7 +2937,7 @@
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds the squirrel
-    "tl2-caterpillar": buildCaterpillarRemains, "tl2-deer": buildDeerRemains,
+    "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds a horned beetle
     "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains, "tl3-leopard": buildLeopardRemains,
     "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains
   };
