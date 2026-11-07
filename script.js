@@ -651,31 +651,33 @@
 
   // Twelve replaceable image slots: 3 producers, 4 primary consumers,
   // 3 secondary consumers, and 2 tertiary consumers.
+  var OLD_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/";
+  var ASSET_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/";
   var ORGANISM_ASSETS = [
-    { id:"tl1-grass-cluster", label:"TL1 · Grass cluster", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Producers/Bushes%2C%20Grasses.png",
+    { id:"tl1-grass-cluster", label:"TL1 · Grass cluster", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Bushes%2C%20Grasses.png",
       x:-0.45, y:0.43, z:-0.3, scale:1.65, opacity:0.98 },
-    { id:"tl1-wildflower-cluster", label:"TL1 · Wildflower cluster", trophicLevel:1, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Producers/cereals.png",
+    { id:"tl1-wildflower-cluster", label:"TL1 · Wildflower cluster", trophicLevel:1, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/cereals.png",
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
-    { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Producers/Tree.png",
+    { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
-    { id:"tl2-rabbit", label:"TL2 · Squirrel", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
+    { id:"tl2-rabbit", label:"TL2 · Squirrel", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
-    { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
+    { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
-    { id:"tl2-caterpillar", label:"TL2 · Caterpillar", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
+    { id:"tl2-caterpillar", label:"TL2 · Caterpillar", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
-    { id:"tl2-deer", label:"TL2 · Deer", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer/Deer.png",
+    { id:"tl2-deer", label:"TL2 · Deer", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
-    { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
+    { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
       x:-0.23, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },
-    { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumer/Frog%20-%20Insect.png",
+    { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Frog%20-%20Insect.png",
       x:0.56, y:0.21, z:-0.16, scale:0.78, opacity:0.96 },
-    { id:"tl3-lizard", label:"TL3 · Lizard", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumer/Lizard%20-%20Insect.png",
+    { id:"tl3-lizard", label:"TL3 · Lizard", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Lizard%20-%20Insect.png",
       x:-0.05, y:0.25, z:0.38, scale:0.78, opacity:0.96 },
-    { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
+    { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
       x:-0.36, y:0.25, z:0.12, scale:0.55, opacity:0.98 },
     // Second tertiary consumer: starts as a drawn placeholder card — long-press it on the pyramid to paste a picture link.
-    { id:"tl4-hawk", label:"TL4 · Hawk", trophicLevel:4, biomassContribution:6, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Tertiary%20Consumers/Hawk%20Lizard%20Energion.png",
+    { id:"tl4-hawk", label:"TL4 · Hawk", trophicLevel:4, biomassContribution:6, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Hawk%20Lizard%20Energion.png",
       x:0.30, y:0.68, z:0.12, scale:0.50, opacity:0.98 }
   ];
 
@@ -698,6 +700,7 @@
     var savedOrganismUrls = JSON.parse(window.localStorage.getItem(ORGANISM_URL_STORAGE_KEY) || "{}");
     ORGANISM_ASSETS.forEach(function(asset){
       var saved = savedOrganismUrls[asset.id];
+      if (saved) saved = saved.replace(OLD_REPO_RAW, ASSET_REPO_RAW);   // links saved before the repo was renamed
       // Old saved links to the deleted Supabase storage can never load again, and old "builtin:"
       // values only stood in for those missing images — ignore both so the repo images show.
       if (saved && saved.indexOf("supabase.co") === -1 && saved.indexOf("builtin:") !== 0) asset.imageUrl = saved;
@@ -4186,7 +4189,7 @@
   // Keys are "<layerId>:<example index>". Saved in localStorage, exported in the project
   // JSON, and baked into HTML snapshots through PROFILE_IMAGE_DEFAULTS.
   var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v1";
-  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer%20Energion/Rabbit%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer%20Energion/Caterpillar%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","2:3":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Primary%20Consumer%20Energion/Deer%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","3:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumers%20Energion/Lizard%20-%20%20Insect%20Energion.png","3:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Secondary%20Consumers%20Energion/Snake%20-%20Rabbit%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png","4:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/Solus-Assets/Tertiary%20Consumers%20Energion/Hawk%20-%20Lizard%20Energion.png"}; // baked by "Save HTML Snapshot"
+  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Rabbit%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Caterpillar%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","2:3":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Deer%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","3:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Lizard%20-%20%20Insect%20Energion.png","3:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Snake%20-%20Rabbit%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png","4:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Hawk%20-%20Lizard%20Energion.png"}; // baked by "Save HTML Snapshot"
   var profileImageUrls = {};
   Object.keys(PROFILE_IMAGE_DEFAULTS).forEach(function(k){ profileImageUrls[k] = PROFILE_IMAGE_DEFAULTS[k]; });
   try {
