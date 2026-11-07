@@ -865,3 +865,10 @@
   .fc-tag.dim, .fc-pct.dim, .fc-sun-tag.dim{ opacity:.28; }
 
   @media (max-width:640px){ .view-btn{ padding:0 10px; font-size:12px; gap:4px; } .view-btn svg{ display:none; } }
+
+  /* food web on phones: name-only tags, one TL marker per row */
+  .fw-row{ position:absolute; left:0; top:0; display:none; font-size:11px; font-weight:700; letter-spacing:.08em; }
+  #foodWebView.fw-tall .fw-row{ display:block; }
+  #foodWebView.fw-tall .fw-tag .fc-tl{ display:none; }
+  #foodWebView.fw-tall .fw-tag{ padding:3px 6px; border-radius:7px; }
+  #foodWebView.fw-tall .fw-tag .fc-name{ font-size:10.5px; font-weight:600; letter-spacing:-.01em; }

@@ -45,8 +45,8 @@
   var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller
   var LAYOUTS = { wide:{ sx:1, row:3.0, halfW:10.8, halfH:6.1, cy:4.7, sun:[-8.6, 0.55, -0.4] },
-                  tall:{ sx:0.56, row:3.6, halfW:6.4, halfH:7.4, cy:5.6, sun:[-5.2, -1.0, 0.6] } };
-  var layout = LAYOUTS.wide, layoutName = "", flow, glowTex, sunMesh, sunHalo;
+                  tall:{ sx:0.6, row:3.6, halfW:6.4, halfH:7.4, cy:5.6, sun:[-5.2, -1.0, 0.6] } };
+  var layout = LAYOUTS.wide, layoutName = "", flow, glowTex, sunMesh, sunHalo, rowTags = [];
   var byId = {}; NODES.forEach(function(n){ byId[n.id] = n; n.bx = n.x; });
 
   var ready = false, building = false, active = false, raf = 0, inited = false;
@@ -78,6 +78,9 @@
       var el = document.createElement("button"); el.type = "button"; el.className = "fc-tag fw-tag"; el.style.setProperty("--tl", hex(TL_COLOR[n.tl]));
       el.innerHTML = '<span class="fc-tl">TL' + n.tl + '</span><span class="fc-name">' + n.name + '</span>';
       el.addEventListener("click", function(){ select(n); }); labelsHost.appendChild(el); n.tag = el;
+    });
+    rowTags = [1, 2, 3, 4].map(function(tl){   // on phones each row shows its level once, at the side
+      var r = document.createElement("div"); r.className = "fw-row"; r.style.color = hex(TL_COLOR[tl]); r.textContent = "TL" + tl; labelsHost.appendChild(r); return r;
     });
     document.getElementById("fwResetBtn").addEventListener("click", function(){ yaw = 0; pitch = 0.14; zoom = 1; });
     showIntro();
@@ -127,12 +130,13 @@
     });
     // the Sun feeds every producer; it sits level with the producer row so its arrows stay below the TL2 labels
     glowTex = glow;
-    sunMesh = new THREE.Mesh(new THREE.SphereGeometry(0.6, 28, 16), new THREE.MeshBasicMaterial({ color:0xffd479 })); world.add(sunMesh);
+    sunMesh = new THREE.Group(); world.add(sunMesh);   // the food chain's Sun model goes in here once loaded
+    sunMesh.add(new THREE.Mesh(new THREE.SphereGeometry(0.6, 28, 16), new THREE.MeshBasicMaterial({ color:0xffd479 })));
     sunHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:0xffb84d, transparent:true, opacity:0.5, depthWrite:false, blending:THREE.AdditiveBlending })); sunHalo.scale.set(3.2, 3.2, 1); world.add(sunHalo);
     flow = new THREE.Group(); world.add(flow);
   }
   function applyLayout(name){   // place the rows for this screen shape and rebuild every arrow
-    layout = LAYOUTS[name]; layoutName = name;
+    layout = LAYOUTS[name]; layoutName = name; view.classList.toggle("fw-tall", name === "tall");
     NODES.forEach(function(n){ n.x = n.bx * layout.sx; n.y = (n.tl - 1) * layout.row; n.group.position.set(n.x, n.y, 0);
       n.anchor = new THREE.Vector3(n.x, n.y + (n.fly ? n.fly + 0.2 : 0.5), 0); });
     sunPos = new THREE.Vector3().fromArray(layout.sun); sunMesh.position.copy(sunPos); sunHalo.position.copy(sunPos);
@@ -143,24 +147,23 @@
     // Links run on a plane behind the plinths: each leaves the top of its food's plinth going up and bends
     // smoothly into the feeder's plinth from below, so no arrow crosses an animal or a label.
     LINKS.forEach(function(l){
-      var a = byId[l[0]], b = byId[l[1]], p0 = new THREE.Vector3(a.x, a.y + 0.25, Z_BACK), p3 = new THREE.Vector3(b.x, b.y + 0.05, Z_BACK), p1, p2;
-      if (a.tl === b.tl){ p1 = p0.clone().add(new THREE.Vector3(0, 1.9, 0)); p2 = p3.clone().add(new THREE.Vector3(0, 1.9, 0)); }   // same row (frog -> snake): an arch
-      else { var dy = p3.y - p0.y; p1 = p0.clone().add(new THREE.Vector3(0, dy * 0.55, 0)); p2 = p3.clone().add(new THREE.Vector3(0, -dy * 0.45, 0)); }
-      addArrow(new THREE.CubicBezierCurve3(p0, p1, p2, p3), { from:a, to:b }, glow, 0.018);
+      var a = byId[l[0]], b = byId[l[1]], lift = a.tl === b.tl ? 1.05 : 0;   // same-row link (frog -> snake) runs just above the plinths
+      var p0 = new THREE.Vector3(a.x, a.y + 0.3 + lift, Z_BACK), p1 = new THREE.Vector3(b.x, b.y + (lift ? 0.3 + lift : 0.05), Z_BACK);
+      var d = p1.clone().sub(p0).normalize(); p0.addScaledVector(d, 0.35); p1.addScaledVector(d, -0.35);
+      addArrow(new THREE.LineCurve3(p0, p1), { from:a, to:b }, glow, 0.016);
     });
   }
   var Z_BACK = -1.25;
   function ORGS_SUN_LINKS(glow){
     NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams, also behind the plinths
-      var p0 = sunPos.clone().add(new THREE.Vector3(0.6, 0, 0)), p3 = new THREE.Vector3(n.x - 0.3, n.y + 0.35, Z_BACK);
-      var p1 = p0.clone().add(new THREE.Vector3(1.6, 0.15, 0)), p2 = p3.clone().add(new THREE.Vector3(-1.4, 0, 0));
-      addArrow(new THREE.CubicBezierCurve3(p0, p1, p2, p3), { from:null, to:n, sun:true }, glow, 0.012);
+      var p1 = new THREE.Vector3(n.x - 0.35, n.y + 0.4, Z_BACK), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
+      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.011);
     });
   }
   function addArrow(curve, meta, glow, r){
     var nPulse = meta.sun ? 1 : 2;
     var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0.3, depthWrite:false });
-    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, r, 6, false), mat); flow.add(tube);
+    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 2, r, 6, false), mat); flow.add(tube);
     // a small chevron halfway along shows the direction (food -> feeder) without crowding either end
     var tan = curve.getTangent(0.5), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
     head.position.copy(curve.getPoint(0.5)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
@@ -251,6 +254,7 @@
     world.rotation.y += (yaw - world.rotation.y) * 0.12;
     var d = fitDist * zoom, cy = layout.cy; camera.position.set(0, cy + Math.sin(pitch) * d, Math.cos(pitch) * d); camera.lookAt(0, cy, 0);
     mixers.forEach(function(m){ m.update(dt); });
+    sunMesh.rotation.y += dt * 0.19;
     // at rest every link is a faint line; tapping an organism (or "Show the food chain") brightens its links and sends energy along them
     var focus = !!selected || showChain;
     links.forEach(function(L){ var on = linkLit(L.meta), target = !focus ? 0.3 : on ? 0.95 : 0.05; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow; L.flowing = focus && on; });
@@ -264,6 +268,10 @@
     var w = renderer.domElement.clientWidth, h = renderer.domElement.clientHeight;
     NODES.forEach(function(n){
       tmp.set(n.x, n.y - 0.3, 1.05); world.localToWorld(tmp); tmp.project(camera);
+      if (n === NODES[0]) rowTags.forEach(function(r, i){   // row markers sit right of each row (phones only; hidden by CSS otherwise)
+        var v = new THREE.Vector3(6.3 * layout.sx + 1.55, i * layout.row + 0.35, 0); world.localToWorld(v); v.project(camera);
+        r.style.transform = "translate(" + ((v.x + 1) / 2 * w).toFixed(1) + "px," + ((1 - v.y) / 2 * h).toFixed(1) + "px) translate(-50%,-50%)";
+      });
       n.tag.style.transform = "translate(" + ((tmp.x + 1) / 2 * w).toFixed(1) + "px," + ((1 - tmp.y) / 2 * h + 4).toFixed(1) + "px) translate(-50%,0)";
     });
   }
@@ -273,6 +281,14 @@
     buildDom(); statusEl.textContent = "Loading 3D organisms…"; statusEl.hidden = false;
     return Promise.all([ THREE.GLTFLoader ? null : addScript(JS + "loaders/GLTFLoader.js"), window.MeshoptDecoder ? null : addScript(JS + "libs/meshopt_decoder.js") ]).then(function(){
       buildScene(); resize(); bindInput();
+      loadGLB("FoodChain/sun.glb").then(function(g){
+        var obj = g.scene; obj.updateMatrixWorld(true);
+        var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+        var pv = new THREE.Group(); obj.position.set(-c.x, -c.y, -c.z); pv.add(obj); pv.scale.setScalar(1.4 / Math.max(size.x, size.y, size.z));
+        obj.traverse(function(o){ if (o.isMesh) o.frustumCulled = false; });
+        while (sunMesh.children.length) sunMesh.remove(sunMesh.children[0]); sunMesh.add(pv);
+        if (g.animations && g.animations.length){ var mx = new THREE.AnimationMixer(obj); mx.clipAction(g.animations[0]).play(); mixers.push(mx); }
+      }).catch(function(e){ console.warn("Sun model unavailable, keeping the sphere:", e); });
       return Promise.all(NODES.map(function(n){ return loadGLB(n.file).then(function(g){ placeModel(n, g); }).catch(function(e){ console.warn("Food web model unavailable:", n.file, e); n.missing = true; }); }));
     }).then(function(){
       var miss = NODES.filter(function(n){ return n.missing; }).map(function(n){ return n.name; });
