@@ -140,30 +140,31 @@
     pulses.length = 0; links.length = 0;
     var glow = glowTex;
     ORGS_SUN_LINKS(glow);
+    // Links run on a plane behind the plinths: each leaves the top of its food's plinth going up and bends
+    // smoothly into the feeder's plinth from below, so no arrow crosses an animal or a label.
     LINKS.forEach(function(l){
-      var a = byId[l[0]], b = byId[l[1]];
-      var from = a.anchor.clone(), to = b.anchor.clone();
-      var dir = to.clone().sub(from).normalize();
-      from.addScaledVector(dir, 0.55); to.addScaledVector(dir, -0.75);
-      var mid = from.clone().add(to).multiplyScalar(0.5); mid.z += 0.9; mid.y += (a.tl === b.tl) ? 0.9 : 0.15;   // same-row links (frog -> snake) arc over
-      addArrow(from, mid, to, { from:a, to:b }, glow, 0.03, 2);
+      var a = byId[l[0]], b = byId[l[1]], p0 = new THREE.Vector3(a.x, a.y + 0.25, Z_BACK), p3 = new THREE.Vector3(b.x, b.y + 0.05, Z_BACK), p1, p2;
+      if (a.tl === b.tl){ p1 = p0.clone().add(new THREE.Vector3(0, 1.9, 0)); p2 = p3.clone().add(new THREE.Vector3(0, 1.9, 0)); }   // same row (frog -> snake): an arch
+      else { var dy = p3.y - p0.y; p1 = p0.clone().add(new THREE.Vector3(0, dy * 0.55, 0)); p2 = p3.clone().add(new THREE.Vector3(0, -dy * 0.45, 0)); }
+      addArrow(new THREE.CubicBezierCurve3(p0, p1, p2, p3), { from:a, to:b }, glow, 0.018);
     });
   }
+  var Z_BACK = -1.25;
   function ORGS_SUN_LINKS(glow){
-    NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){
-      var to = n.anchor.clone().add(new THREE.Vector3(-0.55, 0.1, 0.75)), from = sunPos.clone();
-      from.addScaledVector(to.clone().sub(from).normalize(), 0.7);
-      var mid = from.clone().add(to).multiplyScalar(0.5); mid.y -= 0.25; mid.z += 1.6;   // swing low and in front of the plinths
-      addArrow(from, mid, to, { from:null, to:n, sun:true }, glow, 0.022, 1);
+    NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams, also behind the plinths
+      var p0 = sunPos.clone().add(new THREE.Vector3(0.6, 0, 0)), p3 = new THREE.Vector3(n.x - 0.3, n.y + 0.35, Z_BACK);
+      var p1 = p0.clone().add(new THREE.Vector3(1.6, 0.15, 0)), p2 = p3.clone().add(new THREE.Vector3(-1.4, 0, 0));
+      addArrow(new THREE.CubicBezierCurve3(p0, p1, p2, p3), { from:null, to:n, sun:true }, glow, 0.012);
     });
   }
-  function addArrow(a, mid, b, meta, glow, r, nPulse){
-    var curve = new THREE.QuadraticBezierCurve3(a, mid, b);
-    var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0.8 });
-    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, r, 8, false), mat); flow.add(tube);
-    var tan = curve.getTangent(1), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.4, r * 9, 12), mat);
-    head.position.copy(b).addScaledVector(tan, -r * 4.5); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
-    var rec = { meta:meta, mat:mat, glow:1 };
+  function addArrow(curve, meta, glow, r){
+    var nPulse = meta.sun ? 1 : 2;
+    var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0.3, depthWrite:false });
+    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, r, 6, false), mat); flow.add(tube);
+    // a small chevron halfway along shows the direction (food -> feeder) without crowding either end
+    var tan = curve.getTangent(0.5), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
+    head.position.copy(curve.getPoint(0.5)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
+    var rec = { meta:meta, mat:mat, glow:0.3 };
     for (var k = 0; k < nPulse; k++){
       var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:mat.color, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
       sp.scale.set(r * 11, r * 11, 1); flow.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, rec:rec });
@@ -250,8 +251,10 @@
     world.rotation.y += (yaw - world.rotation.y) * 0.12;
     var d = fitDist * zoom, cy = layout.cy; camera.position.set(0, cy + Math.sin(pitch) * d, Math.cos(pitch) * d); camera.lookAt(0, cy, 0);
     mixers.forEach(function(m){ m.update(dt); });
-    links.forEach(function(L){ var on = linkLit(L.meta); L.glow += ((on ? 1 : 0.08) - L.glow) * 0.12; L.mat.opacity = 0.8 * L.glow; });
-    pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = Math.sin(p.t * Math.PI) * (p.rec.glow > 0.5 ? p.rec.glow : 0); });
+    // at rest every link is a faint line; tapping an organism (or "Show the food chain") brightens its links and sends energy along them
+    var focus = !!selected || showChain;
+    links.forEach(function(L){ var on = linkLit(L.meta), target = !focus ? 0.3 : on ? 0.95 : 0.05; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow; L.flowing = focus && on; });
+    pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = p.rec.flowing ? Math.sin(p.t * Math.PI) * p.rec.glow : 0; });
     NODES.forEach(function(n){
       var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12; n.ring.material.opacity = n.lit; n.tag.classList.toggle("dim", !on);
       if (n.pivot && n.fly) n.pivot.position.y = n.fly + Math.sin(t * 1.3 + n.x) * 0.08;
