@@ -1442,9 +1442,52 @@
 
   var sunData = { currentGlow: 0, targetGlow: 0 };
 
+  // ---------------------------------------------------------
+  // Sun model ("Sun" by SebastianSosnowski, CC BY 4.0 — same file as the food-chain view).
+  // It replaces the plain sphere once loaded; the sphere stays as the fallback, and the
+  // invisible sunHitMesh stays the tap target. Off = dim, on = full glow (driven by updateSun).
+  // ---------------------------------------------------------
+  var sunModel = null, sunModelMats = [];
+  (function loadSunModel(){
+    var file = "Solus-Assets/FoodChain/sun.glb";
+    var fallback = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/" + file;
+    var loaderReady = THREE.GLTFLoader ? Promise.resolve() : new Promise(function(res, rej){
+      var tag = document.createElement("script");
+      tag.src = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
+      tag.onload = res; tag.onerror = rej; document.head.appendChild(tag);
+    });
+    loaderReady.then(function(){
+      var loader = new THREE.GLTFLoader();
+      function get(url){ return new Promise(function(res, rej){ loader.load(url, res, undefined, rej); }); }
+      return get(file).catch(function(){ return get(fallback); });
+    }).then(function(gltf){
+      var obj = gltf.scene; obj.updateMatrixWorld(true);
+      var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+      var pivot = new THREE.Group(); obj.position.set(-c.x, -c.y, -c.z); pivot.add(obj);
+      pivot.scale.setScalar(2.3 / Math.max(size.x, size.y, size.z));   // same diameter as the old sphere (r = 1.15)
+      obj.traverse(function(n){
+        if (!n.isMesh) return;
+        n.raycast = function(){};   // taps go to sunHitMesh only
+        (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
+          m.userData.baseEmissive = (m.emissiveIntensity != null) ? m.emissiveIntensity : 1; sunModelMats.push(m);
+        });
+      });
+      sunGroup.add(pivot); sunModel = pivot; sunCore.visible = false;
+    }).catch(function(e){ console.warn("Sun model unavailable, keeping the sphere:", e); });
+  })();
+
   function updateSun(elapsedTime){
     sunData.currentGlow += (sunData.targetGlow - sunData.currentGlow) * 0.06;
     var g = sunData.currentGlow;
+
+    if (sunModel){   // slow turn; dim while solar input is off, full glow once switched on
+      sunModel.rotation.y = elapsedTime * 0.19;
+      var dim = 0.3 + 1.1 * g;   // a little above 1 when on: the pyramid renders without sRGB output, which darkens textures
+      for (var si = 0; si < sunModelMats.length; si++){
+        sunModelMats[si].color.setScalar(dim);
+        sunModelMats[si].emissiveIntensity = sunModelMats[si].userData.baseEmissive * (0.18 + 0.82 * g);
+      }
+    }
 
     sunCoreMat.color.copy(SUN_INACTIVE_COLOR).lerp(SUN_ACTIVE_COLOR, g);
     sunCoreMat.emissive.copy(SUN_INACTIVE_EMISSIVE).lerp(SUN_ACTIVE_EMISSIVE, g);
