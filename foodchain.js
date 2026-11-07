@@ -20,16 +20,16 @@
   // size = largest dimension in scene units (not to scale: a grasshopper would vanish next to an eagle)
   // yaw  = turn applied after loading so each animal faces its food (towards the left) and a little towards the viewer
   var ORGS = [
-    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:10000, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
+    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:100, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
       eatenBy:"Grasshopper" },
-    { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:1000, file:"grasshopper.glb", size:1.7, yaw:0.55,
+    { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:10, file:"grasshopper.glb", size:1.7, yaw:0.55,
       food:"Grass (a producer).", eatenBy:"Frog" },
-    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:100, file:"frog.glb", size:1.45, yaw:-1.0,
+    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Grasshoppers and other insects.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:10, file:"../Pyramid/snake.glb", size:2.0, yaw:-1.0, clip:[3, 9],
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"../Pyramid/snake.glb", size:2.0, yaw:-1.0, clip:[3, 9],
       food:"Frogs.", eatenBy:"Eagle" },
-    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:1, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
+    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }
   ];
   // Landscape (smart panel, laptop): a row climbing one low step per level, left to right.
@@ -52,7 +52,8 @@
     var r = g.createRadialGradient(32,32,0,32,32,32); r.addColorStop(0,"rgba(255,255,255,1)"); r.addColorStop(0.35,"rgba(255,255,255,0.55)"); r.addColorStop(1,"rgba(255,255,255,0)");
     g.fillStyle = r; g.fillRect(0,0,64,64); return new THREE.CanvasTexture(c);
   }
-  function fmt(n){ return n.toLocaleString("en-IN"); }
+  function fmt(n){ return n.toLocaleString("en-IN", { maximumFractionDigits:2 }); }
+  var UNIT = " rel.&nbsp;J";   // same relative scale as the pyramid's energy panel (TL1 = 100)
   function hex(c){ return "#" + ("000000" + c.toString(16)).slice(-6); }
   function loadScript(url){
     return new Promise(function(res, rej){ var s = document.createElement("script"); s.src = url; s.onload = res; s.onerror = function(){ rej(new Error("Could not load " + url)); }; document.head.appendChild(s); });
@@ -74,7 +75,7 @@
       var el = document.createElement("button");
       el.type = "button"; el.className = "fc-tag"; el.style.setProperty("--tl", hex(o.color));
       el.innerHTML = '<span class="fc-tl">TL' + o.tl + '</span><span class="fc-name">' + o.name + '</span>' +
-                     '<span class="fc-role">' + o.role.split(" · ")[0] + '</span><span class="fc-energy">' + fmt(o.energy) + ' J</span>';
+                     '<span class="fc-role">' + o.role.split(" · ")[0] + '</span><span class="fc-energy">' + fmt(o.energy) + UNIT + '</span>';
       el.addEventListener("click", function(){ select(o); });
       labelsHost.appendChild(el); o.tag = el;
     });
@@ -98,8 +99,8 @@
     infoEl.innerHTML = '<div class="fc-info-title"><span class="fc-chip" style="--tl:' + hex(o.color) + '">TL' + o.tl + '</span>' + o.name + '</div>' +
       '<div class="fc-info-role">' + o.role + '</div>' +
       '<dl><dt>Food</dt><dd>' + o.food + '</dd><dt>Eaten by</dt><dd>' + o.eatenBy + '</dd>' +
-      '<dt>Energy</dt><dd>' + (prev ? fmt(o.energy) + ' J: about 10% of the ' + fmt(prev.energy) + ' J in the ' + prev.name.toLowerCase() + ' it eats.'
-                                     : fmt(o.energy) + ' J stored in plant tissue, available to herbivores.') + '</dd></dl>' +
+      '<dt>Energy</dt><dd>' + (prev ? fmt(o.energy) + UNIT + ': about 10% of the ' + fmt(prev.energy) + UNIT + ' in the ' + prev.name.toLowerCase() + ' level below.'
+                                     : fmt(o.energy) + UNIT + ' fixed by photosynthesis (GPP). About half is used in the grass’s own respiration; the rest (NPP) is stored as plant biomass, of which about 10 reaches herbivores.') + '</dd></dl>' +
       '<button type="button" class="fc-back" id="fcBackBtn">Back to overview</button>';
     document.getElementById("fcBackBtn").addEventListener("click", function(){ selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); });
   }
