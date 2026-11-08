@@ -1,8 +1,9 @@
 /* =========================================================================
    Helios Photonix — Food web view
    The pyramid's organisms linked by who eats whom. Arrows point from the
-   food to the feeder (the direction energy flows). Tap an organism to see
-   only its links; "Show the food chain" lights the chain inside the web.
+   food to the feeder (the direction energy flows). They stay hidden until an
+   organism is tapped (its links only) or "Show the food chain" is pressed.
+   Each organism stands on a chunk of land.
    Same approach as foodchain.js: its own scene, renderer and loop, which
    run only while this view is shown. Models are shared with the other views.
    ========================================================================= */
@@ -38,7 +39,7 @@
       note:"The largest living lizard and an apex predator: it hunts deer, and nothing preys on an adult. It lives wild only on a few Indonesian islands." },
     { id:"hawk",        name:"Hawk",        tl:4, x: 4.2, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95,
       note:"A bird of prey that hunts small mammals such as mice." },
-    { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:0.95 }
+    { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:1.35 }   // high enough that the lowered wings clear the rock
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
@@ -91,8 +92,8 @@
   }
   function showIntro(){
     infoEl.innerHTML = '<div class="fc-info-title">A food web</div>' +
-      '<p>Many food chains linked together. Most animals eat more than one kind of food, and many are eaten by more than one predator. Arrows point from the food to the feeder.</p>' +
-      '<p class="fc-dim">Tap an organism to see only its links.</p>' +
+      '<p>Many food chains linked together. Most animals eat more than one kind of food, and many are eaten by more than one predator.</p>' +
+      '<p class="fc-dim">Tap an organism to see its arrows: from what it eats, to what eats it.</p>' +
       '<button type="button" class="fc-back fc-start" id="fwChainBtn">' + (showChain ? 'Show the whole web' : 'Show the food chain inside the web') + '</button>';
     document.getElementById("fwChainBtn").addEventListener("click", function(){ showChain = !showChain; selected = null; showIntro(); });
     if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → snail → frog → snake → eagle: the chain from the Food chain view is one path through this web.</p>');
@@ -124,11 +125,13 @@
     var rim = new THREE.DirectionalLight(0x9fc4ff, 0.5); rim.position.set(8, 6, -10); scene.add(rim);
     var glow = glowTexture();
 
-    // a plinth per organism, rimmed in its trophic-level colour (the pyramid's colours)
-    NODES.forEach(function(n){
+    // a chunk of land per organism (plain disc until the model arrives), glowing beneath in its trophic-level colour
+    NODES.forEach(function(n, i){
       var g = new THREE.Group(); world.add(g); n.group = g;
-      var soil = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 1.05, 0.28, 40), new THREE.MeshLambertMaterial({ color:0x2a2119 })); soil.position.y = -0.14; g.add(soil);
-      var ring = new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.035, 8, 56), new THREE.MeshBasicMaterial({ color:TL_COLOR[n.tl], transparent:true })); ring.rotation.x = Math.PI / 2; g.add(ring); n.ring = ring;
+      n.land = new THREE.Group(); n.land.rotation.y = i * 1.3; g.add(n.land);   // each chunk turned differently so they don't look stamped
+      var soil = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 1.05, 0.28, 40), new THREE.MeshLambertMaterial({ color:0x3a2a20 })); soil.position.y = -0.14; n.land.add(soil);
+      n.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:TL_COLOR[n.tl], transparent:true, opacity:0.3, depthWrite:false, blending:THREE.AdditiveBlending }));
+      n.glow.scale.set(3.0, 1.0, 1); n.glow.position.y = -0.38; g.add(n.glow);
       n.holder = new THREE.Group(); g.add(n.holder);
       n.lit = 1;
     });
@@ -171,13 +174,14 @@
   }
   function addArrow(curve, meta, glow, r){
     var nPulse = meta.sun ? 1 : 2;
-    var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0.3, depthWrite:false });
+    var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0, depthWrite:false });
     var segs = curve.curves ? curve.curves.length * 2 : 2;
     var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, segs, r, 8, false), mat); flow.add(tube);
     // a small chevron shows the direction (food -> feeder): halfway along, or on the last leg of a bracket
     var at = curve.curves ? 0.86 : 0.5, tan = curve.getTangent(at), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
     head.position.copy(curve.getPoint(at)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
-    var rec = { meta:meta, mat:mat, glow:0.3 };
+    tube.visible = head.visible = false;
+    var rec = { meta:meta, mat:mat, glow:0, meshes:[tube, head] };
     for (var k = 0; k < nPulse; k++){
       var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:mat.color, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
       sp.scale.set(r * 11, r * 11, 1); flow.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, rec:rec });
@@ -285,14 +289,15 @@
     var d = fitDist * zoom, cy = layout.cy; camera.position.set(0, cy + Math.sin(pitch) * d, Math.cos(pitch) * d); camera.lookAt(0, cy, 0);
     mixers.forEach(function(m){ m.update(dt); });
     sunMesh.rotation.y += dt * 0.19;
-    // at rest every link is a faint line; tapping an organism (or "Show the food chain") brightens its links and sends energy along them
+    // at rest no arrows show; tapping an organism (or "Show the food chain") brings up only its links and sends energy along them
     var focus = !!selected || showChain;
-    links.forEach(function(L){ var on = linkLit(L.meta), target = !focus ? 0.3 : on ? 0.95 : 0.05; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow; L.flowing = focus && on; });
+    links.forEach(function(L){ var on = focus && linkLit(L.meta), target = on ? 0.95 : 0; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow;
+      L.meshes.forEach(function(m){ m.visible = L.glow > 0.01; }); L.flowing = on; });
     pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = p.rec.flowing ? Math.sin(p.t * Math.PI) * p.rec.glow : 0; });
     NODES.forEach(function(n){
-      var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12; n.ring.material.opacity = n.lit; n.tag.classList.toggle("dim", !on);
+      var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12; n.tag.classList.toggle("dim", !on);
+      n.glow.material.opacity = n === selected ? 0.55 + Math.sin(t * 4) * 0.1 : 0.3 * n.lit;   // the tapped one's glow pulses
       if (n.pivot && n.fly) n.pivot.position.y = n.fly + Math.sin(t * 1.3 + n.x) * 0.08;
-      n.ring.scale.setScalar(n === selected ? 1.07 + Math.sin(t * 4) * 0.02 : 1);
     });
     renderer.render(scene, camera);
     var w = renderer.domElement.clientWidth, h = renderer.domElement.clientHeight;
@@ -319,6 +324,13 @@
         while (sunMesh.children.length) sunMesh.remove(sunMesh.children[0]); sunMesh.add(pv);
         if (g.animations && g.animations.length){ var mx = new THREE.AnimationMixer(obj); mx.clipAction(g.animations[0]).play(); mixers.push(mx); }
       }).catch(function(e){ console.warn("Sun model unavailable, keeping the sphere:", e); });
+      loadGLB("Platform/land.glb").then(function(g){   // "Chunk Of Land 1", baked with the middle of its flat top at the origin and width 1
+        g.scene.traverse(function(o){ if (o.isMesh){ o.frustumCulled = false; if (o.material.map) o.material.map.anisotropy = 4; } });
+        NODES.forEach(function(n){
+          while (n.land.children.length){ var c = n.land.children.pop(); if (c.geometry) c.geometry.dispose(); }
+          var chunk = g.scene.clone(); chunk.scale.setScalar(2.15); n.land.add(chunk);   // clones share geometry and textures
+        });
+      }).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); });
       return Promise.all(NODES.map(function(n){ return loadGLB(n.file).then(function(g){ placeModel(n, g); }).catch(function(e){ console.warn("Food web model unavailable:", n.file, e); n.missing = true; }); }));
     }).then(function(){
       var miss = NODES.filter(function(n){ return n.missing; }).map(function(n){ return n.name; });

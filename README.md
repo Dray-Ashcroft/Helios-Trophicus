@@ -14,9 +14,9 @@
 
 **🔺 Energy Pyramid**: four trophic levels with 3D organisms. Tap the Sun for a seven-step walkthrough of energy and matter flow: PAR, GPP and NPP, the 10% transfer, heat loss, decomposition and nutrient return. Graph energy, heat or biomass across levels, and simulate mortality.
 
-**🔗 Food Chain**: Grass → Snail → Frog → Snake → Eagle. Energy falls 100 → 10 → 1 → 0.1 → 0.01 rel. J, with heat lost at every link. Step through it one link at a time.
+**🔗 Food Chain**: Grass → Snail → Frog → Snake → Eagle. Energy falls 100 → 10 → 1 → 0.1 → 0.01 rel. J, with heat lost at every link. Tap an organism to see its arrows, or step through the chain one link at a time.
 
-**🕸️ Food Web**: 13 organisms, 14 feeding links. Tap an organism to see what it eats and what eats it, or highlight the food chain inside the web.
+**🕸️ Food Web**: 13 organisms, 14 feeding links. Arrows stay hidden until you tap an organism: then only its links appear. Or highlight the food chain inside the web.
 
 ---
 
@@ -39,6 +39,7 @@ Repository on GitHub & Codeberg
 
 | Organism | Model | Creator | Licence |
 |:--|:--|:--|:--|
+| 🪨 Platforms (food chain, food web) | [Chunk Of Land 1](https://skfb.ly/6uCLu) | Glen Johnson | CC BY 4.0 |
 | ☀️ Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |
 | 🌾 Grass (pyramid, food chain) | [Grass](https://sketchfab.com/3d-models/grass-f2f2bddb2728483a9105c5f5114eb15e) | Cosmic_dust | CC BY 4.0 |
 | 🪻 Lupine (pyramid) | [Lupine Plant](https://sketchfab.com/3d-models/lupine-plant-bf30f1110c174d4baedda0ed63778439) | rufusrockwell | CC BY 4.0 |

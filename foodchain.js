@@ -1,7 +1,8 @@
 /* =========================================================================
    Helios Photonix — Food chain view
-   Grass → Snail → Frog → Snake → Eagle, as 3D models on five steps.
+   Grass → Snail → Frog → Snake → Eagle, as 3D models on chunks of land.
    Arrows point from the food to the feeder: the direction energy flows.
+   They stay hidden until an organism is tapped or the walkthrough shows them.
    About 10% of the energy at one level reaches the next; the rest is used in
    respiration (lost as heat) or passes to decomposers in waste and remains.
 
@@ -28,7 +29,7 @@
       food:"Grass and other leaves (a producer), rasped off with its radula, a tongue covered in tiny teeth.", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Snails, insects and other small animals.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"snake.glb", size:4.6, yaw:0.5,
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"snake.glb", size:4.6, yaw:0.5, lift:0.14, dx:0.35,   // lift: coils clear the rocky rim; dx: the long body stays on the rock
       food:"Frogs.", eatenBy:"Eagle" },
     { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }
@@ -119,6 +120,13 @@
   }
   function goStep(n){ step = Math.max(0, Math.min(LAST_STEP, n)); selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); }
   function focusOf(){ var S = STEPS[step]; return (S && S.arc !== undefined) ? S : null; }   // null: everything lit
+  // Arrows stay hidden until asked for: a tapped organism shows the arrow into it and the arrow out of it;
+  // a walkthrough step shows its own arrow; the summary step shows the whole chain.
+  function arcShown(idx){
+    if (selected){ var i = ORGS.indexOf(selected); return idx === i - 1 || idx === i; }
+    if (step === LAST_STEP) return true;
+    var F = focusOf(); return !!F && F.arc === idx;
+  }
 
   function showIntro(){
     if (step > 0){
@@ -129,9 +137,9 @@
       bindStepNav(); return;
     }
     infoEl.innerHTML = '<div class="fc-info-title">Energy flows one way</div>' +
-      '<p>Each arrow points from the food to the animal that eats it. Only about <b>10%</b> of the energy at one level reaches the next (Lindeman’s 10% law).</p>' +
+      '<p>Energy passes from the food to the animal that eats it. Only about <b>10%</b> of the energy at one level reaches the next (Lindeman’s 10% law).</p>' +
       '<p>The other ~90% is used in respiration and lost as <span class="fc-heat">heat</span>, or passes to decomposers in waste and remains. That is why food chains rarely have more than four or five links.</p>' +
-      '<p class="fc-dim">Tap an organism to learn about it.</p>' +
+      '<p class="fc-dim">Tap an organism to see its arrows: one from its food, one to what eats it.</p>' +
       '<button type="button" class="fc-back fc-start" id="fcStartBtn">Walk through it step by step ›</button>';
     bindStepNav();
   }
@@ -172,17 +180,15 @@
     sunHalo.scale.set(4.2, 4.2, 1); world.add(sunHalo);
     flow = new THREE.Group(); world.add(flow);   // arrows and energy pulses, rebuilt when the layout changes
 
-    // Plinths: a soil top with a coloured rim per trophic level
-    ORGS.forEach(function(o){
+    // Platforms: a chunk of land per organism (placeholder disc until the model arrives), with a soft glow
+    // beneath in the trophic level's colour
+    ORGS.forEach(function(o, i){
       var g = new THREE.Group(); g.position.set(o.x, o.y, 0); world.add(g); o.group = g;
-      var soil = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.6, 0.4, 48), new THREE.MeshLambertMaterial({ color:0x2a2119 }));
-      soil.position.y = -0.2; g.add(soil);
-      var top = new THREE.Mesh(new THREE.CircleGeometry(1.45, 48), new THREE.MeshLambertMaterial({ color:0x3a2e22 }));
-      top.rotation.x = -Math.PI/2; top.position.y = 0.002; g.add(top);
-      var ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.045, 8, 64), new THREE.MeshBasicMaterial({ color:o.color }));
-      ring.rotation.x = Math.PI/2; ring.position.y = 0.0; g.add(ring); o.ring = ring;
-      var floor = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:o.color, transparent:true, opacity:0.18, depthWrite:false, blending:THREE.AdditiveBlending }));
-      floor.scale.set(4, 1.4, 1); floor.position.y = -0.35; g.add(floor);
+      o.land = new THREE.Group(); o.land.rotation.y = i * 1.3; g.add(o.land);   // each chunk turned differently so they don't look stamped
+      var soil = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.6, 0.4, 48), new THREE.MeshLambertMaterial({ color:0x3a2a20 }));
+      soil.position.y = -0.2; o.land.add(soil);
+      var floor = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:o.color, transparent:true, opacity:0.3, depthWrite:false, blending:THREE.AdditiveBlending }));
+      floor.scale.set(4.4, 1.5, 1); floor.position.y = -0.55; g.add(floor); o.glow = floor;
       o.holder = new THREE.Group(); g.add(o.holder);
       o.anchor = new THREE.Vector3(o.x, o.y + (o.fly ? o.fly + 0.4 : 0.6), 0);   // where arrows attach
     });
@@ -202,13 +208,14 @@
   function buildArrows(glow){
     var L = layout.lift, world = flow; arcs.length = 0;
     function arc(a, b, lift, radius, nPulse, label, idx){
-      var mat = new THREE.MeshBasicMaterial({ color:ENERGY_COLOR, transparent:true, opacity:0.85 }), rec = { idx:idx, mat:mat, label:label, glow:1 };
+      var mat = new THREE.MeshBasicMaterial({ color:ENERGY_COLOR, transparent:true, opacity:0 }), rec = { idx:idx, mat:mat, label:label, glow:0, meshes:[] };
       var mid = a.clone().add(b).multiplyScalar(0.5); mid.x += L[0] * lift; mid.y += L[1] * lift; mid.z += L[2];
       var curve = new THREE.QuadraticBezierCurve3(a, mid, b);
       var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, radius, 10, false), mat); world.add(tube);
       var end = curve.getPoint(1), tan = curve.getTangent(1);
       var head = new THREE.Mesh(new THREE.ConeGeometry(radius * 3.2, radius * 8, 16), mat);
       head.position.copy(end).addScaledVector(tan, -radius * 4); head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), tan); world.add(head);
+      rec.meshes.push(tube, head); tube.visible = head.visible = false;
       for (var k = 0; k < nPulse; k++){
         var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:ENERGY_COLOR, transparent:true, opacity:0.95, depthWrite:false, blending:THREE.AdditiveBlending }));
         var s = radius * 9; sp.scale.set(s, s, 1); world.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, speed:0.32, arc:rec });
@@ -268,6 +275,7 @@
     } else obj.position.set(-c.x, -box.min.y - (o.sink || 0) * size.y, -c.z);   // centred, standing on the plinth (the grass mat sits a little into it, hiding its cut edge)
     pivot.scale.setScalar(k); pivot.rotation.y = o.yaw; o.k = k;
     if (o.fly) pivot.position.y = o.fly + 0.3;
+    if (o.lift) o.holder.position.y = o.lift; if (o.dx) o.holder.position.x = o.dx;
     o.holder.add(pivot); o.pivot = pivot;
     if (o.tufts){   // the grass: a few tufts spread over the plinth instead of one clump
       o.tufts.forEach(function(t, i){
@@ -282,6 +290,16 @@
       if (o.clip && THREE.AnimationUtils.subclip) clip = THREE.AnimationUtils.subclip(clip, "calm", Math.round(o.clip[0] * 30), Math.round(o.clip[1] * 30), 30);
       var mixer = new THREE.AnimationMixer(obj); var act = mixer.clipAction(clip); act.timeScale = o.clip ? 1 : 0.75; act.play(); mixers.push(mixer);
     }
+  }
+
+  // "Chunk Of Land 1": baked so the middle of its flat top is at the origin and its width is 1
+  var LAND_W = 3.2;
+  function placeLand(gltf){
+    gltf.scene.traverse(function(n){ if (n.isMesh){ n.frustumCulled = false; var m = n.material; if (m.map) m.map.anisotropy = 4; } });
+    ORGS.forEach(function(o){
+      while (o.land.children.length){ var c = o.land.children.pop(); if (c.geometry) c.geometry.dispose(); }
+      var chunk = gltf.scene.clone(); chunk.scale.setScalar(LAND_W); o.land.add(chunk);   // clones share the geometry and textures
+    });
   }
 
   function placeSun(gltf){   // "Sun" model: a glowing core inside a translucent shell, turning slowly
@@ -334,6 +352,7 @@
       var sx = rect.left + (v.x + 1) / 2 * rect.width, sy = rect.top + (1 - v.y) / 2 * rect.height, d = Math.hypot(sx - cx, sy - cy);
       if (d < bestD){ bestD = d; best = o; } });
     if (best && bestD < rect.width * 0.09) select(best);
+    else if (selected){ selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); }   // tap empty space: arrows go away
   }
 
   // ---------------------------------------------------------------- loop
@@ -360,12 +379,13 @@
         if (o.id === "frog") o.pivot.scale.y = cur * (1 + Math.sin(t * 3.1) * 0.015);                       // breathing
         if (o.fly) o.pivot.position.y = o.fly + 0.3 + Math.sin(t * 1.4) * 0.12;
       }
-      o.ring.material.color.setHex(o.color); o.ring.scale.setScalar(on ? 1.06 + Math.sin(t * 4) * 0.02 : 1);
+      o.glow.material.opacity = on ? 0.5 + Math.sin(t * 4) * 0.1 : 0.3;   // the selected one's glow pulses
     });
     var F = focusOf();
     arcs.forEach(function(a){
-      var lit = !F || F.arc === a.idx; a.glow += ((lit ? 1 : 0.12) - a.glow) * 0.12;
-      a.mat.opacity = 0.85 * a.glow; if (a.label) a.label.classList.toggle("dim", !lit);
+      var lit = arcShown(a.idx); a.glow += ((lit ? 1 : 0) - a.glow) * 0.12;
+      a.mat.opacity = 0.85 * a.glow; a.meshes.forEach(function(m){ m.visible = a.glow > 0.01; });
+      if (a.label) a.label.classList.toggle("off", !lit);
     });
     if (ORGS.sunTag) ORGS.sunTag.classList.toggle("dim", !!F && F.arc !== -1);
     ORGS.forEach(function(o, i){ o.tag.classList.toggle("dim", !!F && i !== F.from && i !== F.to); });
@@ -396,6 +416,7 @@
           .catch(function(e){ console.warn("Food chain model unavailable:", o.file, e); o.missing = true; });
       });
       jobs.push(loadGLB("sun.glb").then(placeSun).catch(function(e){ console.warn("Sun model unavailable, keeping the plain sphere:", e); }));
+      jobs.push(loadGLB("../Platform/land.glb").then(placeLand).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); }));
       return Promise.all(jobs);
     }).then(function(){
       var miss = ORGS.filter(function(o){ return o.missing; }).map(function(o){ return o.name; });
