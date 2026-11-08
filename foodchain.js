@@ -38,7 +38,7 @@
   // Portrait (phone): a zig-zag stacked upwards, producer at the bottom, top carnivore at the top.
   var LAYOUTS = {
     wide:{ pos:function(i){ return [(i - 2) * 4.3, i * 0.55]; }, sun:[-12.9, 3.7, -1.2], lift:[0, 1.15, 0.6], halfW:13.8, halfH:5.6, cy:1.9 },
-    tall:{ pos:function(i){ return [(i % 2 ? 1.55 : -1.55), i * 2.3]; }, sun:[-2.9, 2.3, -1.2], lift:[0, 0.35, 1.3], halfW:3.9, halfH:6.9, cy:5.0 }
+    tall:{ pos:function(i){ return [(i % 2 ? 1.7 : -1.7), i * 2.55]; }, sun:[-3.2, 1.25, -1.2], sunTag:[0, 1.1, 0.6], lift:[0, 0.35, 1.3], halfW:4.3, halfH:7.5, cy:5.2 }
   };
   var layout = LAYOUTS.wide, layoutName = "";
   ORGS.forEach(function(o, i){ var p = layout.pos(i); o.x = p[0]; o.y = p[1]; });
@@ -214,38 +214,50 @@
     pulses.length = 0; buildArrows(glowTex);
   }
 
+  // One clean arrow: a thin shaft that ends exactly where a sharp head begins (no overlap, so the head never looks
+  // hollow), small energy dots running along it. Shared by the sunlight arrow and the feeding links.
+  function buildArrow(curve, radius, color, nPulse, rec, glow){
+    var mat = new THREE.MeshBasicMaterial({ color:color, transparent:true, opacity:0 }); rec.mat = mat;
+    var len = curve.getLength(), headLen = Math.max(radius * 6.5, 0.26), headR = Math.max(radius * 2.6, 0.095), uBase = 1 - headLen / len;
+    var shaft = new THREE.Curve(); shaft.getPoint = function(t, out){ var p = curve.getPointAt(t * uBase); return out ? out.copy(p) : p; };
+    var tube = new THREE.Mesh(new THREE.TubeGeometry(shaft, 48, radius, 12, false), mat);
+    var cap = new THREE.Mesh(new THREE.SphereGeometry(radius, 12, 8), mat); cap.position.copy(curve.getPointAt(0));   // rounded tail
+    var base = curve.getPointAt(uBase), tip = curve.getPointAt(1), dir = tip.clone().sub(base).normalize();
+    var head = new THREE.Mesh(new THREE.ConeGeometry(headR, headLen, 24), mat);
+    head.position.copy(base).addScaledVector(dir, headLen / 2); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+    [tube, cap, head].forEach(function(m){ m.visible = false; flow.add(m); rec.meshes.push(m); });
+    for (var k = 0; k < nPulse; k++){   // small crisp dots of energy travelling along the shaft
+      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:0xf4ffd0, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending }));
+      var sz = 0.16 + radius * 2; sp.scale.set(sz, sz, 1); flow.add(sp); pulses.push({ sprite:sp, curve:shaft, t:k / nPulse, speed:0.3, arc:rec });
+    }
+  }
+
   function buildArrows(glow){
-    var L = layout.lift, world = flow; arcs.length = 0;
-    function arc(a, b, lift, radius, nPulse, label, idx){
-      var mat = new THREE.MeshBasicMaterial({ color:ENERGY_COLOR, transparent:true, opacity:0 }), rec = { idx:idx, mat:mat, label:label, glow:0, meshes:[] };
+    var L = layout.lift; arcs.length = 0;
+    function arc(a, b, lift, radius, color, nPulse, label, idx){
+      var rec = { idx:idx, label:label, glow:0, meshes:[] };
       var mid = a.clone().add(b).multiplyScalar(0.5); mid.x += L[0] * lift; mid.y += L[1] * lift; mid.z += L[2];
       var curve = new THREE.QuadraticBezierCurve3(a, mid, b);
-      var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, radius, 10, false), mat); world.add(tube);
-      var end = curve.getPoint(1), tan = curve.getTangent(1);
-      var head = new THREE.Mesh(new THREE.ConeGeometry(radius * 3.2, radius * 8, 16), mat);
-      head.position.copy(end).addScaledVector(tan, -radius * 4); head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), tan); world.add(head);
-      rec.meshes.push(tube, head); tube.visible = head.visible = false;
-      for (var k = 0; k < nPulse; k++){
-        var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:ENERGY_COLOR, transparent:true, opacity:0.95, depthWrite:false, blending:THREE.AdditiveBlending }));
-        var s = radius * 9; sp.scale.set(s, s, 1); world.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, speed:0.32, arc:rec });
-      }
+      buildArrow(curve, radius, color, nPulse, rec, glow);
       arcs.push(rec);
-      if (label) label.pos = curve.getPoint(0.5).add(new THREE.Vector3(0, radius * 6 + 0.25, 0));
+      if (label) label.pos = layoutName === "tall"   // phones: beside the arrow, on the side away from the name labels hanging below the rocks
+        ? curve.getPoint(0.5).add(new THREE.Vector3(-Math.sign(b.x) * 0.85, -0.1, 0))
+        : curve.getPoint(0.5).add(new THREE.Vector3(0, radius + 0.32, 0));
       return curve;
     }
-    // sunlight into the producer (no 10% label: plants capture only a small share of sunlight)
+    // sunlight into the producer, in the Sun's own colour (no 10% label: plants capture only a small share of sunlight)
     var sd = Math.sign(ORGS[0].x - ORGS.sun.x) || 1;
-    var sunEnd = ORGS[0].anchor.clone().add(new THREE.Vector3(-0.35 * sd, 0.65, 0));
-    var sunStart = ORGS.sun.clone().add(new THREE.Vector3(0.75 * sd, -0.35, 0.4));
-    arc(sunStart, sunEnd, 0.45, 0.06, 4, null, -1);
-    ORGS.sunTagPos = ORGS.sun.clone().add(new THREE.Vector3(0, -1.35, 0.6));
-    // one arrow per link; thinner and fainter as less energy is passed on
+    var sunEnd = new THREE.Vector3(ORGS[0].x - 1.05 * sd, ORGS[0].y + 0.35, 0.35);
+    var sunStart = ORGS.sun.clone().add(new THREE.Vector3(0.8 * sd, -0.3, 0.4));
+    arc(sunStart, sunEnd, 0.35, 0.035, 0xffd479, 2, null, -1);
+    ORGS.sunTagPos = ORGS.sun.clone().add(new THREE.Vector3().fromArray(layout.sunTag || [0, -1.35, 0.6]));   // phones: tag above the Sun, clear of the frog's label
+    // one arrow per link, from the top of the food's rock, over the gap, down onto the feeder's rock;
+    // a little thinner at each link as less energy is passed on
     for (var i = 0; i < ORGS.length - 1; i++){
-      var dir = Math.sign(ORGS[i+1].x - ORGS[i].x) || 1;
-      var a = ORGS[i].anchor.clone().add(new THREE.Vector3(0.75 * dir, 0.15, 0.2));
-      var b = ORGS[i+1].anchor.clone().add(new THREE.Vector3(-0.85 * dir, 0.15, 0.2));
-      var r = 0.085 - i * 0.017;
-      arc(a, b, 1, r, 5 - i, arrows[i].label, i);
+      var o = ORGS[i], f = ORGS[i+1], dir = Math.sign(f.x - o.x) || 1;
+      var a = new THREE.Vector3(o.x + 0.95 * dir, o.y + 0.3, 0.35);
+      var b = new THREE.Vector3(f.x - 1.05 * dir, f.y + 0.14, 0.35);
+      arc(a, b, 1, 0.05 - i * 0.007, ENERGY_COLOR, 3, arrows[i].label, i);
     }
   }
 
@@ -393,7 +405,7 @@
     var F = focusOf();
     arcs.forEach(function(a){
       var lit = arcShown(a.idx); a.glow += ((lit ? 1 : 0) - a.glow) * 0.12;
-      a.mat.opacity = 0.85 * a.glow; a.meshes.forEach(function(m){ m.visible = a.glow > 0.01; });
+      a.mat.opacity = 0.92 * a.glow; a.meshes.forEach(function(m){ m.visible = a.glow > 0.01; });
       if (a.label) a.label.classList.toggle("off", !lit);
     });
     if (ORGS.sunTag) ORGS.sunTag.classList.toggle("dim", !!F && F.arc !== -1);

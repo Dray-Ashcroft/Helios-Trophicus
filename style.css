@@ -817,7 +817,7 @@
   .fc-role{ font-size:11px; color:var(--text-dim); }
   .fc-energy{ margin-top:2px; font-size:12.5px; font-weight:600; color:#c6ea5a; font-variant-numeric:tabular-nums; }
   .fc-pct, .fc-sun-tag{ position:absolute; left:0; top:0; padding:2px 8px; border-radius:999px; font-size:11.5px; font-weight:700; }
-  .fc-pct{ color:#11160a; background:#c6ea5a; }
+  .fc-pct{ color:#d8ef8f; background:rgba(10,14,22,0.78); border:1px solid rgba(198,234,90,0.45); font-size:11px; font-weight:600; padding:1px 7px; }   /* quiet tag: dark pill, green text */
   .fc-sun-tag{ color:#2a1d05; background:#ffd479; }
   .fc-status{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); padding:10px 16px; border-radius:10px; background:var(--panel-bg); border:1px solid var(--panel-border); color:var(--text-dim); font-size:13px; }
   .fc-panel{ position:absolute; left:max(16px, env(safe-area-inset-left)); top:max(16px, env(safe-area-inset-top)); width:min(340px, calc(100vw - 32px)); padding:14px 16px;

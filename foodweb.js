@@ -161,40 +161,61 @@
     pulses.length = 0; links.length = 0;
     var glow = glowTex;
     ORGS_SUN_LINKS(glow);
-    // Links run on a plane behind the plinths: each leaves the top of its food's plinth going up and bends
-    // smoothly into the feeder's plinth from below, so no arrow crosses an animal or a label.
-    // One unbroken straight line per link: it rises from the centre of the food's plinth (from behind the animal)
-    // and ends at the front of the feeder's plinth, just above its label, so nothing cuts it into pieces.
+    // Every link runs rock to rock: it leaves the side of the food's rock that faces the feeder and its head points
+    // into the side of the feeder's rock. Both ends sit just outside the rocks, beside the name labels (which hang
+    // below each rock), so no line passes through an animal or a label. A same-row link (frog -> snake) is a low arc
+    // over the gap between the two rocks.
+    var EDGE = 1.12;
     LINKS.forEach(function(l){
-      var a = byId[l[0]], b = byId[l[1]];
-      if (a.tl === b.tl){   // same row (frog -> snake): a bracket over the row, up, across, down
-        var h = a.y + layout.row * 0.52, p = [new THREE.Vector3(a.x, a.y + 0.05, -0.2), new THREE.Vector3(a.x, h, -0.2), new THREE.Vector3(b.x, h, -0.2), new THREE.Vector3(b.x, b.y + 1.2, -0.2)];   // stays below the TL4 labels
-        var path = new THREE.CurvePath(); for (var i = 0; i < 3; i++) path.add(new THREE.LineCurve3(p[i], p[i + 1]));
-        addArrow(path, { from:a, to:b }, glow, 0.02, [1, 0.5, 1]);
+      var a = byId[l[0]], b = byId[l[1]], side = Math.sign(b.x - a.x) || 1;
+      if (a.tl === b.tl){
+        var p0 = new THREE.Vector3(a.x + 0.75 * side, a.y + 0.2, 0.35), p2 = new THREE.Vector3(b.x - 0.75 * side, b.y + 0.2, 0.35);
+        var p1 = p0.clone().add(p2).multiplyScalar(0.5); p1.y += 0.9;
+        addArrow(new THREE.QuadraticBezierCurve3(p0, p1, p2), { from:a, to:b }, glow, 0.022);
         return;
       }
-      addArrow(new THREE.LineCurve3(new THREE.Vector3(a.x, a.y + 0.05, -0.2), new THREE.Vector3(b.x, b.y - 0.18, 0.95)), { from:a, to:b }, glow, 0.02);
+      if (b.tl - a.tl >= 2){   // skips a row (mouse -> owl): curve through the nearest gap in the row between, and reach
+        var mids = NODES.filter(function(n){ return n.tl === a.tl + 1; }).map(function(n){ return n.x; }).sort(function(u, v){ return u - v; });
+        var gapX = 0, best = 1e9;   // nearest gap to the food that is not directly under the feeder (its label hangs there)
+        for (var g = 0; g < mids.length - 1; g++){ var gx = (mids[g] + mids[g + 1]) / 2; if (Math.abs(gx - b.x) > EDGE && Math.abs(gx - a.x) < best){ best = Math.abs(gx - a.x); gapX = gx; } }
+        var sa = Math.sign(gapX - a.x) || 1, sb = Math.sign(gapX - b.x) || 1;   // the feeder's rock from the gap side, beside its label
+        var q0 = new THREE.Vector3(a.x + EDGE * sa, a.y + 0.1, 0.35), q2 = new THREE.Vector3(b.x + EDGE * sb, b.y + 0.1, 0.35);
+        var q1 = new THREE.Vector3((gapX - 0.36 * q0.x - 0.16 * q2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
+        addArrow(new THREE.QuadraticBezierCurve3(q0, q1, q2), { from:a, to:b }, glow, 0.022);
+        return;
+      }
+      // same column: both ends on the same side, so the line stays clear of the labels
+      var endSide = (a.x === b.x) ? -side : side;
+      var p0 = new THREE.Vector3(a.x + EDGE * side, a.y + 0.1, 0.35), p2 = new THREE.Vector3(b.x - EDGE * endSide, b.y + 0.1, 0.35);
+      if (Math.abs(p2.x - p0.x) < 1.4){   // nearly vertical: bow gently outward, away from the labels hanging below the rocks
+        var c = p0.clone().add(p2).multiplyScalar(0.5); c.x += (Math.sign(p2.x - b.x) || 1) * 0.7;
+        addArrow(new THREE.QuadraticBezierCurve3(p0, c, p2), { from:a, to:b }, glow, 0.022);
+      } else addArrow(new THREE.LineCurve3(p0, p2), { from:a, to:b }, glow, 0.022);
     });
   }
   function ORGS_SUN_LINKS(glow){
-    NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams, also behind the plinths
-      var p1 = new THREE.Vector3(n.x - 0.95, n.y + 0.1, 0.1), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
-      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.014);
+    NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams onto each producer's rock
+      var p1 = new THREE.Vector3(n.x - EDGE_SUN, n.y + 0.15, 0.35), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
+      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.016);
     });
   }
+  var EDGE_SUN = 1.1;
+  // One clean arrow: a thin shaft that ends exactly where a sharp head begins (no overlap, so the head never looks
+  // hollow), with small energy dots running along it while the link is shown.
   function addArrow(curve, meta, glow, r){
     var nPulse = meta.sun ? 1 : 2;
     var mat = new THREE.MeshBasicMaterial({ color:meta.sun ? 0xffd479 : ENERGY, transparent:true, opacity:0, depthWrite:false });
-    var segs = curve.curves ? curve.curves.length * 2 : 2;
-    var tube = new THREE.Mesh(new THREE.TubeGeometry(curve, segs, r, 8, false), mat); flow.add(tube);
-    // a small chevron shows the direction (food -> feeder): halfway along, or on the last leg of a bracket
-    var at = curve.curves ? 0.86 : 0.5, tan = curve.getTangent(at), head = new THREE.Mesh(new THREE.ConeGeometry(r * 3.6, r * 9, 10), mat);
-    head.position.copy(curve.getPoint(at)); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tan); flow.add(head);
-    tube.visible = head.visible = false;
+    var len = curve.getLength(), headLen = Math.max(r * 8, 0.2), headR = Math.max(r * 3.2, 0.07), uBase = 1 - headLen / len;
+    var shaft = new THREE.Curve(); shaft.getPoint = function(t, out){ var p = curve.getPointAt(t * uBase); return out ? out.copy(p) : p; };
+    var tube = new THREE.Mesh(new THREE.TubeGeometry(shaft, curve.isLineCurve3 ? 2 : 32, r, 8, false), mat);
+    var base = curve.getPointAt(uBase), tip = curve.getPointAt(1), dir = tip.clone().sub(base).normalize();
+    var head = new THREE.Mesh(new THREE.ConeGeometry(headR, headLen, 20), mat);
+    head.position.copy(base).addScaledVector(dir, headLen / 2); head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
     var rec = { meta:meta, mat:mat, glow:0, meshes:[tube, head] };
+    [tube, head].forEach(function(m){ m.visible = false; flow.add(m); });
     for (var k = 0; k < nPulse; k++){
-      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:mat.color, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
-      sp.scale.set(r * 11, r * 11, 1); flow.add(sp); pulses.push({ sprite:sp, curve:curve, t:k / nPulse, rec:rec });
+      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:meta.sun ? 0xfff0c0 : 0xf4ffd0, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending }));
+      sp.scale.set(0.15, 0.15, 1); flow.add(sp); pulses.push({ sprite:sp, curve:shaft, t:k / nPulse, rec:rec });
     }
     links.push(rec);
   }
@@ -301,7 +322,7 @@
     sunMesh.rotation.y += dt * 0.19;
     // at rest no arrows show; tapping an organism (or "Show the food chain") brings up only its links and sends energy along them
     var focus = !!selected || showChain;
-    links.forEach(function(L){ var on = focus && linkLit(L.meta), target = on ? 0.95 : 0; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow;
+    links.forEach(function(L){ var on = focus && linkLit(L.meta), target = on ? 0.9 : 0; L.glow += (target - L.glow) * 0.12; L.mat.opacity = L.glow;
       L.meshes.forEach(function(m){ m.visible = L.glow > 0.01; }); L.flowing = on; });
     pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = p.rec.flowing ? Math.sin(p.t * Math.PI) * p.rec.glow : 0; });
     NODES.forEach(function(n){
