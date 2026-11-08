@@ -37,16 +37,16 @@
       apex:true, note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
     { id:"komodo",      name:"Komodo dragon", tl:3, x: 6.3, file:"FoodWeb/komodo.glb",     size:2.5, facing:"z", turn:-60,
       apex:true, note:"The largest living lizard and an apex predator: it hunts deer, and nothing preys on an adult. It lives wild only on a few Indonesian islands." },
-    { id:"hawk",        name:"Hawk",        tl:4, x: 4.2, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95,
-      note:"A bird of prey that hunts mice (TL2) and snakes (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a snake." },
+    { id:"owl",         name:"Owl",         tl:4, x: 4.2, file:"Pyramid/owl.glb",          size:2.2, facing:"z", turn:20, fly:0.95, posedBox:true,
+      note:"A great horned owl. It hunts mice (TL2) at night and also takes snakes (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a snake. Owls this size even kill hawks, and little hunts an adult. India's eagle-owl looks much like it." },
     { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:1.35,
       note:"A snake eagle: it is TL4 when its snake ate a mouse, and TL5 when the snake ate a frog, as in the food chain view." }   // high enough that the lowered wings clear the rock
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
     ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["grass","squirrel"], ["lupine","caterpillar"],
-    ["grasshopper","frog"], ["caterpillar","frog"], ["squirrel","snake"], ["squirrel","hawk"],
-    ["frog","snake"], ["snake","eagle"], ["snake","hawk"], ["deer","leopard"], ["deer","komodo"]
+    ["grasshopper","frog"], ["caterpillar","frog"], ["squirrel","snake"], ["squirrel","owl"],
+    ["frog","snake"], ["snake","eagle"], ["snake","owl"], ["deer","leopard"], ["deer","komodo"]
   ];
   var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller
