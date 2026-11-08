@@ -97,9 +97,9 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🐌 Snail (food chain, food web) | [Snail (Non-Commercial)](https://sketchfab.com/3d-models/snail-non-commercial-6d3d307258924e07a7f02a8427f5f018) | Nyilonelycompany | CC BY-NC 4.0 ¹ |
 | 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
 | 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
-| 🦌 Deer (pyramid) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
-| 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
-| 🐸 Frog | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
+| 🦌 Deer | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
+| 🐸 Frog (food chain, food web) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
+| 🐸 Common frog (pyramid) | Common Frog | kenchoo | CC BY-NC-SA 4.0 ¹ |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |

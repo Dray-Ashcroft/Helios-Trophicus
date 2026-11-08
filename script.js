@@ -843,9 +843,9 @@
     "tl2-rabbit":             { file:"Pyramid/mouse.glb",        size:1.7,  facing:"z",  turn:-25, posedBox:true },   // sand mouse, idle
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/butterfly.glb",    size:1.0, facing:"z",  turn:35,  posedBox:true, fly:0.55 },   // butterfly hovering, wings flapping
-    "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"x",  turn:30 },
+    "tl2-deer":               { file:"FoodWeb/deer.glb",         size:1.8, facing:"x",  turn:30 },   // the food web's animated deer (morph-target walk)
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-110, clip:[3, 9] },   // the calm rear-and-sway stretch only
-    "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
+    "tl3-frog":               { file:"Pyramid/frog.glb",         size:1.15, facing:"z",  turn:20,  posedBox:true },   // common frog; its legs splay wide, so a little larger
     "tl3-scorpion":           { file:"Pyramid/scorpion.glb",     size:1.3,  facing:"z",  turn:35,  clipName:"idle", posedBox:true },   // idle, claws raised
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
     "tl4-owl":                { file:"Pyramid/owl.glb",          size:1.3,  facing:"z",  turn:15,  posedBox:true, fly:0.62 }   // great horned owl in flapping flight
@@ -899,6 +899,20 @@
       var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
       var bones = new THREE.Box3(), bp = new THREE.Vector3();
       obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
+      // morph-animated models (the walking deer): measure the shapes the animation shows, not the base mesh
+      // (r128 does not unpack normalised attributes in getX, so scale them by hand)
+      var morphBox = new THREE.Box3();
+      obj.traverse(function(n){
+        if (!n.isMesh || !n.geometry.morphAttributes.position) return;
+        var basePos = n.geometry.getAttribute("position"), M = n.geometry.morphAttributes.position, rel = n.geometry.morphTargetsRelative, v = new THREE.Vector3();
+        function unit(a){ if (!a.normalized) return 1; var A = a.array; return A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1; }
+        var kb = unit(basePos);
+        for (var t = 0; t < M.length; t += 3){ var km = unit(M[t]); for (var i = 0; i < basePos.count; i += 7){
+          v.set(M[t].getX(i) * km, M[t].getY(i) * km, M[t].getZ(i) * km); if (rel) v.add(new THREE.Vector3(basePos.getX(i) * kb, basePos.getY(i) * kb, basePos.getZ(i) * kb));
+          v.applyMatrix4(n.matrixWorld); morphBox.expandByPoint(v);
+        } }
+      });
+      if (!morphBox.isEmpty()){ box.copy(morphBox); box.getSize(size); box.getCenter(c); }
       if (cfg.posedBox){   // measure the mesh as the skeleton actually draws it, across the whole animation
         box.makeEmpty();
         var clip0 = gltf.animations && gltf.animations[0];
