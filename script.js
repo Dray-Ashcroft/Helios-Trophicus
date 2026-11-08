@@ -669,14 +669,11 @@
     { id:"tl2-deer", label:"TL2 · Deer", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
     { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
-      x:0.3, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },
+      x:0.14, y:0.67, z:-0.42, scale:0.92, opacity:0.98 },   // back, just right of centre (its body stretches left): with the tiger gone the three TL3 animals form a triangle
     { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Frog%20-%20Insect.png",
       x:0.45, y:0.21, z:0.32, scale:0.78, opacity:0.96 },
     { id:"tl3-lizard", label:"TL3 · Lizard", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Lizard%20-%20Insect.png",
       x:-0.3, y:0.25, z:0.45, scale:0.78, opacity:0.96 },
-    // Predator of the deer: a tiger (no picture yet, so its fallback is the drawn card). Slot id kept from the leopard.
-    { id:"tl3-leopard", label:"TL3 · Tiger", trophicLevel:3, biomassContribution:6, status:"living", imageUrl:"builtin:leopard",
-      x:-0.36, y:0.3, z:-0.32, scale:0.9, opacity:0.98 },
     { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
       x:-0.36, y:0.25, z:0.12, scale:0.55, opacity:0.98 },
     // Second tertiary consumer: starts as a drawn placeholder card — long-press it on the pyramid to paste a picture link.
@@ -723,7 +720,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl3-leopard":"🐅","tl4-eagle":"🦅","tl4-hawk":"🦅"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl4-eagle":"🦅","tl4-hawk":"🦅"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -848,7 +845,6 @@
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
     "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, clipName:"idle", posedBox:true },   // its mesh and skeleton are stored at different scales
-    "tl3-leopard":            { file:"Pyramid/tiger.glb",        size:1.6,  facing:"z",  turn:-75, posedBox:true },   // white tiger, idle; hunts the deer
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
     "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.3,  facing:"z",  turn:25,  fly:0.72 }
   };
@@ -2825,12 +2821,6 @@
       ribLen: 0.13, bodyW: 0.11, bodyH: 0.065, pelvisW: 0.12, toes: 4, tissueHex: 0x8a6a4a, target: 0.95,
       limbs: [[[0.09, 0.28], [0.17, 0.22], [0.20, 0.36], [0.21, 0.45], true, 0.012], [[0.10, -0.28], [0.24, -0.18], [0.26, -0.40], [0.25, -0.50], false, 0.014]] });
   }
-  // Big cat (tiger slot, formerly leopard). Short broad skull with a short muzzle, long tail (~22 vertebrae), digitigrade limbs.
-  function buildLeopardRemains(){
-    return buildTetrapodRemains({ skullZ: 0.66, cran: [0.07, 0.055, 0.09], snout: 0.06, incisors: false, neck: 7, trunk: 13, lumbar: 7, tailStart: -0.42, tailN: 22, tailStep: 0.03, tailSway: 0.04,
-      ribLen: 0.17, bodyW: 0.14, bodyH: 0.08, pelvisW: 0.14, toes: 4, tissueHex: 0x8a6a45, target: 1.0,
-      limbs: [[[0.11, 0.36], [0.20, 0.28], [0.23, 0.48], [0.24, 0.60], true, 0.016], [[0.12, -0.40], [0.27, -0.26], [0.29, -0.52], [0.28, -0.66], false, 0.017]] });
-  }
   function buildDeerRemains(){
     return buildTetrapodRemains({ skullZ: 0.78, cran: [0.06, 0.048, 0.11], snout: 0.16, incisors: false, neck: 7, trunk: 13, lumbar: 6, tailStart: -0.5, tailN: 6, tailStep: 0.024, tailSway: 0.0,
       ribLen: 0.19, bodyW: 0.16, bodyH: 0.085, pelvisW: 0.16, toes: 2, tissueHex: 0x8b6a45, target: 1.05,
@@ -2945,7 +2935,7 @@
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a mouse (rodent skeleton)
     "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds a butterfly
-    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains, "tl3-leopard": buildLeopardRemains,
+    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains,
     "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains
   };
 
