@@ -2110,6 +2110,36 @@
   scene.add(stems); scene.add(caps);
   habitatDisposables.push(stemGeo, capGeo, stemMat, capMat);
 
+  // "Neon mushrooms - Day 1" (patrakeevasveta, CC BY 4.0) replaces the drawn mushrooms once loaded (the instanced
+  // ones stay as the fallback): at each fungi spot one large swaying cluster and two smaller ones around it.
+  // They swell during the Decomposers step exactly as the drawn ones did (setDecomposerGrowth).
+  var mushClusters = [], mushMixers = [], MUSH_MODEL_H = 0.41;
+  (function(){
+    var specs = [];
+    FUNGI_SPOTS.forEach(function(sp, si){
+      specs.push({ x: sp.x, z: sp.z, h: 1.4, yaw: si * 2.1, delay: 0 });
+      [0.9, 3.4].forEach(function(a, k){ var r = 0.8 + k * 0.15; specs.push({ x: sp.x + Math.cos(a + si) * r, z: sp.z + Math.sin(a + si) * r, h: 0.85 - k * 0.12, yaw: a * 1.7 + si, delay: 0.15 + k * 0.12 }); });
+    });
+    var placed = 0;
+    specs.forEach(function(spec){
+      loadPyramidGLB("Pyramid/mushrooms.glb").then(function(g){
+        var o = g.scene;
+        o.traverse(function(n){
+          if (!n.isMesh) return; n.frustumCulled = false; n.raycast = function(){};
+          var m = n.material;   // the pyramid renders without sRGB output: read the textures as linear so the colours stay true
+          ["map", "emissiveMap"].forEach(function(k){ if (m[k]){ m[k].encoding = THREE.LinearEncoding; m[k].needsUpdate = true; } });
+          m.needsUpdate = true;
+        });
+        var root = new THREE.Group(); root.add(o); o.rotation.y = spec.yaw; scene.add(root);
+        if (g.animations.length){ var mx = new THREE.AnimationMixer(o), act = mx.clipAction(g.animations[0]); act.play(); act.time = Math.random() * g.animations[0].duration; mushMixers.push(mx); }
+        mushClusters.push({ root: root, spec: spec, k: spec.h / MUSH_MODEL_H });
+        if (++placed === specs.length){ stems.visible = false; caps.visible = false; }   // all clusters in: retire the drawn mushrooms
+        setDecomposerGrowth(habGrowth, 0);
+      }).catch(function(e){ console.warn("Mushroom model unavailable, keeping the drawn mushrooms:", e); });
+    });
+  })();
+  function updateMushrooms(delta){ for (var i = 0; i < mushMixers.length; i++) mushMixers[i].update(delta); }
+
   // ---- mycelium: thin branching threads on the soil, revealed outward ----
   var mycSegs = [];
   FUNGI_SPOTS.forEach(function(sp){
@@ -2193,7 +2223,9 @@
   function habEase(x){ x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); }
 
   // G: 0 = at rest, 1 = fully active (dead matter has arrived). T: seconds, for the shimmer.
+  var habGrowth = 0;
   function setDecomposerGrowth(G, T){
+    habGrowth = G;
     var sy = 1 + 0.45 * G;                                  // organic matter accumulates: humus thickens
     soilBed.scale.y = sy;
     soilBedMat.color.setRGB(1 - 0.16 * G, 1 - 0.18 * G, 1 - 0.20 * G);   // slightly darker, richer soil
@@ -2210,6 +2242,11 @@
     }
     stems.instanceMatrix.needsUpdate = true;
     caps.instanceMatrix.needsUpdate = true;
+    for (var mc = 0; mc < mushClusters.length; mc++){         // the neon mushroom clusters swell the same way
+      var cl = mushClusters[mc], cg = cl.k * (0.8 + 0.45 * habEase(G * 1.5 - cl.spec.delay));
+      cl.root.position.set(cl.spec.x, soilHeight(cl.spec.x, cl.spec.z) * sy - 0.01, cl.spec.z);
+      cl.root.scale.setScalar(cg);
+    }
     for (var c = 0; c < CRUMB_N; c++){
       var cd = crumbData[c], cs = cd.base * (0.25 + 0.75 * habEase(G * 1.5 - cd.delay));
       habP.set(cd.x, soilHeight(cd.x, cd.z) + cs * 0.4, cd.z);
@@ -4828,6 +4865,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     controls.update();
     updateMortalityAnimations(elapsed, delta);
     updateRemains(elapsed, delta);
+    updateMushrooms(delta);
 
     layerMeshes.forEach(function(mesh){
       var ud = mesh.userData;

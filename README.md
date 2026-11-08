@@ -84,6 +84,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 
 | Organism | Model | Creator | Licence |
 |:--|:--|:--|:--|
+| 🍄 Decomposer fungi (pyramid) | [Neon mushrooms - Day 1](https://skfb.ly/orwRY) | patrakeevasveta | CC BY 4.0 |
 | 🏝️ Pyramid base | Landpiece | nitesharma12457868 | CC BY 4.0 |
 | 🪨 Platforms (food chain, food web) | [Chunk Of Land 1](https://skfb.ly/6uCLu) | Glen Johnson | CC BY 4.0 |
 | ☀️ Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |
