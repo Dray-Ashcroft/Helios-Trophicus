@@ -845,7 +845,7 @@
     "tl2-caterpillar":        { file:"Pyramid/butterfly.glb",    size:1.0, facing:"z",  turn:35,  posedBox:true, fly:0.55 },   // butterfly hovering, wings flapping
     "tl2-deer":               { file:"FoodWeb/deer.glb",         size:1.8, facing:"x",  turn:30 },   // the food web's animated deer (morph-target walk)
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-110, clip:[3, 9] },   // the calm rear-and-sway stretch only
-    "tl3-frog":               { file:"Pyramid/frog.glb",         size:1.15, facing:"z",  turn:20,  posedBox:true },   // common frog; its legs splay wide, so a little larger
+    "tl3-frog":               { file:"Pyramid/frog.glb",         size:1.3,  facing:"-x", turn:20,  posedBox:true },   // Schlegel's green tree frog (CC0 scan)
     "tl3-scorpion":           { file:"Pyramid/scorpion.glb",     size:1.3,  facing:"z",  turn:35,  clipName:"idle", posedBox:true },   // idle, claws raised
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
     "tl4-owl":                { file:"Pyramid/owl.glb",          size:1.3,  facing:"z",  turn:15,  posedBox:true, fly:0.62 }   // great horned owl in flapping flight
