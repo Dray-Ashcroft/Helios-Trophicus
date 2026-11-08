@@ -53,7 +53,7 @@ Repository on GitHub & Codeberg
 | 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🦌 Deer (pyramid) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
-| 🐸 Frog | Frog | *credit to be added* | |
+| 🐸 Frog | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
 | 🦎 Lizard (pyramid) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
@@ -63,7 +63,7 @@ Repository on GitHub & Codeberg
 | 🐅 Tiger (food web) | [White Tiger (RIGGED ANIMATED)](https://skfb.ly/oIUBX) | MotionStreamStudios | CC BY 4.0 |
 | 🦅 Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |
 
-<sub>¹ Non-commercial use only. Models keep their full original geometry; textures are packed to 2048 px WebP for faster loading. Creators retain ownership.</sub>
+<sub>¹ Non-commercial use only. ² No derivatives: the frog is shared unaltered, apart from the file-format compression that CC 4.0 licences allow as a technical modification. Models keep their full original geometry; textures are packed to 2048 px WebP for faster loading. Creators retain ownership.</sub>
 
 ---
 
