@@ -3447,37 +3447,61 @@
   flowRoot.add(nutTube);
   flowDisposables.push(nutGeo, nutMat);
   var flowNutParts = makeFlowPoints(NUT_PARTS, 0x8fe3c7, 0.12);
-  // Nutrient cloud: "Looping Particles (Dust or Bubbles)" (Elin, CC BY 4.0) tinted mint, drifting between the soil and
-  // the producers in front of the pyramid. Shown only from the Nutrients step on, like the mint line.
-  var nutCloud = null, nutCloudMix = null, nutCloudMats = [];
-  loadPyramidGLB("Pyramid/nutrients.glb").then(function(g){
-    // its bones are animated at 100x scale, so the cloud really spans about +-500 units: squeeze it into the space
-    // between the soil and the producers (about 6 x 1.6 x 3 units, across the front of the pyramid), then enlarge each particle about its own centre
-    // (every particle hangs from one bone) so the dots stay visible at that size
-    nutCloud = g.scene; nutCloud.scale.set(0.0058, 0.0016, 0.0036); nutCloud.position.set(0.15, 0.68, 3.0); nutCloud.visible = false;
-    nutCloud.traverse(function(n){
-      if (!n.isMesh) return; n.frustumCulled = false; n.raycast = function(){};
-      if (n.isSkinnedMesh){
-        var P = n.geometry.getAttribute("position"), J = n.geometry.getAttribute("skinIndex"), sum = {}, cnt = {}, i, j;
-        for (i = 0; i < P.count; i++){ j = J.getX(i); if (!sum[j]){ sum[j] = new THREE.Vector3(); cnt[j] = 0; } sum[j].x += P.getX(i); sum[j].y += P.getY(i); sum[j].z += P.getZ(i); cnt[j]++; }
-        for (i = 0; i < P.count; i++){ j = J.getX(i); var c = sum[j].clone().divideScalar(cnt[j]);
-          P.setXYZ(i, c.x + (P.getX(i) - c.x) * 4.2, c.y + (P.getY(i) - c.y) * 4.2, c.z + (P.getZ(i) - c.z) * 4.2); }
-        P.needsUpdate = true;
-      }
-      var m = n.material; m.map = null; m.color.copy(NUT_COLOR); m.transparent = true; m.opacity = 0; m.depthWrite = false; m.needsUpdate = true;   // normal blending keeps the mint (additive washes it to white)
-      nutCloudMats.push(m);
+  // Nutrient uptake (Nutrients step): inorganic nutrients released by the decomposers travel through the soil to the
+  // producers and are taken up by their ROOTS. Each living producer gets a path from the nearer fungi cluster, along the
+  // soil surface, in through the base of the pyramid, ending at its roots; mint particles stream along it and fade as
+  // they are absorbed, and a soft glow pulses at the roots. Never toward TL2-TL4: matter returns to producers only.
+  var NUT_ROOT_IDS = ["tl1-grass-cluster", "tl1-wildflower-cluster", "tl1-young-tree"], NUT_PER_PATH = 9, NUT_TRIP = 3.4;
+  var nutPaths = null, nutClock = 0, nutAlpha = 0;
+  var nutRootParts = makeFlowPoints(NUT_ROOT_IDS.length * NUT_PER_PATH, 0x8fe3c7, 0.3);
+  modelScene.add(nutRootParts.pts);   // drawn in the organisms' pass, so the producer tier's walls do not wash it out
+  function buildNutPaths(){
+    nutPaths = NUT_ROOT_IDS.map(function(id){
+      var slot = organismSlots[id]; if (!slot) return null;
+      var root = new THREE.Vector3(slot.sprite.position.x, layers[0].yBottom + 0.05, slot.sprite.position.z);
+      var f = FUNGI_SPOTS.reduce(function(best, sp){ return (!best || sp.distanceToSquared(root) < best.distanceToSquared(root)) ? sp : best; }, null);
+      var toF = new THREE.Vector3(f.x - root.x, 0, f.z - root.z).normalize();
+      function onSoil(x, z, lift){ return new THREE.Vector3(x, soilHeight(x, z) + lift, z); }
+      var p0 = onSoil(f.x + toF.x * 0.25, f.z + toF.z * 0.25, 0.05);                       // leaves the fungi / humus
+      var mx = root.x + toF.x * 1.6, mz = root.z + toF.z * 1.6;
+      var p1 = onSoil((p0.x + mx) / 2, (p0.z + mz) / 2, 0.04);                               // through the soil
+      var p2 = onSoil(mx, mz, 0.04);
+      var p3 = new THREE.Vector3(root.x + toF.x * 0.45, layers[0].yBottom * 0.55, root.z + toF.z * 0.45);   // in at the base
+      var curve = new THREE.CatmullRomCurve3([p0, p1, p2, p3, root.clone()]);
+      var tubeGeo = new THREE.TubeGeometry(curve, 48, 0.035, 6, false);
+      var tubeMat = new THREE.MeshBasicMaterial({ color: NUT_COLOR, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      var tube = new THREE.Mesh(tubeGeo, tubeMat); tube.frustumCulled = false; tube.visible = false; modelScene.add(tube);
+      var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture, color: NUT_COLOR, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+      glow.position.copy(root).add(new THREE.Vector3(0, 0.06, 0)); glow.scale.set(1.3, 0.7, 1); glow.visible = false; modelScene.add(glow);
+      flowDisposables.push(tubeGeo, tubeMat, glow.material);
+      return { id: id, curve: curve, tube: tube, glow: glow };
     });
-    if (g.animations.length){ nutCloudMix = new THREE.AnimationMixer(nutCloud); nutCloudMix.clipAction(g.animations[0]).play(); }
-    scene.add(nutCloud);
-  }).catch(function(e){ console.warn("Nutrient particles unavailable:", e); });
-  function updateNutCloud(T, delta){   // T < 0: not in a flow
-    if (!nutCloud) return;
-    var a = T > FLOW_T.NUTRIENT_START ? 0.9 * flowStep(0, 1.2, T - FLOW_T.NUTRIENT_START) : 0;
-    nutCloud.visible = a > 0.01;
-    nutCloudMats.forEach(function(m){ m.opacity = a; });
-    if (nutCloud.visible && nutCloudMix) nutCloudMix.update(delta);
   }
-
+  function updateNutCloud(T, delta){   // T < 0: not in a flow
+    var target = T > FLOW_T.NUTRIENT_START ? flowStep(0, 1.2, T - FLOW_T.NUTRIENT_START) : 0;
+    nutAlpha += (target - nutAlpha) * Math.min(1, delta * 6);
+    if (nutAlpha < 0.01 && target === 0){
+      if (nutRootParts.pts.visible) hideFlowPoints(nutRootParts);
+      if (nutPaths) nutPaths.forEach(function(P){ if (P){ P.tube.visible = false; P.glow.visible = false; } });
+      nutClock = 0; return;
+    }
+    if (!nutPaths) buildNutPaths();
+    nutClock += delta; nutRootParts.pts.visible = true;
+    nutPaths.forEach(function(P, k){
+      var alive = P && ORGANISM_ASSETS.some(function(a){ return a.id === P.id && a.status === "living"; });   // a dead producer has no roots to take nutrients up
+      if (P){ P.tube.visible = alive; P.tube.material.opacity = 0.45 * nutAlpha;
+              P.glow.visible = alive; P.glow.material.opacity = nutAlpha * (0.55 + 0.2 * Math.sin(nutClock * 3 + k)); }
+      for (var q = 0; q < NUT_PER_PATH; q++){
+        var idx = k * NUT_PER_PATH + q;
+        if (!alive){ setFlowPoint(nutRootParts, idx, 0, -10, 0, 0); continue; }
+        var u = ((nutClock / NUT_TRIP) + q / NUT_PER_PATH + k * 0.17) % 1;
+        P.curve.getPointAt(u, flowTmp);
+        var b = nutAlpha * Math.min(1, u / 0.08) * (1 - flowStep(0.82, 1, u)) * 0.95;   // fades in at the fungi, absorbed at the roots
+        setFlowPoint(nutRootParts, idx, flowTmp.x, flowTmp.y, flowTmp.z, b);
+      }
+    });
+    flushFlowPoints(nutRootParts);
+  }
   // ---- step controller (single source of truth: ecosystemStep) ----------
   // ecosystemStep : 0 = resting ecosystem, 1..7 = the step shown in the indicator
   // flow.mode     : IDLE | PLAYING (the step's slow animation is running) | STABLE (holding the finished picture)
@@ -3683,11 +3707,7 @@
 
     // nutrient line: soil/decomposers -> TL1 ONLY (matter cycling, not energy)
     var nT = T - FLOW_T.NUTRIENT_START;
-    if (nT > 0){
-      nutTube.visible = true;
-      nutTube.geometry.setDrawRange(0, Math.floor(THREE.MathUtils.clamp(nT / 1.6, 0, 1) * NUT_TUBE_SEG) * NUT_TUBE_RAD * 6);
-      nutMat.opacity = 0.5 * flowStep(0, 0.5, nT);
-    } else if (nutTube.visible){
+    if (nutTube.visible){   // the old mid-air line is replaced by the soil-to-roots paths (updateNutCloud)
       nutTube.visible = false; nutTube.geometry.setDrawRange(0, 0); nutMat.opacity = 0;
     }
   }
@@ -3742,7 +3762,7 @@
     }
     // nutrient particles ride the thin mint line to TL1 only
     var nT = T - FLOW_T.NUTRIENT_START;
-    if (nT > 0){
+    if (false){   // nutrient particles now follow the soil-to-roots paths (updateNutCloud)
       flowNutParts.pts.visible = true;
       for (var m = 0; m < NUT_PARTS; m++){
         var np = (nT - 0.05 - m * 0.22) / 2.4;
