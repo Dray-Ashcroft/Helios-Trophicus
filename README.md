@@ -16,7 +16,7 @@
 
 **🔗 Food Chain**: Grass → Snail → Frog → Snake → Eagle. Energy falls 100 → 10 → 1 → 0.1 → 0.01 rel. J, with heat lost at every link. Step through it one link at a time.
 
-**🕸️ Food Web**: 13 organisms, 15 feeding links. Tap an organism to see what it eats and what eats it, or highlight the food chain inside the web.
+**🕸️ Food Web**: 13 organisms, 14 feeding links. Tap an organism to see what it eats and what eats it, or highlight the food chain inside the web.
 
 ---
 
@@ -50,7 +50,8 @@ Repository on GitHub & Codeberg
 | 🦌 Deer (pyramid) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog | Frog | *credit to be added* | |
-| 🦎 Lizard | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
+| 🦎 Lizard (pyramid) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
+| 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |
 | 🐅 Tiger | [White Tiger (RIGGED ANIMATED)](https://skfb.ly/oIUBX) | MotionStreamStudios | CC BY 4.0 |

@@ -30,19 +30,21 @@
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
       note:"In Indian forests deer such as chital and sambar are a main prey of leopards and tigers." },
     { id:"frog",        name:"Frog",        tl:3, x:-6.3, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
-    { id:"lizard",      name:"Lizard",      tl:3, x:-2.1, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
-    { id:"snake",       name:"Snake",       tl:3, x: 2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
+    { id:"snake",       name:"Snake",       tl:3, x:-2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
       note:"It eats mice (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a frog." },
-    { id:"leopard",     name:"Tiger",       tl:3, x: 6.3, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
+    { id:"leopard",     name:"Tiger",       tl:3, x: 2.1, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
       note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
-    { id:"hawk",        name:"Hawk",        tl:4, x:-2.4, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95 },
-    { id:"eagle",       name:"Eagle",       tl:4, x: 2.4, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:0.95 }
+    { id:"komodo",      name:"Komodo dragon", tl:3, x: 6.3, file:"FoodWeb/komodo.glb",     size:2.5, facing:"z", turn:-60,
+      note:"The largest living lizard and an apex predator: it hunts deer, and nothing preys on an adult. It lives wild only on a few Indonesian islands." },
+    { id:"hawk",        name:"Hawk",        tl:4, x: 4.2, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95,
+      note:"A bird of prey that hunts small mammals such as mice." },
+    { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:0.95 }
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
     ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["grass","squirrel"], ["lupine","caterpillar"],
-    ["grasshopper","frog"], ["grasshopper","lizard"], ["caterpillar","frog"], ["caterpillar","lizard"], ["squirrel","snake"],
-    ["frog","snake"], ["lizard","hawk"], ["snake","eagle"], ["deer","leopard"]
+    ["grasshopper","frog"], ["caterpillar","frog"], ["squirrel","snake"], ["squirrel","hawk"],
+    ["frog","snake"], ["snake","eagle"], ["deer","leopard"], ["deer","komodo"]
   ];
   var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller
