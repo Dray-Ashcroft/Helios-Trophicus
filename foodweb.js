@@ -31,8 +31,8 @@
     { id:"lizard",      name:"Lizard",      tl:3, x:-2.1, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
     { id:"snake",       name:"Snake",       tl:3, x: 2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
       note:"It eats squirrels (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a squirrel, TL4 when it eats a frog." },
-    { id:"leopard",     name:"Leopard",     tl:3, x: 6.3, file:"Pyramid/leopard.glb",      size:1.8, facing:"z", turn:-30,
-      note:"A big cat of forests across India. Deer are among its main prey; nothing hunts an adult leopard here." },
+    { id:"leopard",     name:"Tiger",       tl:3, x: 6.3, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
+      note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
     { id:"hawk",        name:"Hawk",        tl:4, x:-2.4, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95 },
     { id:"eagle",       name:"Eagle",       tl:4, x: 2.4, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:0.95 }
   ];
