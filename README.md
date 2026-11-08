@@ -4,33 +4,79 @@
 
 <h1 align="center">🌿 Oekos Matrix</h1>
 
-<p align="center"><em>Ecological Interaction Simulator: energy pyramid, food chain and food web in 3D</em></p>
+<p align="center"><em>Ecological Interaction Simulator</em></p>
 
 <p align="center"><a href="https://solus-en-orb.stark-kodex.workers.dev"><strong>Explore the Simulation →</strong></a></p>
 
 ---
 
-## ✦ Three Views
-
-**🔺 Energy Pyramid**: four trophic levels with 3D organisms. Tap the Sun for a seven-step walkthrough of energy and matter flow: PAR, GPP and NPP, the 10% transfer, heat loss, decomposition and nutrient return. Graph energy, heat or biomass across levels, and simulate mortality.
-
-**🔗 Food Chain**: Grass → Snail → Frog → Snake → Eagle. Energy falls 100 → 10 → 1 → 0.1 → 0.01 rel. J, with heat lost at every link. Tap an organism to see its arrows, or step through the chain one link at a time.
-
-**🕸️ Food Web**: 13 organisms, 15 feeding links. Arrows stay hidden until you tap an organism: then only its links appear. Or highlight the food chain inside the web.
+An interactive 3D simulator for teaching how energy moves through an ecosystem. Real animated organisms show the energy pyramid, a food chain and a food web side by side, so students can see who eats whom, why only about 10% of energy passes up each level, and where the rest goes. Built for classroom smart panels, and it works on laptops and phones too.
 
 ---
 
-## 🌱 Concepts
+## ✦ Three Views
 
-Trophic levels · 10% law · PAR · GPP & NPP · Respiration & heat loss · Biomass · Food chains & webs · Decomposers · Nutrient cycling
+Switch views with the three icons at the top.
+
+### 🔺 Energy Pyramid
+Four trophic levels, each with its own 3D organisms.
+- **Tap the Sun** for a seven-step walkthrough: PAR → producers (GPP, respiration, NPP) → the 10% transfer up each level → heat loss → decomposers → nutrients returning to the producers.
+- **Graph** energy, heat or biomass across the four levels.
+- **Simulate mortality**: an organism dies, its remains fall to the soil, and the level's energy and biomass drop.
+- **Hold a layer** to open its profile: a short description, an example picture and the energy available.
+
+### 🔗 Food Chain
+Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
+- Energy falls **100 → 10 → 1 → 0.1 → 0.01 rel. J**, with heat rising from every organism.
+- **Tap an organism** to see its arrows: one from its food, one to what eats it.
+- **Walk through it step by step**, one feeding link at a time, ending with why food chains are short.
+
+### 🕸️ Food Web
+13 organisms joined by 15 feeding links.
+- Arrows stay hidden until you **tap an organism**; then only its links appear, with what it eats, what eats it and a short note.
+- **Show the food chain inside the web** to see that a chain is one path through the web, and that an animal's trophic level depends on what it eats.
+
+---
+
+## 🌍 The Ecosystem
+
+| Level | Pyramid | Role |
+|:--|:--|:--|
+| TL4 | Eagle · Owl | Tertiary consumers: eat secondary consumers |
+| TL3 | Lizard · Scorpion · Snake · Frog | Secondary consumers: eat primary consumers |
+| TL2 | Mouse · Grasshopper · Butterfly · Deer | Primary consumers: eat producers |
+| TL1 | Grass · Lupine · Tree | Producers: make food by photosynthesis |
+
+The food web adds a snail, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
+
+---
+
+## 🌱 Concepts Covered
+
+Trophic levels · Food chains and food webs · Lindeman's 10% law · PAR · GPP, NPP and respiration · Heat loss · Pyramids of energy and biomass · Decomposers · Nutrient cycling · Apex predators · Animals feeding at more than one trophic level
+
+---
+
+## 🧭 Controls
+
+| Action | What it does |
+|:--|:--|
+| Drag · scroll or pinch | Rotate · zoom |
+| Tap | Select a layer or organism |
+| Hold a pyramid layer | Open its profile |
+| Hold an organism | Show your own picture in place of the model (**Original** brings the model back) |
+| ⌃ on a card | Fold the card away to free the screen |
+| Save · Export · Import | Save an HTML snapshot, or export and re-import the simulator's state as JSON |
 
 ---
 
 ## ⚙️ Technology
 
-HTML · CSS · JavaScript · Three.js · Cloudflare  
-Repository on GitHub & Codeberg
+HTML · CSS · JavaScript · Three.js · Cloudflare
 
+Runs entirely in the browser with no build step. To run it locally, serve the folder with any static server (for example `npx serve`) rather than opening `index.html` directly, so the 3D models can load.
+
+**Project Designer:** Sai Prasad  
 **Code:** Perplexity Sonar 2 (architecture) · OpenAI GPT-5.6 (refinement) · Claude Opus 4.8 (implementation)
 
 ---
@@ -70,3 +116,9 @@ Repository on GitHub & Codeberg
 ## 📜 License
 
 Source code: **GNU GPL-3.0**. 3D models keep their own licences (above).
+
+---
+
+<p align="center">
+  <b>Repository</b>: GitHub · Codeberg &nbsp;&nbsp;|&nbsp;&nbsp; <b>Hosting</b>: Cloudflare
+</p>
