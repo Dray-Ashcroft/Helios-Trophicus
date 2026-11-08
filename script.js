@@ -666,7 +666,7 @@
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
     { id:"tl2-caterpillar", label:"TL2 · Ants", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
-    { id:"tl2-deer", label:"TL2 · Deer", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
+    { id:"tl2-deer", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
     { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
       x:0.02, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },   // back centre; TL3 is a triangle: snake behind, scorpion and frog in front
@@ -722,7 +722,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🐜","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🐜","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -843,7 +843,7 @@
     "tl2-rabbit":             { file:"Pyramid/rat.glb",          size:1.5,  facing:"z",  turn:-25, posedBox:true, clipName:"idle_a2" },   // black rat, idle
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/ant.glb",          size:0.95, facing:"z", turn:35,  posedBox:true, clip:[5, 40] },   // seed-harvesting ant; loops only its walk in place (later it wanders off)
-    "tl2-deer":               { file:"FoodWeb/deer.glb",         size:1.8, facing:"x",  turn:30 },   // the food web's animated deer (morph-target walk)
+    "tl2-deer":               { file:"Pyramid/rabbit.glb",       size:1.35, facing:"z", turn:40,  posedBox:true },   // rabbit, idle (slot id kept from the deer); eaten by the snake, owl and eagle above
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-110, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"Pyramid/frog.glb",         size:1.3,  facing:"-x", turn:20,  posedBox:true },   // Schlegel's green tree frog (CC0 scan)
     "tl3-scorpion":           { file:"Pyramid/scorpion.glb",     size:1.3,  facing:"z",  turn:35,  clipName:"idle", posedBox:true },   // idle, claws raised
@@ -2951,7 +2951,7 @@
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a rat (rodent skeleton)
-    "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds an ant
+    "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildRabbitRemains,   // the slot now holds an ant
     "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-scorpion": buildInsectRemains,
     "tl4-eagle": buildEagleRemains, "tl4-owl": buildEagleRemains
   };

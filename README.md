@@ -44,10 +44,10 @@ Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
 |:--|:--|:--|
 | TL4 | Eagle · Owl | Tertiary consumers: eat secondary consumers |
 | TL3 | Scorpion · Snake · Frog | Secondary consumers: eat primary consumers |
-| TL2 | Rat · Grasshopper · Ants · Deer | Primary consumers: eat producers |
+| TL2 | Rat · Grasshopper · Ants · Rabbit | Primary consumers: eat producers |
 | TL1 | Grass · Lupine · Tree | Producers: make food by photosynthesis |
 
-The food web adds a snail, a butterfly, a red fox, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
+The food web adds a snail, a butterfly, a deer, a red fox, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
 
 ---
 
@@ -99,10 +99,11 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🐜 Ant (pyramid) | ANT | MAXDESIGN-3D | CC BY 4.0 |
 | 🐁 Mouse (food web) | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🐀 Black rat (pyramid) | Black Rat (Free download) | Nestaeric | CC BY 4.0 |
-| 🦌 Deer | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
+| 🐇 Rabbit (pyramid) | [RABBIT - Realistic 3D Model (DEMO FREE)](https://skfb.ly/pM9sw) | WildMesh 3D | CC BY-NC 4.0 ¹ |
+| 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog (food chain) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
 | 🐸 Frog (pyramid) | CC0 シュレーゲルアオガエル ♀ Schlegel's Green Tree Frog | — | CC0 1.0 |
-| 🦊 Red fox (food web) | Fox | *credit to be added* | |
+| 🦊 Red fox (food web) | [Fox](https://skfb.ly/6TnPL) | Alexei Ostapenko | CC BY 4.0 |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Spectacled cobra | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🦂 Scorpion (pyramid) | [Scorpion](https://skfb.ly/6WLZY) | anthonyvanoo | CC BY 4.0 |
