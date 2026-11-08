@@ -28,7 +28,7 @@
       food:"Grass (a producer).", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Grasshoppers and other insects.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"../Pyramid/snake.glb", size:2.0, yaw:-1.0, clip:[3, 9],
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"snake.glb", size:4.6, yaw:0.5,
       food:"Frogs.", eatenBy:"Eagle" },
     { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }

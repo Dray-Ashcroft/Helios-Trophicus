@@ -44,12 +44,13 @@ Repository on GitHub & Codeberg
 | 🪻 Lupine | [Lupine Plant](https://sketchfab.com/3d-models/lupine-plant-bf30f1110c174d4baedda0ed63778439) | rufusrockwell | CC BY 4.0 |
 | 🌳 Tree | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
 | 🦗 Grasshopper | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
-| 🪲 Horned beetle | [Insect Horn Run](https://skfb.ly/pHTMx) | LostBoyz2078 | CC BY-NC 4.0 ¹ |
+| 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
 | 🐿️ Squirrel | [Curious Squirrel](https://sketchfab.com/3d-models/curious-squirrel-0b5e2372910c4bd18e5c2fe2f1ee0b4c) | iRahulRajput | CC BY 4.0 |
 | 🦌 Deer | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
-| 🐸 Frog | [Realistic Frog](https://sketchfab.com/3d-models/realistic-frog-81a49956c5944279abfb2ccaa791f7d8) | maksroberthut | CC BY 4.0 |
+| 🐸 Frog | Frog | *credit to be added* | |
 | 🦎 Lizard | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
-| 🐍 Snake | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
+| 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
+| 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |
 | 🐆 Leopard | [Prowling Leopard](https://skfb.ly/pKHxA) | iRahulRajput | CC BY 4.0 |
 | 🦅 Hawk | [Hawk In Full Wingspan](https://skfb.ly/pKvNF) | restore50 | CC BY 4.0 |
 | 🦅 Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |
