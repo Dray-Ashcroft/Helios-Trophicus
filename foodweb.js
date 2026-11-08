@@ -17,14 +17,14 @@
 
   // rows climb by trophic level; facing = the model's own forward axis, turned to face the viewer
   var NODES = [
-    { id:"grass",       name:"Grass",       tl:1, x:-4.6, file:"Pyramid/grass.glb",        size:1.5, facing:"z" },
-    { id:"tree",        name:"Tree",        tl:1, x: 0.0, file:"Pyramid/tree.glb",         size:2.1, facing:"z", sink:0.07 },
-    { id:"lupine",      name:"Lupine",      tl:1, x: 4.6, file:"Pyramid/lupine.glb",       size:1.4, facing:"z",
-      note:"A legume: bacteria in its root nodules fix nitrogen, enriching the soil." },
+    { id:"grass",       name:"Grass",       tl:1, x:-4.6, file:"FoodWeb/grass.glb",        size:1.8, facing:"z", ys:1.8 },   // a wide, low patch of thin blades: drawn taller so it reads at this scale
+    { id:"tree",        name:"Tree",        tl:1, x: 0.0, file:"FoodWeb/tree.glb",         size:2.3, facing:"z" },
+    { id:"lupine",      name:"Lungwort",    tl:1, x: 4.6, file:"FoodWeb/lungwort.glb",     size:1.5, facing:"z",
+      note:"A spring wildflower: its flowers open pink and turn blue as they age, and their nectar feeds early bees and butterflies." },
     { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
       note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
     { id:"caterpillar", name:"Butterfly", tl:2, x:-2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
-      note:"Adults sip nectar from flowers such as the lupine; as caterpillars they ate its leaves. India's plain tiger looks very like this one." },
+      note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. India's plain tiger looks very like this one." },
     { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
       note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
@@ -220,7 +220,7 @@
     } else if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, n.fly ? -bc.y : -bones.min.y, -bc.z); }
     else obj.position.set(-c.x, n.fly ? -c.y : -box.min.y - (n.sink || 0) * size.y, -c.z);
     obj.traverse(function(o){ if (o.isMesh){ o.frustumCulled = false; if (!o.geometry.getAttribute("normal")) o.geometry.computeVertexNormals(); } });
-    var pivot = new THREE.Group(); pivot.add(obj); pivot.scale.setScalar(n.size / Math.max(size.x, size.y, size.z));
+    var pivot = new THREE.Group(); pivot.add(obj); pivot.scale.setScalar(n.size / Math.max(size.x, size.y, size.z)); if (n.ys) pivot.scale.y *= n.ys;
     pivot.rotation.y = (({ "z":0, "x":-90, "-x":90 })[n.facing] + (n.turn || 0)) * D2R;
     if (n.fly) pivot.position.y = n.fly;
     if (n.back) pivot.position.z = -n.back;   // sprawling legs stay inside the plinth's ring

@@ -40,9 +40,12 @@ Repository on GitHub & Codeberg
 | Organism | Model | Creator | Licence |
 |:--|:--|:--|:--|
 | ☀️ Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |
-| 🌾 Grass | [Grass](https://sketchfab.com/3d-models/grass-f2f2bddb2728483a9105c5f5114eb15e) | Cosmic_dust | CC BY 4.0 |
-| 🪻 Lupine | [Lupine Plant](https://sketchfab.com/3d-models/lupine-plant-bf30f1110c174d4baedda0ed63778439) | rufusrockwell | CC BY 4.0 |
-| 🌳 Tree | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
+| 🌾 Grass (pyramid, food chain) | [Grass](https://sketchfab.com/3d-models/grass-f2f2bddb2728483a9105c5f5114eb15e) | Cosmic_dust | CC BY 4.0 |
+| 🪻 Lupine (pyramid) | [Lupine Plant](https://sketchfab.com/3d-models/lupine-plant-bf30f1110c174d4baedda0ed63778439) | rufusrockwell | CC BY 4.0 |
+| 🌾 Grass (food web) | [Realistics grass 06](https://skfb.ly/oQLNJ) | POLYSCAN | CC BY 4.0 |
+| 🌳 Tree (food web) | [Realistic Europan Tree](https://skfb.ly/oxyBJ) | BB ARTS | CC BY 4.0 |
+| 🌸 Lungwort (food web) | [Spring Lungwort flowering plants](https://skfb.ly/oQDEK) | hkhalif | CC BY 4.0 |
+| 🌳 Tree (pyramid) | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
 | 🦗 Grasshopper (pyramid) | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
 | 🐌 Snail (food chain, food web) | [Snail (Non-Commercial)](https://sketchfab.com/3d-models/snail-non-commercial-6d3d307258924e07a7f02a8427f5f018) | Nyilonelycompany | CC BY-NC 4.0 ¹ |
 | 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
