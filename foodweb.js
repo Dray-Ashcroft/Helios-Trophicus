@@ -26,7 +26,7 @@
       note:"Adults sip nectar from flowers such as the lupine; as caterpillars they ate its leaves. India's plain tiger looks very like this one." },
     { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
       note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
-    { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"Pyramid/deer.glb",         size:1.8, facing:"x", turn:25,
+    { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
       note:"In Indian forests deer such as chital and sambar are a main prey of leopards and tigers." },
     { id:"frog",        name:"Frog",        tl:3, x:-6.3, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
     { id:"lizard",      name:"Lizard",      tl:3, x:-2.1, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
@@ -187,6 +187,18 @@
     var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
     var bones = new THREE.Box3(), bp = new THREE.Vector3();
     obj.traverse(function(o){ if (o.isBone){ o.getWorldPosition(bp); bones.expandByPoint(bp); } });
+    var morphBox = new THREE.Box3();   // morph-animated models (the food web deer): measure the shapes the animation shows, not the base mesh
+    obj.traverse(function(o){
+      if (!o.isMesh || !o.geometry.morphAttributes.position) return;
+      var base = o.geometry.getAttribute("position"), M = o.geometry.morphAttributes.position, rel = o.geometry.morphTargetsRelative, v = new THREE.Vector3();
+      function k(a){ if (!a.normalized) return 1; var A = a.array; return A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1; }   // r128 does not unpack compressed values
+      var kb = k(base);
+      for (var t = 0; t < M.length; t += 3){ var km = k(M[t]); for (var i = 0; i < base.count; i += 7){
+        v.set(M[t].getX(i) * km, M[t].getY(i) * km, M[t].getZ(i) * km); if (rel) v.add(new THREE.Vector3(base.getX(i) * kb, base.getY(i) * kb, base.getZ(i) * kb));
+        v.applyMatrix4(o.matrixWorld); morphBox.expandByPoint(v);
+      } }
+    });
+    if (!morphBox.isEmpty()){ box.copy(morphBox); box.getSize(size); box.getCenter(c); }
     if (n.posedBox){   // measure as the skeleton draws it, across the whole animation (lizard, running beetle)
       box.makeEmpty();
       var clip0 = gltf.animations && gltf.animations[0];

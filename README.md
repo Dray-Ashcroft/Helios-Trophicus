@@ -46,7 +46,8 @@ Repository on GitHub & Codeberg
 | 🦗 Grasshopper | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
 | 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
 | 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
-| 🦌 Deer | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
+| 🦌 Deer (pyramid) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
+| 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog | Frog | *credit to be added* | |
 | 🦎 Lizard | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
