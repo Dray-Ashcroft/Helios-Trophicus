@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="Solus-Assets/banner/banner.png" alt="Helios Photonix — Energy Flow Simulator" width="100%">
+  <img src="Solus-Assets/banner/banner.png" alt="Oekos Matrix — Ecological Interaction Simulator" width="100%">
 </p>
 
-<h1 align="center">☀️ Helios Photonix</h1>
+<h1 align="center">🌿 Oekos Matrix</h1>
 
-<p align="center"><em>Energy Flow Simulator: energy pyramid, food chain and food web in 3D</em></p>
+<p align="center"><em>Ecological Interaction Simulator: energy pyramid, food chain and food web in 3D</em></p>
 
 <p align="center"><a href="https://solus-en-orb.stark-kodex.workers.dev"><strong>Explore the Simulation →</strong></a></p>
 

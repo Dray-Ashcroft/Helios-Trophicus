@@ -1,5 +1,5 @@
 /* =========================================================================
-   Helios Photonix — Food chain view
+   Oekos Matrix — Food chain view
    Grass → Snail → Frog → Snake → Eagle, as 3D models on chunks of land.
    Arrows point from the food to the feeder: the direction energy flows.
    They stay hidden until an organism is tapped or the walkthrough shows them.
@@ -68,11 +68,20 @@
   }
 
   // ---------------------------------------------------------------- DOM
+  // the description card folds to its title line (remembered on this device); the camera then re-fits
+  function bindFold(card, key){
+    var b = card && card.querySelector(".fc-fold"); if (!b) return;
+    function set(f){ card.classList.toggle("folded", f); b.setAttribute("aria-expanded", f ? "false" : "true");
+      b.setAttribute("aria-label", f ? "Expand card" : "Collapse card"); b.title = f ? "Expand" : "Collapse"; }
+    try { set(localStorage.getItem(key) === "1"); } catch (e) {}
+    b.addEventListener("click", function(){ var f = !card.classList.contains("folded"); set(f);
+      try { localStorage.setItem(key, f ? "1" : "0"); } catch (e) {} resize(); });
+  }
   function buildDom(){
     view = document.getElementById("foodChainView");
     canvasHost = view.querySelector(".fc-canvas");
     labelsHost = view.querySelector(".fc-labels");
-    infoEl = document.getElementById("fcInfo");
+    infoEl = document.getElementById("fcInfo"); bindFold(infoEl.parentNode, "oekos-fold-chain");
     statusEl = view.querySelector(".fc-status");
     ORGS.forEach(function(o){
       var el = document.createElement("button");
@@ -323,7 +332,7 @@
     var top = 0, bottom = 0;
     if (layoutName === "tall"){
       var hdr = document.querySelector("#ui .header"); if (hdr) top = Math.max(0, hdr.getBoundingClientRect().bottom);
-      var pr = infoEl.getBoundingClientRect(); if (pr.height && pr.top > h * 0.4) bottom = h - pr.top;
+      var pr = infoEl.parentNode.getBoundingClientRect(); if (pr.height && pr.top > h * 0.4) bottom = h - pr.top;
     }
     var avail = Math.max(h * 0.4, h - top - bottom - 12);
     var vf = camera.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);

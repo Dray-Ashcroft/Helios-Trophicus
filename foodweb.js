@@ -1,5 +1,5 @@
 /* =========================================================================
-   Helios Photonix — Food web view
+   Oekos Matrix — Food web view
    The pyramid's organisms linked by who eats whom. Arrows point from the
    food to the feeder (the direction energy flows). They stay hidden until an
    organism is tapped (its links only) or "Show the food chain" is pressed.
@@ -76,9 +76,18 @@
   function list(a){ return a.length > 1 ? a.slice(0, -1).join(", ") + " and " + a[a.length - 1] : (a[0] || ""); }
 
   // ---------------------------------------------------------------- DOM
+  // the description card folds to its title line (remembered on this device); the camera then re-fits
+  function bindFold(card, key){
+    var b = card && card.querySelector(".fc-fold"); if (!b) return;
+    function set(f){ card.classList.toggle("folded", f); b.setAttribute("aria-expanded", f ? "false" : "true");
+      b.setAttribute("aria-label", f ? "Expand card" : "Collapse card"); b.title = f ? "Expand" : "Collapse"; }
+    try { set(localStorage.getItem(key) === "1"); } catch (e) {}
+    b.addEventListener("click", function(){ var f = !card.classList.contains("folded"); set(f);
+      try { localStorage.setItem(key, f ? "1" : "0"); } catch (e) {} resize(); });
+  }
   function buildDom(){
     view = document.getElementById("foodWebView");
-    labelsHost = view.querySelector(".fc-labels"); infoEl = document.getElementById("fwInfo"); statusEl = view.querySelector(".fc-status");
+    labelsHost = view.querySelector(".fc-labels"); infoEl = document.getElementById("fwInfo"); bindFold(infoEl.parentNode, "oekos-fold-web"); statusEl = view.querySelector(".fc-status");
     NODES.forEach(function(n){
       var el = document.createElement("button"); el.type = "button"; el.className = "fc-tag fw-tag"; el.style.setProperty("--tl", hex(TL_COLOR[n.tl]));
       el.innerHTML = '<span class="fc-tl">TL' + n.tl + '</span><span class="fc-name">' + n.name + '</span>';
@@ -245,7 +254,7 @@
     // fit all four rows between the header and the bottom of the screen
     var want = (w / h < 0.9) ? "tall" : "wide"; if (want !== layoutName) applyLayout(want);
     var hdr = document.querySelector("#ui .header"), top = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0, bottom = 0;
-    if (layoutName === "tall"){ var pr = infoEl.getBoundingClientRect(); if (pr.height && pr.top > h * 0.4) bottom = h - pr.top; }   // the info panel docks at the bottom on phones
+    if (layoutName === "tall"){ var pr = infoEl.parentNode.getBoundingClientRect(); if (pr.height && pr.top > h * 0.4) bottom = h - pr.top; }   // the info panel docks at the bottom on phones
     var avail = Math.max(h * 0.4, h - top - bottom - 8);
     var halfW = layout.halfW, halfH = layout.halfH, vf = camera.fov * D2R, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
     fitDist = Math.max(halfW / Math.tan(hf / 2), halfH / Math.tan(vf / 2) * h / avail) * 1.04;

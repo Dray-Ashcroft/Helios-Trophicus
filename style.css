@@ -873,3 +873,25 @@
   #foodWebView.fw-tall .fw-tag .fc-tl{ display:none; }
   #foodWebView.fw-tall .fw-tag{ padding:3px 6px; border-radius:7px; }
   #foodWebView.fw-tall .fw-tag .fc-name{ font-size:10.5px; font-weight:600; letter-spacing:-.01em; }
+
+  /* ---- view switch: three Material Symbols icons (names on hover and for screen readers) ---- */
+  .view-switch .view-btn{ width:44px; padding:0; justify-content:center; gap:0; }
+  .view-switch .view-btn svg{ display:block; width:20px; height:20px; }
+  @media (pointer:coarse){ .view-switch .view-btn{ width:48px; } .view-switch .view-btn svg{ width:22px; height:22px; } }
+
+  /* ---- collapsible description cards (food chain, food web): folded to the title line ---- */
+  .fc-panel .fc-fold{ position:absolute; top:9px; right:9px; width:30px; height:30px; display:grid; place-items:center; padding:0; border:0; border-radius:999px; background:transparent; color:var(--text-dim); cursor:pointer; pointer-events:auto; }
+  .fc-panel .fc-fold:hover{ color:var(--text); background:rgba(255,255,255,0.06); }
+  .fc-panel .fc-fold:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  .fc-panel .fc-fold svg{ width:22px; height:22px; transition:transform .25s ease; }
+  .fc-panel .fc-info-title{ padding-right:30px; }
+  .fc-panel.folded .fc-fold svg{ transform:rotate(180deg); }
+  .fc-panel.folded > [id$="Info"] > :not(.fc-info-title){ display:none; }
+
+  /* ---- pyramid panel: folds to the walkthrough's step arrows ---- */
+  .panel-fold-btn{ flex:none; }
+  .panel-fold-btn svg{ width:20px; height:20px; transition:transform .25s ease; }
+  #infoPanel.panel-folded .eco-graph-fold, #infoPanel.panel-folded #prodReadout, #infoPanel.panel-folded .hint, #infoPanel.panel-folded .eco-collapse-btn{ display:none !important; }
+  #infoPanel.panel-folded .panel-actions{ margin-top:0; padding-top:0; border-top-color:transparent; }
+  #infoPanel.panel-folded .panel-fold-btn svg{ transform:rotate(180deg); }
+  @media (prefers-reduced-motion:reduce){ .fc-panel .fc-fold svg, .panel-fold-btn svg{ transition:none; } }

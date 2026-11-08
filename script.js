@@ -4670,7 +4670,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     downloadTextFile("helios-trophicus-snapshot-"+exportTimestamp()+".html",html,"text/html;charset=utf-8");
   });
   var STATE_SCHEMA_VERSION = 1;
-  document.getElementById("exportJsonBtn").addEventListener("click",function(){var state={schemaVersion:STATE_SCHEMA_VERSION,project:"Helios Photonix",exportedAt:new Date().toISOString(),selectedTrophicLevel:selectedId,solarState:{state:simState,energyDelivered:solarState.energyDelivered},trophicLevels:TROPHIC_DATA,organisms:ORGANISM_ASSETS,profileImages:profileImageUrls};downloadTextFile("helios-trophicus-state-"+exportTimestamp()+".json",JSON.stringify(state,null,2),"application/json;charset=utf-8");});
+  document.getElementById("exportJsonBtn").addEventListener("click",function(){var state={schemaVersion:STATE_SCHEMA_VERSION,project:"Oekos Matrix",exportedAt:new Date().toISOString(),selectedTrophicLevel:selectedId,solarState:{state:simState,energyDelivered:solarState.energyDelivered},trophicLevels:TROPHIC_DATA,organisms:ORGANISM_ASSETS,profileImages:profileImageUrls};downloadTextFile("helios-trophicus-state-"+exportTimestamp()+".json",JSON.stringify(state,null,2),"application/json;charset=utf-8");});
 
   // ---- Import state JSON: restores what can be restored safely and instantly —
   // organism image URLs, profile image URLs, which organisms have already died
@@ -4681,7 +4681,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
   function importStateJson(raw){
     var data;
     try { data = JSON.parse(raw); } catch (e) { throw new Error("not valid JSON"); }
-    if (!data || typeof data !== "object" || !Array.isArray(data.organisms)) throw new Error("not a Helios Photonix state file");
+    if (!data || typeof data !== "object" || !Array.isArray(data.organisms)) throw new Error("not an Oekos Matrix state file");
     if (data.schemaVersion !== undefined && data.schemaVersion > STATE_SCHEMA_VERSION) throw new Error("file is from a newer version of this app");
 
     cancelCurrentSimulation(); // start from a clean, idle scene before applying imported state
@@ -4893,6 +4893,22 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
       btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
       btn.setAttribute("aria-label", collapsed ? "Show graph" : "Hide graph");
       btn.title = collapsed ? "Show graph" : "Hide graph";
+    });
+  })();
+
+  // ---- Fold the whole panel down to the walkthrough's step arrows (remembered on this device) ----
+  (function(){
+    var btn = document.getElementById("panelFoldBtn"), panel = document.getElementById("infoPanel");
+    if (!btn || !panel) return;
+    function set(folded){
+      panel.classList.toggle("panel-folded", folded);
+      btn.setAttribute("aria-expanded", folded ? "false" : "true");
+      btn.setAttribute("aria-label", folded ? "Expand panel" : "Collapse panel"); btn.title = folded ? "Expand" : "Collapse";
+    }
+    try { set(localStorage.getItem("oekos-fold-pyramid") === "1"); } catch (e) {}
+    btn.addEventListener("click", function(){
+      var folded = !panel.classList.contains("panel-folded"); set(folded);
+      try { localStorage.setItem("oekos-fold-pyramid", folded ? "1" : "0"); } catch (e) {}
     });
   })();
 
