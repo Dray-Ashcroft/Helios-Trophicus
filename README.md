@@ -98,7 +98,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🦋 Butterfly (food web) | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
 | 🐜 Ant (pyramid) | ANT | MAXDESIGN-3D | CC BY 4.0 |
 | 🐁 Mouse (food web) | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
-| 🐀 Black rat (pyramid) | Black Rat (Free download) | Nestaeric | CC BY 4.0 |
+| 🐀 Black rat (pyramid) | [Black Rat (Free download)](https://skfb.ly/p9TYP) | Nestaeric | CC BY 4.0 |
 | 🐇 Rabbit (pyramid) | [RABBIT - Realistic 3D Model (DEMO FREE)](https://skfb.ly/pM9sw) | WildMesh 3D | CC BY-NC 4.0 ¹ |
 | 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog (food chain) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
