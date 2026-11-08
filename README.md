@@ -43,7 +43,7 @@ Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
 | Level | Pyramid | Role |
 |:--|:--|:--|
 | TL4 | Eagle · Owl | Tertiary consumers: eat secondary consumers |
-| TL3 | Lizard · Scorpion · Snake · Frog | Secondary consumers: eat primary consumers |
+| TL3 | Scorpion · Snake · Frog | Secondary consumers: eat primary consumers |
 | TL2 | Mouse · Grasshopper · Butterfly · Deer | Primary consumers: eat producers |
 | TL1 | Grass · Lupine · Tree | Producers: make food by photosynthesis |
 
@@ -100,7 +100,6 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🦌 Deer (pyramid) | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🦌 Deer (food web) | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
-| 🦎 Lizard (pyramid) | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |
