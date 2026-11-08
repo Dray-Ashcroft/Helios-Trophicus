@@ -108,13 +108,13 @@
     { arc:0, from:0, to:1, title:"Grass → Snail", pass:"Passed on 10 · lost 90",
       text:"About <b>10 rel. J</b> reaches the snail: 10% of the 100 fixed by the grass. The other 90 never reaches it: the grass's own respiration (<span class='fc-heat'>heat</span>), parts that are not eaten, and leaves that die and fall as litter for decomposers." },
     { arc:1, from:1, to:2, title:"Snail → Frog", pass:"Passed on 1 · lost 9",
-      text:"The frog gets about <b>1 rel. J</b>. The snail spent most of its 10 staying alive (gliding on its mucus, growing its shell, keeping its cells working), and that energy left as <span class='fc-heat'>heat</span>. Food it could not digest passed out as droppings." },
+      text:"The frog gets about <b>1 rel. J</b>. The snail spent most of its 10 staying alive (moving, breathing, keeping its cells working), and respiration released that energy as <span class='fc-heat'>heat</span>. Its slime trail and the food it could not digest (droppings) carried more energy away to decomposers. Only what it built into its own body can pass to the frog." },
     { arc:2, from:2, to:3, title:"Frog → Snake", pass:"Passed on 0.1 · lost 0.9",
       text:"Only <b>0.1 rel. J</b> reaches the snake. The same pattern repeats at every link: about 90% is lost, mostly as <span class='fc-heat'>heat</span> from respiration." },
     { arc:3, from:3, to:4, title:"Snake → Eagle", pass:"Passed on 0.01 · lost 0.09",
       text:"The eagle at the top receives about <b>0.01 rel. J</b>, one ten-thousandth of what the grass fixed. Nothing eats the eagle in this chain; when it dies, decomposers use what remains." },
     { title:"Why food chains are short", pass:"100 → 10 → 1 → 0.1 → 0.01",
-      text:"Each link keeps only about 10%, so after four or five links too little energy is left to support another level. This is also why there are many grasshoppers and very few eagles: the energy pyramid." }
+      text:"Each link keeps only about 10%, so after four or five links too little energy is left to support another level. This is also why there are many snails and very few eagles: the energy pyramid." }
   ];
   var LAST_STEP = STEPS.length - 1;
   function stepNav(){

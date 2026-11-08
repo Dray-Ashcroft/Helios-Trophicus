@@ -3820,7 +3820,7 @@
   var mortalityButtonEl = document.getElementById("simulateMortalityBtn");
 
   function formatEnergy(v){
-    return (v >= 1 ? v.toString() : v.toFixed(1)) + " energy units";
+    return (v >= 1 ? v.toString() : v.toFixed(1)) + " rel. J";   // same relative unit as the graph and the food chain (TL1 = 100)
   }
 
   function formatBiomass(v){
@@ -4196,7 +4196,7 @@
       layerId: 4,
       icon: "\ud83e\udd85",
       title: "Tertiary Consumers",
-      description: "Tertiary consumers occupy a higher trophic position and obtain energy by feeding on other consumers. This simulation uses four levels as its teaching model \u2014 not every ecosystem has exactly four.",
+      description: "Tertiary consumers obtain energy by feeding on secondary consumers, as an eagle eats a snake or a hawk eats a lizard. This simulation uses four levels as its teaching model \u2014 not every ecosystem has exactly four.",
       media: [
         { type:"image", url:"", title:"Eagle feeding on a snake", caption:"Eagle feeding on a snake" },
         { type:"image", url:"", title:"Hawk feeding on a lizard", caption:"Hawk feeding on a lizard" }

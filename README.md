@@ -16,7 +16,7 @@
 
 **🔗 Food Chain**: Grass → Snail → Frog → Snake → Eagle. Energy falls 100 → 10 → 1 → 0.1 → 0.01 rel. J, with heat lost at every link. Tap an organism to see its arrows, or step through the chain one link at a time.
 
-**🕸️ Food Web**: 13 organisms, 14 feeding links. Arrows stay hidden until you tap an organism: then only its links appear. Or highlight the food chain inside the web.
+**🕸️ Food Web**: 13 organisms, 15 feeding links. Arrows stay hidden until you tap an organism: then only its links appear. Or highlight the food chain inside the web.
 
 ---
 

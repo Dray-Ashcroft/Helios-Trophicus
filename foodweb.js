@@ -25,7 +25,7 @@
     { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
       note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
     { id:"caterpillar", name:"Butterfly", tl:2, x:-2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
-      note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. India's plain tiger looks very like this one." },
+      note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. Its orange-and-black wings are like those of the monarch and India's tiger butterflies (genus Danaus)." },
     { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
       note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
@@ -34,18 +34,19 @@
     { id:"snake",       name:"Snake",       tl:3, x:-2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
       note:"It eats mice (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a frog." },
     { id:"leopard",     name:"Tiger",       tl:3, x: 2.1, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
-      note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
+      apex:true, note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
     { id:"komodo",      name:"Komodo dragon", tl:3, x: 6.3, file:"FoodWeb/komodo.glb",     size:2.5, facing:"z", turn:-60,
-      note:"The largest living lizard and an apex predator: it hunts deer, and nothing preys on an adult. It lives wild only on a few Indonesian islands." },
+      apex:true, note:"The largest living lizard and an apex predator: it hunts deer, and nothing preys on an adult. It lives wild only on a few Indonesian islands." },
     { id:"hawk",        name:"Hawk",        tl:4, x: 4.2, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95,
-      note:"A bird of prey that hunts small mammals such as mice." },
-    { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:1.35 }   // high enough that the lowered wings clear the rock
+      note:"A bird of prey that hunts mice (TL2) and snakes (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a snake." },
+    { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:1.35,
+      note:"A snake eagle: it is TL4 when its snake ate a mouse, and TL5 when the snake ate a frog, as in the food chain view." }   // high enough that the lowered wings clear the rock
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
     ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["grass","squirrel"], ["lupine","caterpillar"],
     ["grasshopper","frog"], ["caterpillar","frog"], ["squirrel","snake"], ["squirrel","hawk"],
-    ["frog","snake"], ["snake","eagle"], ["deer","leopard"], ["deer","komodo"]
+    ["frog","snake"], ["snake","eagle"], ["snake","hawk"], ["deer","leopard"], ["deer","komodo"]
   ];
   var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller
@@ -105,7 +106,7 @@
       '<p class="fc-dim">Tap an organism to see its arrows: from what it eats, to what eats it.</p>' +
       '<button type="button" class="fc-back fc-start" id="fwChainBtn">' + (showChain ? 'Show the whole web' : 'Show the food chain inside the web') + '</button>';
     document.getElementById("fwChainBtn").addEventListener("click", function(){ showChain = !showChain; selected = null; showIntro(); });
-    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → snail → frog → snake → eagle: the chain from the Food chain view is one path through this web.</p>');
+    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → snail → frog → snake → eagle: the chain from the Food chain view is one path through this web. Along this path the snake is at TL4 and the eagle at TL5: an animal\u2019s trophic level depends on what it eats.</p>');
     NODES.forEach(function(x){ x.tag.classList.remove("on"); });
   }
   function select(n){
@@ -115,7 +116,7 @@
     infoEl.innerHTML = '<div class="fc-info-title"><span class="fc-chip" style="--tl:' + hex(TL_COLOR[n.tl]) + '">TL' + n.tl + '</span>' + n.name + '</div>' +
       '<div class="fc-info-role">' + TL_ROLE[n.tl] + '</div>' +
       '<dl><dt>Eats</dt><dd>' + (food.length ? list(food) : 'Nothing: makes its own food by photosynthesis') + '</dd>' +
-      '<dt>Eaten by</dt><dd>' + (pred.length ? list(pred) : (n.tl === 4 ? 'Nothing here: a top carnivore' : 'None shown')) + '</dd></dl>' +
+      '<dt>Eaten by</dt><dd>' + (pred.length ? list(pred) : (n.tl === 4 || n.apex ? 'Nothing: it is an apex (top) predator' : 'None shown')) + '</dd></dl>' +
       (n.note ? '<p>' + n.note + '</p>' : '') +
       '<button type="button" class="fc-back" id="fwBackBtn">Back to the whole web</button>';
     document.getElementById("fwBackBtn").addEventListener("click", function(){ selected = null; showIntro(); });
