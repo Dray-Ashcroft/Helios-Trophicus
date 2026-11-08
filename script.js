@@ -654,11 +654,11 @@
   var OLD_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/";
   var ASSET_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/";
   var ORGANISM_ASSETS = [
-    { id:"tl1-grass-cluster", label:"TL1 · Grass cluster", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Bushes%2C%20Grasses.png",
+    { id:"tl1-grass-cluster", label:"TL1 · Grass", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Bushes%2C%20Grasses.png",
       x:-0.45, y:0.43, z:-0.3, scale:1.65, opacity:0.98 },
-    { id:"tl1-wildflower-cluster", label:"TL1 · Wildflower cluster", trophicLevel:1, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/cereals.png",
+    { id:"tl1-wildflower-cluster", label:"TL1 · Lungwort", trophicLevel:1, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/cereals.png",
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
-    { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
+    { id:"tl1-young-tree", label:"TL1 · Tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
     { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"builtin:rat",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
@@ -722,7 +722,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🦗","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌸","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🦗","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -837,9 +837,10 @@
   // size = largest dimension (scene units; not to scale). facing = the model's own forward axis.
   // turn = extra yaw so they do not all stare the same way. fly = hovers at this fraction of its tier's height instead of standing on the floor.
   var ORGANISM_MODELS = {
-    "tl1-grass-cluster":      { file:"Pyramid/grass.glb",        size:2.21,  facing:"z",  turn:0 },
-    "tl1-wildflower-cluster": { file:"Pyramid/lupine.glb",       size:1.5,  facing:"z",  turn:0 },
-    "tl1-young-tree":         { file:"Pyramid/tree.glb",         size:2.35, facing:"z",  turn:0,   sink:0.07 },   // roots partly in the soil
+    // producers: the food web's full-quality models (shared files, downloaded once for both views)
+    "tl1-grass-cluster":      { file:"FoodWeb/grass.glb",        size:2.1,  facing:"z",  turn:0,   ys:1.8 },   // a wide, low patch of thin blades: drawn taller so it reads
+    "tl1-wildflower-cluster": { file:"FoodWeb/lungwort.glb",     size:1.5,  facing:"z",  turn:0 },
+    "tl1-young-tree":         { file:"FoodWeb/tree.glb",         size:2.35, facing:"z",  turn:0 },
     "tl2-rabbit":             { file:"Pyramid/rat.glb",          size:1.5,  facing:"z",  turn:-25, posedBox:true, clipName:"idle_a2" },   // black rat, idle
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/pigeon.glb",       size:1.15, facing:"z", turn:35,  posedBox:true },   // rock pigeon: eats seeds and grain
@@ -933,7 +934,7 @@
       } else if (!bones.isEmpty()){ var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, cfg.fly ? -bc.y : -bones.min.y, -bc.z); }   // rigged: trust the skeleton
       else obj.position.set(-c.x, cfg.fly ? -c.y : -box.min.y - (cfg.sink || 0) * size.y, -c.z);
       var pivot = new THREE.Group(); pivot.add(obj);
-      var k = cfg.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k);
+      var k = cfg.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k); if (cfg.ys) pivot.scale.y *= cfg.ys;
       var base = { "z":0, "x":-90, "-x":90 }[cfg.facing] || 0;
       pivot.rotation.y = (base + CAMERA_FACING + cfg.turn) * D2R;
       var root = new THREE.Group(); root.add(pivot); root.visible = false; modelScene.add(root);
