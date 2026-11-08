@@ -2709,7 +2709,7 @@
       for (var f = 0; f < 4; f++) rmToe(cs, wr, s, -0.25 + f * 0.2, 0.08 + (f === 1 || f === 2 ? 0.03 : 0), 0.006);
     });
     k.ball(P3(0, -0.005, 0.13), 0.018, 0.008, 0.03);                                      // xiphisternum
-    return { bones: k.build(), tissue: cs.tissue.build(), tissueHex: 0x6b7a3c, decayHex: 0x33291c, boneHex: 0xe4dac2, target: 0.85, sink: 0.012 };
+    return { bones: k.build(), tissue: cs.tissue.build(), tissueHex: 0x8fae3e, decayHex: 0x33291c, boneHex: 0xe4dac2, target: 0.85, sink: 0.012 };   // tissue: the tree frog's yellow-green
   }
 
   // ---------- INSECT: empty chitin husk (exuvia-like remains) ----------
@@ -2739,6 +2739,32 @@
       });
     });
     return { bones: k.build(), tissue: null, boneHex: 0xb79a63, target: 0.62, sink: 0.006, husk: true };
+  }
+  // ---------- SCORPION: moulted / empty exoskeleton (arachnid: 8 legs, pincers, segmented tail with a sting) ----------
+  function buildScorpionRemains(){
+    var k = new BoneKit(0x6a3c22, 0.04), dark = new THREE.Color(0x2e1a10), i;
+    k.ball(P3(0, 0.03, 0.30), 0.085, 0.035, 0.09);                                         // prosoma (carapace)
+    k.ball(P3(0, 0.06, 0.33), 0.012, 0.01, 0.012, dark);                                    // median eyes
+    for (i = 0; i < 7; i++) k.ball(P3(0, 0.028, 0.19 - i * 0.05), 0.085 - i * 0.004, 0.032, 0.03);   // mesosoma: 7 broad plates
+    var prev = P3(0, 0.03, -0.16);
+    for (i = 1; i <= 5; i++){                                                                // metasoma: 5 tail segments, curling up and forward
+      var a = i * 0.42, cur = P3(0, 0.03 + Math.sin(a) * 0.16, -0.16 - Math.sin(Math.min(a, 1.57)) * 0.2 + (a > 1.57 ? (a - 1.57) * 0.12 : 0));
+      k.rod(prev, cur, 0.024 - i * 0.002, true); k.ball(cur, 0.026 - i * 0.002, 0.026 - i * 0.002, 0.026 - i * 0.002); prev = cur;
+    }
+    var tip = P3(0, prev.y + 0.03, prev.z + 0.07);
+    k.ball(P3(0, prev.y + 0.01, prev.z + 0.03), 0.026, 0.024, 0.035);                       // telson (venom bulb)
+    k.rod(P3(0, prev.y + 0.01, prev.z + 0.05), tip, 0.007, false, dark);                    // aculeus (sting)
+    [-1, 1].forEach(function(s){
+      var b = P3(s * 0.06, 0.02, 0.38), e = P3(s * 0.15, 0.02, 0.48), w = P3(s * 0.17, 0.02, 0.58);   // pedipalp
+      k.rod(b, e, 0.014, true).rod(e, w, 0.016, true);
+      k.ball(P3(s * 0.18, 0.025, 0.64), 0.04, 0.025, 0.06);                                 // chela (claw hand)
+      k.rod(P3(s * 0.165, 0.02, 0.68), P3(s * 0.15, 0.02, 0.75), 0.008, true, dark).rod(P3(s * 0.2, 0.02, 0.68), P3(s * 0.19, 0.02, 0.75), 0.008, true, dark);   // fingers
+      for (var l = 0; l < 4; l++){                                                          // 4 walking legs per side
+        var z = 0.34 - l * 0.06, h = P3(s * 0.07, 0.02, z), kn = P3(s * 0.18, 0.06, z + 0.04 - l * 0.03), ft = P3(s * 0.28, 0.0, z - 0.02 - l * 0.05);
+        k.rod(h, kn, 0.008, true).rod(kn, ft, 0.006, true);
+      }
+    });
+    return { bones: k.build(), tissue: null, boneHex: 0x6a3c22, target: 0.5, sink: 0.006, husk: true };
   }
   function buildCaterpillarRemains(){
     var k = new BoneKit(0x5a4128, 0.05), t = new BoneKit(0xffffff, 0.12), i;
@@ -2871,6 +2897,38 @@
     return { bones: k.build(), tissue: cs.tissue.build(), tissueHex: 0x5a4a38, decayHex: 0x33291c, boneHex: 0xe6dcc6, target: 0.9, sink: 0.012 };
   }
 
+  // Pigeon: a seed-eater, not a raptor. Short straight bill with a soft cere at its base, rounded skull with modest
+  // orbits, short neck, very deep keel (big flight muscles), short legs with small toes; grey plumage tissue.
+  function buildPigeonRemains(){
+    var cs = new Carcass(0xe6dcc6, 0xffffff), k = cs.bones, i;
+    k.ball(P3(0, 0.03, 0.44), 0.045, 0.04, 0.05);                                           // rounded skull
+    k.rod(P3(0, 0.025, 0.48), P3(0, 0.018, 0.56), 0.012, true);                             // short straight bill
+    k.ball(P3(0, 0.032, 0.49), 0.016, 0.012, 0.016, new THREE.Color(0xf2efe6));             // cere
+    [-1, 1].forEach(function(s){ k.ball(P3(s * 0.03, 0.045, 0.45), 0.016, 0.014, 0.016, RM_DARK); });
+    var prev = P3(0, 0.02, 0.4);
+    for (i = 1; i <= 7; i++){ var cur = P3(Math.sin(i * 0.4) * 0.012, 0.02, 0.4 - i * 0.022); k.rod(prev, cur, 0.012, true); prev = cur; }   // short neck
+    k.ball(P3(0, 0.02, 0.0), 0.045, 0.028, 0.17);                                           // synsacrum
+    k.ball(P3(0, 0.005, 0.08), 0.09, 0.012, 0.14).ball(P3(0, -0.045, 0.08), 0.008, 0.05, 0.14);   // sternum + very deep keel
+    k.ball(P3(0, 0.02, -0.2), 0.02, 0.025, 0.025);                                          // pygostyle
+    cs.flesh(P3(0, 0.05, 0.05), 0.12, 0.08, 0.2).flesh(P3(0, 0.045, 0.32), 0.04, 0.04, 0.07).flesh(P3(0, 0.045, 0.44), 0.05, 0.045, 0.06);
+    [-1, 1].forEach(function(s){
+      k.rod(P3(s * 0.1, 0.005, 0.2), P3(s * 0.005, -0.012, 0.14), 0.008, true);             // furcula
+      for (var r = 0; r < 5; r++){ var rz = 0.16 - r * 0.04; k.rod(P3(s * 0.03, 0.02, rz), P3(s * 0.085, 0.0, rz - 0.02), 0.005); }
+      var sh = P3(s * 0.06, 0.02, 0.17), el = P3(s * 0.2, 0.02, 0.06), wr = P3(s * 0.18, 0.02, -0.22), hd = P3(s * 0.2, 0.02, -0.36);
+      cs.limb(sh, el, 0.011, 4, true).limb(el, wr, 0.009, 4, true).limb(wr, hd, 0.007, 4, true);   // folded wing
+      var hip = P3(s * 0.06, 0.02, -0.06), kn = P3(s * 0.12, 0.02, 0.03), an = P3(s * 0.13, 0.01, -0.13), ft = P3(s * 0.12, 0.008, -0.22);
+      cs.limb(hip, kn, 0.011, 4, true).limb(kn, an, 0.01, 4, true).limb(an, ft, 0.008, 4, true);  // short legs
+      [[-0.4, 0.06], [-0.05, 0.07], [0.3, 0.06]].forEach(function(td){ rmToe(cs, ft, s, td[0], td[1], 0.004); });
+      k.rod(ft, P3(s * 0.12, 0.006, -0.27), 0.004, true);                                   // hallux
+    });
+    return { bones: k.build(), tissue: cs.tissue.build(), tissueHex: 0x7a7680, decayHex: 0x33291c, boneHex: 0xe6dcc6, target: 0.7, sink: 0.012 };
+  }
+
+  // Remains footprint per organism (scene units). The models are not to scale, but their remains keep a sensible
+  // order of size on the soil: rabbit > rat > pigeon > frog > scorpion, grasshopper.
+  var RM_TARGET = { "tl2-deer":0.95, "tl2-rabbit":0.8, "tl2-caterpillar":0.62, "tl2-herbivorous-insect":0.42,
+                    "tl3-frog":0.5, "tl3-scorpion":0.45, "tl3-snake":1.15, "tl4-eagle":0.9, "tl4-owl":0.85 };
+
   // ---------- PLANT LITTER ----------
   function rmLeafTexture(kind){
     var W = kind === "blade" ? 48 : 128, H = 256, c = document.createElement("canvas");
@@ -2951,8 +3009,8 @@
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a rat (rodent skeleton)
-    "tl2-caterpillar": buildEagleRemains, "tl2-deer": buildRabbitRemains,   // the slot now holds a pigeon (bird skeleton)
-    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-scorpion": buildInsectRemains,
+    "tl2-caterpillar": buildPigeonRemains, "tl2-deer": buildRabbitRemains,   // the slot now holds a pigeon
+    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-scorpion": buildScorpionRemains,
     "tl4-eagle": buildEagleRemains, "tl4-owl": buildEagleRemains
   };
 
@@ -2962,6 +3020,7 @@
     if (!build || !slot) return null;
     var def = build();
     var scale = def.scale || 1;
+    if (RM_TARGET[asset.id]) def.target = RM_TARGET[asset.id];
     if (def.target){
       def.bones.computeBoundingBox();
       var bb = def.bones.boundingBox;
