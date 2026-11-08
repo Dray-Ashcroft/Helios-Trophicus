@@ -45,7 +45,7 @@ Repository on GitHub & Codeberg
 | 🌳 Tree | [Tree2](https://skfb.ly/oA7RW) | sale7zrn | CC BY 4.0 |
 | 🦗 Grasshopper | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
 | 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
-| 🐿️ Squirrel | [Curious Squirrel](https://sketchfab.com/3d-models/curious-squirrel-0b5e2372910c4bd18e5c2fe2f1ee0b4c) | iRahulRajput | CC BY 4.0 |
+| 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🦌 Deer | [Realistic Deer](https://skfb.ly/oHEYJ) | pighunt3r15 | CC BY 4.0 |
 | 🐸 Frog | Frog | *credit to be added* | |
 | 🦎 Lizard | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |

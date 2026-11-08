@@ -660,7 +660,7 @@
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
     { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
-    { id:"tl2-rabbit", label:"TL2 · Squirrel", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
+    { id:"tl2-rabbit", label:"TL2 · Mouse", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
     { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
@@ -723,7 +723,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐇","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl3-leopard":"🐅","tl4-eagle":"🦅","tl4-hawk":"🦅"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl3-leopard":"🐅","tl4-eagle":"🦅","tl4-hawk":"🦅"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -841,7 +841,7 @@
     "tl1-grass-cluster":      { file:"Pyramid/grass.glb",        size:2.21,  facing:"z",  turn:0 },
     "tl1-wildflower-cluster": { file:"Pyramid/lupine.glb",       size:1.5,  facing:"z",  turn:0 },
     "tl1-young-tree":         { file:"Pyramid/tree.glb",         size:2.35, facing:"z",  turn:0,   sink:0.07 },   // roots partly in the soil
-    "tl2-rabbit":             { file:"Pyramid/squirrel.glb",     size:1.3,  facing:"z",  turn:-25 },
+    "tl2-rabbit":             { file:"Pyramid/mouse.glb",        size:1.7,  facing:"z",  turn:-25, posedBox:true },   // sand mouse, idle
     "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
     "tl2-caterpillar":        { file:"Pyramid/butterfly.glb",    size:1.0, facing:"z",  turn:35,  posedBox:true, fly:0.55 },   // butterfly hovering, wings flapping
     "tl2-deer":               { file:"Pyramid/deer.glb",         size:1.8, facing:"x",  turn:30 },
@@ -2943,7 +2943,7 @@
     "tl1-grass-cluster": function(){ return buildPlantRemains("grass"); },
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
-    "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds the squirrel
+    "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a mouse (rodent skeleton)
     "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds a butterfly
     "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains, "tl3-leopard": buildLeopardRemains,
     "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains

@@ -24,13 +24,14 @@
     { id:"grasshopper", name:"Grasshopper", tl:2, x:-6.3, file:"FoodChain/grasshopper.glb", size:1.2, facing:"-x", turn:30 },
     { id:"caterpillar", name:"Butterfly", tl:2, x:-2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
       note:"Adults sip nectar from flowers such as the lupine; as caterpillars they ate its leaves. India's plain tiger looks very like this one." },
-    { id:"squirrel",    name:"Squirrel",    tl:2, x: 2.1, file:"Pyramid/squirrel.glb",     size:1.2, facing:"z", turn:-20 },
+    { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
+      note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"Pyramid/deer.glb",         size:1.8, facing:"x", turn:25,
       note:"In Indian forests deer such as chital and sambar are a main prey of leopards and tigers." },
     { id:"frog",        name:"Frog",        tl:3, x:-6.3, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
     { id:"lizard",      name:"Lizard",      tl:3, x:-2.1, file:"Pyramid/lizard.glb",       size:1.4, facing:"z", turn:-30, clipName:"idle", posedBox:true },
     { id:"snake",       name:"Snake",       tl:3, x: 2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
-      note:"It eats squirrels (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a squirrel, TL4 when it eats a frog." },
+      note:"It eats mice (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a frog." },
     { id:"leopard",     name:"Tiger",       tl:3, x: 6.3, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
       note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
     { id:"hawk",        name:"Hawk",        tl:4, x:-2.4, file:"Pyramid/hawk.glb",         size:1.7, facing:"z", turn:20, fly:0.95 },
@@ -38,7 +39,7 @@
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
-    ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["tree","squirrel"], ["lupine","caterpillar"],
+    ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["grass","squirrel"], ["lupine","caterpillar"],
     ["grasshopper","frog"], ["grasshopper","lizard"], ["caterpillar","frog"], ["caterpillar","lizard"], ["squirrel","snake"],
     ["frog","snake"], ["lizard","hawk"], ["snake","eagle"], ["deer","leopard"]
   ];
