@@ -51,7 +51,8 @@ Repository on GitHub & Codeberg
 | 🦎 Lizard | [Lizard](https://sketchfab.com/3d-models/lizard-2405fa5c4338474ebb646a21aaf81f2d) | Froggreen | CC BY 4.0 |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |
-| 🐆 Leopard | [Prowling Leopard](https://skfb.ly/pKHxA) | iRahulRajput | CC BY 4.0 |
+| 🐅 Tiger (pyramid) | [White Tiger (RIGGED ANIMATED)](https://skfb.ly/oIUBX) | MotionStreamStudios | CC BY 4.0 |
+| 🐆 Leopard (food web) | [Prowling Leopard](https://skfb.ly/pKHxA) | iRahulRajput | CC BY 4.0 |
 | 🦅 Hawk | [Hawk In Full Wingspan](https://skfb.ly/pKvNF) | restore50 | CC BY 4.0 |
 | 🦅 Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |
 
