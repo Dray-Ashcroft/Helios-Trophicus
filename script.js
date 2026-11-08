@@ -4170,10 +4170,7 @@
       title: "Primary Consumers",
       description: "Primary consumers obtain their energy by feeding directly on producers. They include herbivorous insects, mammals and other plant-eating animals \u2014 not insects alone.",
       media: [
-        { type:"image", url:"", title:"Rabbit feeding on grass", caption:"Rabbit feeding on grass" },
-        { type:"image", url:"", title:"Caterpillar feeding on leaves", caption:"Caterpillar feeding on leaves" },
-        { type:"image", url:"", title:"Grasshopper feeding on grass", caption:"Grasshopper feeding on grass" },
-        { type:"image", url:"", title:"Deer feeding on vegetation", caption:"Deer feeding on vegetation" }
+        { type:"image", url:"", title:"Grasshopper feeding on grass", caption:"Grasshopper feeding on grass" }
       ]
     },
     secondaryConsumers: {
@@ -4182,9 +4179,7 @@
       title: "Secondary Consumers",
       description: "Secondary consumers obtain energy by feeding on primary consumers.",
       media: [
-        { type:"image", url:"", title:"Frog feeding on an insect", caption:"Frog feeding on an insect" },
-        { type:"image", url:"", title:"Lizard feeding on an insect", caption:"Lizard feeding on an insect" },
-        { type:"image", url:"", title:"Snake feeding on a smaller animal", caption:"Snake feeding on a smaller animal" }
+        { type:"image", url:"", title:"Frog feeding on an insect", caption:"Frog feeding on an insect" }
       ]
     },
     tertiaryConsumers: {
@@ -4193,8 +4188,7 @@
       title: "Tertiary Consumers",
       description: "Tertiary consumers obtain energy by feeding on secondary consumers, as an eagle or an owl eats a snake. This simulation uses four levels as its teaching model \u2014 not every ecosystem has exactly four.",
       media: [
-        { type:"image", url:"", title:"Eagle feeding on a snake", caption:"Eagle feeding on a snake" },
-        { type:"image", url:"", title:"Owl feeding on a snake", caption:"Owl feeding on a snake" }
+        { type:"image", url:"", title:"Eagle feeding on a snake", caption:"Eagle feeding on a snake" }
       ]
     }
   };
@@ -4223,12 +4217,22 @@
   // ---- Profile images: every example is an image placeholder with an optional URL ----
   // Keys are "<layerId>:<example index>". Saved in localStorage, exported in the project
   // JSON, and baked into HTML snapshots through PROFILE_IMAGE_DEFAULTS.
-  var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v1";
-  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Rabbit%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Caterpillar%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","2:3":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Deer%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","3:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Lizard%20-%20%20Insect%20Energion.png","3:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Snake%20-%20Rabbit%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
+  var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v2";   // v2: one example picture per level
+  // Older saves and exports keyed several pictures per level ("2:0".."2:3"); only the ones kept carry over:
+  // TL1 seed-to-plant, TL2 grasshopper (was "2:2"), TL3 frog, TL4 eagle.
+  var OLD_PROFILE_KEY_MAP = { "1:0":"1:0", "2:2":"2:0", "3:0":"3:0", "4:0":"4:0" };
+  function upgradeProfileImageKeys(obj, isOld){   // isOld: known to be the old layout (a v1 save); otherwise detected from the keys
+    var old = isOld || Object.keys(obj).some(function(k){ return +k.split(":")[1] > 0; });
+    if (!old) return obj;
+    var out = {}; Object.keys(OLD_PROFILE_KEY_MAP).forEach(function(k){ if (k in obj) out[OLD_PROFILE_KEY_MAP[k]] = obj[k]; });
+    return out;
+  }
+  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
   var profileImageUrls = {};
   Object.keys(PROFILE_IMAGE_DEFAULTS).forEach(function(k){ profileImageUrls[k] = PROFILE_IMAGE_DEFAULTS[k]; });
   try {
-    var savedProfileImages = JSON.parse(window.localStorage.getItem(PROFILE_IMAGE_STORAGE_KEY) || "{}");
+    var savedV2 = window.localStorage.getItem(PROFILE_IMAGE_STORAGE_KEY), savedV1 = window.localStorage.getItem("ecosystem-profile-image-urls-v1");
+    var savedProfileImages = savedV2 ? JSON.parse(savedV2) : (savedV1 ? upgradeProfileImageKeys(JSON.parse(savedV1), true) : {});   // v1 saves kept only what the user changed, so "2:0" there was a rabbit picture and is dropped
     Object.keys(savedProfileImages).forEach(function(k){ if (typeof savedProfileImages[k] === "string" && savedProfileImages[k].indexOf("supabase.co") === -1) profileImageUrls[k] = savedProfileImages[k]; });   // dead Supabase links are skipped
   } catch (e) { /* localStorage can be unavailable for some file:// contexts */ }
   function saveProfileImageUrls(){
@@ -4700,8 +4704,9 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     saveOrganismUrls();
 
     if (data.profileImages && typeof data.profileImages === "object"){
-      Object.keys(data.profileImages).forEach(function(k){
-        if (typeof data.profileImages[k] === "string" && data.profileImages[k].indexOf("supabase.co") === -1) profileImageUrls[k] = data.profileImages[k];
+      var impImages = upgradeProfileImageKeys(data.profileImages);   // files exported before one-picture-per-level carry the full old set
+      Object.keys(impImages).forEach(function(k){
+        if (typeof impImages[k] === "string" && impImages[k].indexOf("supabase.co") === -1) profileImageUrls[k] = impImages[k];
       });
       saveProfileImageUrls();
     }
