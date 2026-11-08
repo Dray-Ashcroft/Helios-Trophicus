@@ -61,7 +61,7 @@ Repository on GitHub & Codeberg
 | 🦅 Hawk | [Hawk In Full Wingspan](https://skfb.ly/pKvNF) | restore50 | CC BY 4.0 |
 | 🦅 Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |
 
-<sub>¹ Non-commercial use only. Models were simplified and compressed for classroom panels; creators retain ownership.</sub>
+<sub>¹ Non-commercial use only. Models keep their full original geometry; textures are packed to 2048 px WebP for faster loading. Creators retain ownership.</sub>
 
 ---
 
