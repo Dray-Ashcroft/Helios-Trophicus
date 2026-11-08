@@ -34,7 +34,7 @@ Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
 ### 🕸️ Food Web
 13 organisms joined by 15 feeding links.
 - Arrows stay hidden until you **tap an organism**; then only its links appear, with what it eats, what eats it and a short note.
-- **Show the food chain inside the web** to see that a chain is one path through the web, and that an animal's trophic level depends on what it eats.
+- **Show the food chain inside the web** (grass → mouse → fox → eagle) to see that a chain is one path through the web, and that an animal's trophic level depends on what it eats.
 
 ---
 
@@ -47,7 +47,7 @@ Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
 | TL2 | Mouse · Grasshopper · Butterfly · Deer | Primary consumers: eat producers |
 | TL1 | Grass · Lupine · Tree | Producers: make food by photosynthesis |
 
-The food web adds a snail, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
+The food web adds a snail, a red fox, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
 
 ---
 
@@ -98,8 +98,9 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🦋 Butterfly | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
 | 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🦌 Deer | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
-| 🐸 Frog (food chain, food web) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
+| 🐸 Frog (food chain) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
 | 🐸 Common frog (pyramid) | Common Frog | kenchoo | CC BY-NC-SA 4.0 ¹ |
+| 🦊 Red fox (food web) | Fox | *credit to be added* | |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |

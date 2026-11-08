@@ -24,15 +24,16 @@
       note:"A spring wildflower: its flowers open pink and turn blue as they age, and their nectar feeds early bees and butterflies." },
     { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
       note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
-    { id:"caterpillar", name:"Butterfly", tl:2, x:-2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
+    { id:"caterpillar", name:"Butterfly", tl:2, x: 2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
       note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. Its orange-and-black wings are like those of the monarch and India's tiger butterflies (genus Danaus)." },
-    { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
+    { id:"squirrel",    name:"Mouse",       tl:2, x:-2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
       note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
       note:"In Indian forests deer such as chital and sambar are a main prey of leopards and tigers." },
-    { id:"frog",        name:"Frog",        tl:3, x:-6.3, file:"FoodChain/frog.glb",       size:1.1, facing:"z", turn:15 },
+    { id:"fox",         name:"Fox",         tl:3, x:-6.3, file:"FoodWeb/fox.glb",          size:2.8, facing:"z", turn:20, posedBox:true, once:true,   // wakes up once, then stands
+      note:"A red fox: an omnivore that hunts mice and also eats snails, insects and fruit. Eagles such as the golden eagle take foxes, especially young ones." },
     { id:"snake",       name:"Snake",       tl:3, x:-2.1, file:"Pyramid/snake.glb",        size:1.6, facing:"z", turn:-20, clip:[3, 9],
-      note:"It eats mice (TL2) and frogs (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a frog." },
+      note:"Here it eats mice (TL2), so it is a secondary consumer (TL3). Snakes that also eat frogs or lizards feed at TL4 too." },
     { id:"leopard",     name:"Tiger",       tl:3, x: 2.1, file:"Pyramid/tiger.glb",        size:1.9, facing:"z", turn:-70, posedBox:true,
       apex:true, note:"A big cat of India's forests; deer such as chital and sambar are its main prey, and nothing hunts an adult tiger. This one is a white tiger, a rare colour form of the Bengal tiger." },
     { id:"komodo",      name:"Komodo dragon", tl:3, x: 6.3, file:"FoodWeb/komodo.glb",     size:3.2, facing:"z", turn:-60,
@@ -40,15 +41,15 @@
     { id:"owl",         name:"Owl",         tl:4, x: 4.2, file:"Pyramid/owl.glb",          size:2.2, facing:"z", turn:20, fly:0.95, posedBox:true,
       note:"A great horned owl. It hunts mice (TL2) at night and also takes snakes (TL3), so it feeds at two trophic levels: TL3 when it eats a mouse, TL4 when it eats a snake. Owls this size even kill hawks, and little hunts an adult. India's eagle-owl looks much like it." },
     { id:"eagle",       name:"Eagle",       tl:4, x:-2.1, file:"FoodChain/eagle.glb",      size:1.9, facing:"x", turn:-20, fly:1.35,
-      note:"A snake eagle: it is TL4 when its snake ate a mouse, and TL5 when the snake ate a frog, as in the food chain view." }   // high enough that the lowered wings clear the rock
+      note:"It takes snakes and foxes, both secondary consumers (TL3), so here the eagle is a tertiary consumer (TL4)." }   // high enough that the lowered wings clear the rock
   ];
   // food -> feeder (energy flows this way)
   var LINKS = [
     ["grass","grasshopper"], ["lupine","grasshopper"], ["grass","deer"], ["tree","deer"], ["grass","squirrel"], ["lupine","caterpillar"],
-    ["grasshopper","frog"], ["caterpillar","frog"], ["squirrel","snake"], ["squirrel","owl"],
-    ["frog","snake"], ["snake","eagle"], ["snake","owl"], ["deer","leopard"], ["deer","komodo"]
+    ["grasshopper","fox"], ["squirrel","fox"], ["squirrel","snake"], ["squirrel","owl"],
+    ["snake","eagle"], ["fox","eagle"], ["snake","owl"], ["deer","leopard"], ["deer","komodo"]
   ];
-  var CHAIN = ["grass","grasshopper","frog","snake","eagle"];   // the food chain view's chain, found inside this web
+  var CHAIN = ["grass","squirrel","fox","eagle"];   // one food chain inside this web: grass -> mouse -> fox -> eagle
   // wide screens: rows 3.0 apart at full width; tall (phone) screens: rows pulled in and spread taller
   var LAYOUTS = { wide:{ sx:1, row:3.0, halfW:10.8, halfH:6.1, cy:4.7, sun:[-8.6, 0.55, -0.4] },
                   tall:{ sx:0.6, row:3.6, halfW:6.4, halfH:7.4, cy:5.6, sun:[-5.2, -1.0, 0.6] } };
@@ -106,7 +107,7 @@
       '<p class="fc-dim">Tap an organism to see its arrows: from what it eats, to what eats it.</p>' +
       '<button type="button" class="fc-back fc-start" id="fwChainBtn">' + (showChain ? 'Show the whole web' : 'Show the food chain inside the web') + '</button>';
     document.getElementById("fwChainBtn").addEventListener("click", function(){ showChain = !showChain; selected = null; showIntro(); });
-    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → snail → frog → snake → eagle: the chain from the Food chain view is one path through this web. Along this path the snake is at TL4 and the eagle at TL5: an animal\u2019s trophic level depends on what it eats.</p>');
+    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → mouse → fox → eagle: one food chain inside this web. Every path from a producer to a top predator is a food chain; the Food chain view follows another one, with a snail and a frog. Most animals belong to several chains at once.</p>');
     NODES.forEach(function(x){ x.tag.classList.remove("on"); });
   }
   function select(n){
@@ -163,7 +164,7 @@
     ORGS_SUN_LINKS(glow);
     // Every link runs rock to rock: it leaves the side of the food's rock that faces the feeder and its head points
     // into the side of the feeder's rock. Both ends sit just outside the rocks, beside the name labels (which hang
-    // below each rock), so no line passes through an animal or a label. A same-row link (frog -> snake) is a low arc
+    // below each rock), so no line passes through an animal or a label. A same-row link (if any) is a low arc
     // over the gap between the two rocks.
     var EDGE = 1.12;
     LINKS.forEach(function(l){
@@ -177,7 +178,7 @@
       if (b.tl - a.tl >= 2){   // skips a row (mouse -> owl): curve through the nearest gap in the row between, and reach
         var mids = NODES.filter(function(n){ return n.tl === a.tl + 1; }).map(function(n){ return n.x; }).sort(function(u, v){ return u - v; });
         var gapX = 0, best = 1e9;   // nearest gap to the food that is not directly under the feeder (its label hangs there)
-        for (var g = 0; g < mids.length - 1; g++){ var gx = (mids[g] + mids[g + 1]) / 2; if (Math.abs(gx - b.x) > EDGE && Math.abs(gx - a.x) < best){ best = Math.abs(gx - a.x); gapX = gx; } }
+        for (var g = 0; g < mids.length - 1; g++){ var gx = (mids[g] + mids[g + 1]) / 2; var sc = Math.abs(gx - a.x) + 0.01 * Math.abs(gx - b.x); if (Math.abs(gx - b.x) > EDGE && sc < best){ best = sc; gapX = gx; } }   // ties go to the gap nearer the feeder
         var sa = Math.sign(gapX - a.x) || 1, sb = Math.sign(gapX - b.x) || 1;   // the feeder's rock from the gap side, beside its label
         var q0 = new THREE.Vector3(a.x + EDGE * sa, a.y + 0.1, 0.35), q2 = new THREE.Vector3(b.x + EDGE * sb, b.y + 0.1, 0.35);
         var q1 = new THREE.Vector3((gapX - 0.36 * q0.x - 0.16 * q2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
@@ -264,7 +265,9 @@
       var clip = gltf.animations[0];
       if (n.clipName) gltf.animations.forEach(function(a){ if (a.name.toLowerCase().indexOf(n.clipName) !== -1) clip = a; });
       if (n.clip && THREE.AnimationUtils.subclip) clip = THREE.AnimationUtils.subclip(clip, "calm", Math.round(n.clip[0] * 30), Math.round(n.clip[1] * 30), 30);
-      var mixer = new THREE.AnimationMixer(obj); mixer.clipAction(clip).play(); mixers.push(mixer);
+      var mixer = new THREE.AnimationMixer(obj), act = mixer.clipAction(clip);
+      if (n.once){ act.setLoop(THREE.LoopOnce, 1); act.clampWhenFinished = true; }   // e.g. the fox wakes up once and stays standing
+      act.play(); mixers.push(mixer);
     }
   }
 
