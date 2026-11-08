@@ -1,5 +1,5 @@
 /* =========================================================================
-   Helios Trophicus — Food web view
+   Helios Photonix — Food web view
    The pyramid's organisms linked by who eats whom. Arrows point from the
    food to the feeder (the direction energy flows). Tap an organism to see
    only its links; "Show the food chain" lights the chain inside the web.

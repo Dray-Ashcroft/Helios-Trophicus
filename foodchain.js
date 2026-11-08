@@ -1,5 +1,5 @@
 /* =========================================================================
-   Helios Trophicus — Food chain view
+   Helios Photonix — Food chain view
    Grass → Grasshopper → Frog → Snake → Eagle, as 3D models on five steps.
    Arrows point from the food to the feeder: the direction energy flows.
    About 10% of the energy at one level reaches the next; the rest is used in
