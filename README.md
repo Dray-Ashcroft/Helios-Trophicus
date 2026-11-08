@@ -99,7 +99,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🐁 Mouse | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🦌 Deer | [Animated Deer](https://skfb.ly/oGXBO) | igor-lir | CC BY 4.0 |
 | 🐸 Frog (food chain) | [Frog](https://skfb.ly/oSSIz) | kenchoo | CC BY-NC-ND 4.0 ¹ ² |
-| 🐸 Common frog (pyramid) | Common Frog | kenchoo | CC BY-NC-SA 4.0 ¹ |
+| 🐸 Common frog (pyramid) | [Common Frog](https://skfb.ly/pwHYG) | kenchoo | CC BY-NC-SA 4.0 ¹ |
 | 🦊 Red fox (food web) | Fox | *credit to be added* | |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
 | 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
