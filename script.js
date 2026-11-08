@@ -660,13 +660,13 @@
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
     { id:"tl1-young-tree", label:"TL1 · Young tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
-    { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
+    { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"builtin:rat",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
-    { id:"tl2-herbivorous-insect", label:"TL2 · Herbivorous insect", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
+    { id:"tl2-herbivorous-insect", label:"TL2 · Grasshopper", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
-    { id:"tl2-caterpillar", label:"TL2 · Pigeon", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Caterpillar.png",
+    { id:"tl2-caterpillar", label:"TL2 · Pigeon", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"builtin:pigeon",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
-    { id:"tl2-deer", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Deer.png",
+    { id:"tl2-deer", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
     { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
       x:0.02, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },   // back centre; TL3 is a triangle: snake behind, scorpion and frog in front
@@ -722,7 +722,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🦗","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -4180,7 +4180,7 @@
       layerId: 2,
       icon: "\ud83d\udc3e",
       title: "Primary Consumers",
-      description: "Primary consumers obtain their energy by feeding directly on producers. They include herbivorous insects, mammals and other plant-eating animals \u2014 not insects alone.",
+      description: "Primary consumers obtain their energy by feeding directly on producers. They include plant-eating insects, birds and mammals, such as the grasshopper, pigeon, rat and rabbit here.",
       media: [
         { type:"image", url:"", title:"Grasshopper feeding on grass", caption:"Grasshopper feeding on grass" }
       ]

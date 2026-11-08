@@ -25,7 +25,7 @@
     { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
       note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
     { id:"caterpillar", name:"Butterfly", tl:2, x: 2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
-      note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. Its orange-and-black wings are like those of the monarch and India's tiger butterflies (genus Danaus)." },
+      note:"Adults sip nectar from flowers such as the lungwort; as caterpillars they ate leaves. Its orange-and-black wings are like those of the monarch and India's tiger butterflies (genus Danaus). Nothing in this web eats it, but in nature birds, lizards, frogs and spiders do; its bright colours warn that it tastes bad." },
     { id:"squirrel",    name:"Mouse",       tl:2, x:-2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
       note:"A sand mouse: a small rodent that eats seeds and grain and digs burrows. Its gnawing incisors never stop growing." },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"FoodWeb/deer.glb",         size:1.8, facing:"x", turn:25,
