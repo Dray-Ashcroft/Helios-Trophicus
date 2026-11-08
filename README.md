@@ -85,6 +85,8 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 
 | Organism | Model | Creator | Licence |
 |:--|:--|:--|:--|
+| 🏝️ Pyramid base | Landpiece | nitesharma12457868 | CC BY 4.0 |
+| ✨ Nutrient particles (pyramid) | [Looping Particles (Dust or Bubbles)](https://skfb.ly/6WECP) | Elin | CC BY 4.0 |
 | 🪨 Platforms (food chain, food web) | [Chunk Of Land 1](https://skfb.ly/6uCLu) | Glen Johnson | CC BY 4.0 |
 | ☀️ Sun | [Sun](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645) | SebastianSosnowski | CC BY 4.0 |
 | 🌾 Grass (pyramid, food chain) | [Grass](https://sketchfab.com/3d-models/grass-f2f2bddb2728483a9105c5f5114eb15e) | Cosmic_dust | CC BY 4.0 |

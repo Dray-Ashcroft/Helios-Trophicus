@@ -2111,6 +2111,16 @@
   scene.add(soilBed);
   habitatDisposables.push(soilBedGeo, soilBedMat, soilGrainTexture);
 
+  // ---- the land the ecosystem stands on: "Landpiece" (nitesharma12457868, CC BY 4.0), baked so its top is flat at
+  // y = 0 with a circular footprint of radius 1. Set just under the soil bed and a little wider, so a grassy rim frames
+  // the soil and its earthen underside hangs below like a piece of land lifted out of the ground.
+  var ISLAND_R = SOIL_R * 1.13;
+  loadPyramidGLB("Platform/island.glb").then(function(g){
+    var island = g.scene; island.scale.setScalar(ISLAND_R); island.position.y = -0.03;
+    island.traverse(function(n){ if (n.isMesh){ n.frustumCulled = false; n.raycast = function(){}; } });   // never steals taps from the pyramid
+    scene.add(island);
+  }).catch(function(e){ console.warn("Island base unavailable, keeping the plain soil:", e); });
+
   // scattered grains and pebbles (children of the bed so they follow its swelling)
   var GRAIN_N = 90;
   var grainGeo = new THREE.IcosahedronGeometry(1, 0);
@@ -3436,6 +3446,36 @@
   flowRoot.add(nutTube);
   flowDisposables.push(nutGeo, nutMat);
   var flowNutParts = makeFlowPoints(NUT_PARTS, 0x8fe3c7, 0.12);
+  // Nutrient cloud: "Looping Particles (Dust or Bubbles)" (Elin, CC BY 4.0) tinted mint, drifting between the soil and
+  // the producers in front of the pyramid. Shown only from the Nutrients step on, like the mint line.
+  var nutCloud = null, nutCloudMix = null, nutCloudMats = [];
+  loadPyramidGLB("Pyramid/nutrients.glb").then(function(g){
+    // its bones are animated at 100x scale, so the cloud really spans about +-500 units: squeeze it into the space
+    // between the soil and the producers (about 6 x 1.6 x 3 units, across the front of the pyramid), then enlarge each particle about its own centre
+    // (every particle hangs from one bone) so the dots stay visible at that size
+    nutCloud = g.scene; nutCloud.scale.set(0.0058, 0.0016, 0.0036); nutCloud.position.set(0.15, 0.68, 3.0); nutCloud.visible = false;
+    nutCloud.traverse(function(n){
+      if (!n.isMesh) return; n.frustumCulled = false; n.raycast = function(){};
+      if (n.isSkinnedMesh){
+        var P = n.geometry.getAttribute("position"), J = n.geometry.getAttribute("skinIndex"), sum = {}, cnt = {}, i, j;
+        for (i = 0; i < P.count; i++){ j = J.getX(i); if (!sum[j]){ sum[j] = new THREE.Vector3(); cnt[j] = 0; } sum[j].x += P.getX(i); sum[j].y += P.getY(i); sum[j].z += P.getZ(i); cnt[j]++; }
+        for (i = 0; i < P.count; i++){ j = J.getX(i); var c = sum[j].clone().divideScalar(cnt[j]);
+          P.setXYZ(i, c.x + (P.getX(i) - c.x) * 4.2, c.y + (P.getY(i) - c.y) * 4.2, c.z + (P.getZ(i) - c.z) * 4.2); }
+        P.needsUpdate = true;
+      }
+      var m = n.material; m.map = null; m.color.copy(NUT_COLOR); m.transparent = true; m.opacity = 0; m.depthWrite = false; m.needsUpdate = true;   // normal blending keeps the mint (additive washes it to white)
+      nutCloudMats.push(m);
+    });
+    if (g.animations.length){ nutCloudMix = new THREE.AnimationMixer(nutCloud); nutCloudMix.clipAction(g.animations[0]).play(); }
+    scene.add(nutCloud);
+  }).catch(function(e){ console.warn("Nutrient particles unavailable:", e); });
+  function updateNutCloud(T, delta){   // T < 0: not in a flow
+    if (!nutCloud) return;
+    var a = T > FLOW_T.NUTRIENT_START ? 0.9 * flowStep(0, 1.2, T - FLOW_T.NUTRIENT_START) : 0;
+    nutCloud.visible = a > 0.01;
+    nutCloudMats.forEach(function(m){ m.opacity = a; });
+    if (nutCloud.visible && nutCloudMix) nutCloudMix.update(delta);
+  }
 
   // ---- step controller (single source of truth: ecosystemStep) ----------
   // ecosystemStep : 0 = resting ecosystem, 1..7 = the step shown in the indicator
@@ -3715,7 +3755,7 @@
 
   // Called once per frame from the existing animation loop.
   function updateEcosystemFlow(elapsedTime, delta){
-    if (flow.phase === "IDLE") return;
+    if (flow.phase === "IDLE"){ updateNutCloud(-1, delta); return; }
     // Safety: if the run this belongs to is gone (Reset) or replaced, stop.
     if (!run || run.id !== flow.runId){ cancelEcosystemFlow(); return; }
     if (flow.mode === "PLAYING"){
@@ -3725,6 +3765,7 @@
     var live = (flow.mode === "PLAYING");
     updateProductivityReadout();
     applyPersistentVisuals(flow.T, elapsedTime, live);
+    updateNutCloud(flow.T, delta);
     if (live) applyTransientVisuals(flow.T, delta);
     ageHeatParticles(delta);                                 // leftover heat finishes fading on its own
   }
