@@ -21,7 +21,8 @@
     { id:"tree",        name:"Tree",        tl:1, x: 0.0, file:"Pyramid/tree.glb",         size:2.1, facing:"z", sink:0.07 },
     { id:"lupine",      name:"Lupine",      tl:1, x: 4.6, file:"Pyramid/lupine.glb",       size:1.4, facing:"z",
       note:"A legume: bacteria in its root nodules fix nitrogen, enriching the soil." },
-    { id:"grasshopper", name:"Grasshopper", tl:2, x:-6.3, file:"FoodChain/grasshopper.glb", size:1.2, facing:"-x", turn:30 },
+    { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
+      note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
     { id:"caterpillar", name:"Butterfly", tl:2, x:-2.1, file:"Pyramid/butterfly.glb",  size:1.35, facing:"z", turn:30, posedBox:true, fly:0.45,
       note:"Adults sip nectar from flowers such as the lupine; as caterpillars they ate its leaves. India's plain tiger looks very like this one." },
     { id:"squirrel",    name:"Mouse",       tl:2, x: 2.1, file:"Pyramid/mouse.glb",        size:1.95, facing:"z", turn:-20, posedBox:true,
@@ -92,7 +93,7 @@
       '<p class="fc-dim">Tap an organism to see only its links.</p>' +
       '<button type="button" class="fc-back fc-start" id="fwChainBtn">' + (showChain ? 'Show the whole web' : 'Show the food chain inside the web') + '</button>';
     document.getElementById("fwChainBtn").addEventListener("click", function(){ showChain = !showChain; selected = null; showIntro(); });
-    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → grasshopper → frog → snake → eagle: one food chain hidden inside this web.</p>');
+    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → snail → frog → snake → eagle: the chain from the Food chain view is one path through this web.</p>');
     NODES.forEach(function(x){ x.tag.classList.remove("on"); });
   }
   function select(n){
