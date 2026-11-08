@@ -674,13 +674,11 @@
       x:0.45, y:0.21, z:0.32, scale:0.78, opacity:0.96 },
     { id:"tl3-lizard", label:"TL3 · Lizard", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Lizard%20-%20Insect.png",
       x:-0.3, y:0.25, z:0.45, scale:0.78, opacity:0.96 },
-    // Owl: a night hunter of mice, so a secondary consumer. Flies above the back-left of the tier (no picture: drawn card fallback).
-    { id:"tl3-owl", label:"TL3 · Owl", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"builtin:owl",
-      x:-0.34, y:0.5, z:-0.3, scale:0.85, opacity:0.98 },
     { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
       x:-0.36, y:0.25, z:0.12, scale:0.55, opacity:0.98 },
-    // Second tertiary consumer: starts as a drawn placeholder card — long-press it on the pyramid to paste a picture link.
-    { id:"tl4-hawk", label:"TL4 · Hawk", trophicLevel:4, biomassContribution:6, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Hawk%20Lizard%20Energion.png",
+    // Second tertiary consumer: a great horned owl. Besides mice it takes snakes, frogs and even hawks and other
+    // owls, and little hunts an adult, so it stands at the top beside the eagle. No picture yet: drawn card fallback.
+    { id:"tl4-owl", label:"TL4 · Owl", trophicLevel:4, biomassContribution:6, status:"living", imageUrl:"builtin:owl",
       x:0.30, y:0.68, z:0.12, scale:0.50, opacity:0.98 }
   ];
 
@@ -723,7 +721,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl3-owl":"🦉","tl4-eagle":"🦅","tl4-hawk":"🦅"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl4-eagle":"🦅","tl4-owl":"🦉"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -848,9 +846,8 @@
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
     "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, clipName:"idle", posedBox:true },   // its mesh and skeleton are stored at different scales
-    "tl3-owl":                { file:"Pyramid/owl.glb",          size:1.45, facing:"z",  turn:15,  posedBox:true, fly:0.6 },   // great horned owl in flapping flight
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
-    "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.3,  facing:"z",  turn:25,  fly:0.72 }
+    "tl4-owl":                { file:"Pyramid/owl.glb",          size:1.3,  facing:"z",  turn:15,  posedBox:true, fly:0.62 }   // great horned owl in flapping flight
   };
   var CAMERA_FACING = 30;   // START_THETA: the default view looks from +z, a little from +x
   var modelScene = new THREE.Scene();
@@ -928,7 +925,7 @@
       obj.traverse(function(n){
         if (!n.isMesh) return;
         n.frustumCulled = false;
-        if (!n.geometry.getAttribute("normal")) n.geometry.computeVertexNormals();   // the hawk carries colour per vertex, no normals
+        if (!n.geometry.getAttribute("normal")) n.geometry.computeVertexNormals();   // a model with colour per vertex and no normals
         (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
           m.userData.baseColor = m.color.clone(); m.userData.baseOpacity = m.opacity; m.userData.baseTransparent = m.transparent; mats.push(m);
         });
@@ -2939,8 +2936,8 @@
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a mouse (rodent skeleton)
     "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds a butterfly
-    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains, "tl3-owl": buildEagleRemains,
-    "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains
+    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains,
+    "tl4-eagle": buildEagleRemains, "tl4-owl": buildEagleRemains
   };
 
   // ---- spawn: body falls from the organism's position to a free spot on the soil ----
@@ -4190,10 +4187,10 @@
       layerId: 4,
       icon: "\ud83e\udd85",
       title: "Tertiary Consumers",
-      description: "Tertiary consumers obtain energy by feeding on secondary consumers, as an eagle eats a snake or a hawk eats a lizard. This simulation uses four levels as its teaching model \u2014 not every ecosystem has exactly four.",
+      description: "Tertiary consumers obtain energy by feeding on secondary consumers, as an eagle or an owl eats a snake. This simulation uses four levels as its teaching model \u2014 not every ecosystem has exactly four.",
       media: [
         { type:"image", url:"", title:"Eagle feeding on a snake", caption:"Eagle feeding on a snake" },
-        { type:"image", url:"", title:"Hawk feeding on a lizard", caption:"Hawk feeding on a lizard" }
+        { type:"image", url:"", title:"Owl feeding on a snake", caption:"Owl feeding on a snake" }
       ]
     }
   };
@@ -4223,7 +4220,7 @@
   // Keys are "<layerId>:<example index>". Saved in localStorage, exported in the project
   // JSON, and baked into HTML snapshots through PROFILE_IMAGE_DEFAULTS.
   var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v1";
-  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Rabbit%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Caterpillar%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","2:3":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Deer%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","3:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Lizard%20-%20%20Insect%20Energion.png","3:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Snake%20-%20Rabbit%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png","4:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Hawk%20-%20Lizard%20Energion.png"}; // baked by "Save HTML Snapshot"
+  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Rabbit%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Caterpillar%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","2:3":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Deer%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","3:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Lizard%20-%20%20Insect%20Energion.png","3:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Snake%20-%20Rabbit%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
   var profileImageUrls = {};
   Object.keys(PROFILE_IMAGE_DEFAULTS).forEach(function(k){ profileImageUrls[k] = PROFILE_IMAGE_DEFAULTS[k]; });
   try {
