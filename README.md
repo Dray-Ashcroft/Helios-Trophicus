@@ -102,8 +102,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🐸 Frog (pyramid) | CC0 シュレーゲルアオガエル ♀ Schlegel's Green Tree Frog | — | CC0 1.0 |
 | 🦊 Red fox (food web) | Fox | *credit to be added* | |
 | 🦎 Komodo dragon (food web) | [Komodo Dragon Lizard](https://sketchfab.com/3d-models/komodo-dragon-lizard-f4c8b2accf50495db3d64ca583f2a148) | Nyilonelycompany | Sketchfab Standard |
-| 🐍 Snake (pyramid, food web) | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
-| 🐍 Snake (food chain) | [Snake Titanoboa by Dino Raul](https://skfb.ly/pvE97) | kenchoo | CC BY-NC 4.0 ¹ |
+| 🐍 Spectacled cobra | [Snake attack Animations](https://sketchfab.com/3d-models/snake-attack-animations-multiple-83c4290cd4b648fd942d4bbc2280a3f6) | Imagigoo | CC BY 4.0 |
 | 🦂 Scorpion (pyramid) | [Scorpion](https://skfb.ly/6WLZY) | anthonyvanoo | CC BY 4.0 |
 | 🦉 Owl (pyramid, food web) | [Owl](https://skfb.ly/pwnos) | kenchoo | CC BY-NC 4.0 ¹ |
 | 🐅 Tiger (food web) | [White Tiger (RIGGED ANIMATED)](https://skfb.ly/oIUBX) | MotionStreamStudios | CC BY 4.0 |
