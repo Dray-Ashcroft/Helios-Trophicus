@@ -92,7 +92,7 @@
       '<p class="fc-dim">Tap an organism to see only its links.</p>' +
       '<button type="button" class="fc-back fc-start" id="fwChainBtn">' + (showChain ? 'Show the whole web' : 'Show the food chain inside the web') + '</button>';
     document.getElementById("fwChainBtn").addEventListener("click", function(){ showChain = !showChain; selected = null; showIntro(); });
-    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → grasshopper → frog → snake → eagle: the chain from the Food chain view is one path through this web.</p>');
+    if (showChain) infoEl.insertAdjacentHTML("beforeend", '<p class="fc-pass">Grass → grasshopper → frog → snake → eagle: one food chain hidden inside this web.</p>');
     NODES.forEach(function(x){ x.tag.classList.remove("on"); });
   }
   function select(n){

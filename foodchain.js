@@ -1,6 +1,6 @@
 /* =========================================================================
    Helios Photonix — Food chain view
-   Grass → Grasshopper → Frog → Snake → Eagle, as 3D models on five steps.
+   Grass → Snail → Frog → Snake → Eagle, as 3D models on five steps.
    Arrows point from the food to the feeder: the direction energy flows.
    About 10% of the energy at one level reaches the next; the rest is used in
    respiration (lost as heat) or passes to decomposers in waste and remains.
@@ -18,16 +18,16 @@
   var MESHOPT_URL = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js";   // models are meshopt-compressed
   var ENERGY_COLOR = 0xc6ea5a, HEAT_COLOR = 0xff9b54, BG = 0x05070d;
 
-  // size = largest dimension in scene units (not to scale: a grasshopper would vanish next to an eagle)
+  // size = largest dimension in scene units (not to scale: a snail would vanish next to an eagle)
   // yaw  = turn applied after loading so each animal faces its food (towards the left) and a little towards the viewer
   var ORGS = [
     { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:100, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
-      eatenBy:"Grasshopper" },
-    { id:"grasshopper", tl:2, name:"Grasshopper", role:"Primary consumer · herbivore", color:0xfacc15, energy:10, file:"grasshopper.glb", size:1.7, yaw:0.55,
-      food:"Grass (a producer).", eatenBy:"Frog" },
+      eatenBy:"Snail" },
+    { id:"snail", tl:2, name:"Snail", role:"Primary consumer · herbivore", color:0xfacc15, energy:10, file:"snail.glb", size:1.5, yaw:-1.0, posedBox:true,
+      food:"Grass and other leaves (a producer), rasped off with its radula, a tongue covered in tiny teeth.", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
-      food:"Grasshoppers and other insects.", eatenBy:"Snake" },
+      food:"Snails, insects and other small animals.", eatenBy:"Snake" },
     { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"snake.glb", size:4.6, yaw:0.5,
       food:"Frogs.", eatenBy:"Eagle" },
     { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
@@ -95,10 +95,10 @@
   var STEPS = [null,
     { arc:-1, to:0, title:"Sunlight → Grass", pass:"Fixed 100 · respired ~50 · stored ~50",
       text:"Grass, a producer, captures sunlight in photosynthesis and fixes <b>100 rel. J</b> (GPP). It uses about half in its own respiration, lost as <span class='fc-heat'>heat</span>. The rest, about 50 (NPP), is stored as plant biomass: the food for every level above." },
-    { arc:0, from:0, to:1, title:"Grass → Grasshopper", pass:"Passed on 10 · lost 90",
-      text:"About <b>10 rel. J</b> reaches the grasshopper: 10% of the 100 fixed by the grass. The other 90 never reaches it: the grass's own respiration (<span class='fc-heat'>heat</span>), parts that are not eaten, and leaves that die and fall as litter for decomposers." },
-    { arc:1, from:1, to:2, title:"Grasshopper → Frog", pass:"Passed on 1 · lost 9",
-      text:"The frog gets about <b>1 rel. J</b>. The grasshopper spent most of its 10 staying alive (moving, hopping, keeping its cells working), and that energy left as <span class='fc-heat'>heat</span>. Food it could not digest passed out as droppings." },
+    { arc:0, from:0, to:1, title:"Grass → Snail", pass:"Passed on 10 · lost 90",
+      text:"About <b>10 rel. J</b> reaches the snail: 10% of the 100 fixed by the grass. The other 90 never reaches it: the grass's own respiration (<span class='fc-heat'>heat</span>), parts that are not eaten, and leaves that die and fall as litter for decomposers." },
+    { arc:1, from:1, to:2, title:"Snail → Frog", pass:"Passed on 1 · lost 9",
+      text:"The frog gets about <b>1 rel. J</b>. The snail spent most of its 10 staying alive (gliding on its mucus, growing its shell, keeping its cells working), and that energy left as <span class='fc-heat'>heat</span>. Food it could not digest passed out as droppings." },
     { arc:2, from:2, to:3, title:"Frog → Snake", pass:"Passed on 0.1 · lost 0.9",
       text:"Only <b>0.1 rel. J</b> reaches the snake. The same pattern repeats at every link: about 90% is lost, mostly as <span class='fc-heat'>heat</span> from respiration." },
     { arc:3, from:3, to:4, title:"Snake → Eagle", pass:"Passed on 0.01 · lost 0.09",
@@ -258,7 +258,12 @@
     var pivot = new THREE.Group(); pivot.add(obj);
     var bones = new THREE.Box3(), bp = new THREE.Vector3();
     obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });
-    if (!bones.isEmpty()){   // rigged (eagle, snake): the skeleton, not the raw mesh box, says where the animal is drawn
+    if (o.posedBox){   // measure the skinned mesh as drawn (the snail)
+      box.makeEmpty(); obj.traverse(function(m){ if (!m.isSkinnedMesh) return; m.skeleton.update(); var P = m.geometry.getAttribute("position");
+        for (var i = 0; i < P.count; i += 3){ m.boneTransform(i, bp); bp.applyMatrix4(m.matrixWorld); box.expandByPoint(bp); } });
+      box.getSize(size); box.getCenter(c); k = o.size / Math.max(size.x, size.y, size.z); pivot.scale.setScalar(k);
+      obj.position.set(-c.x, -box.min.y, -c.z);
+    } else if (!bones.isEmpty()){   // rigged (eagle, snake): the skeleton, not the raw mesh box, says where the animal is drawn
       var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, o.fly ? -bc.y : -bones.min.y, -bc.z);
     } else obj.position.set(-c.x, -box.min.y - (o.sink || 0) * size.y, -c.z);   // centred, standing on the plinth (the grass mat sits a little into it, hiding its cut edge)
     pivot.scale.setScalar(k); pivot.rotation.y = o.yaw; o.k = k;
@@ -353,7 +358,6 @@
       if (o.pivot){
         var cur = o.pivot.scale.x; if (!o.tufts){ cur += (o.k * s - cur) * 0.15; o.pivot.scale.setScalar(cur); }   // selected one grows a little
         if (o.id === "frog") o.pivot.scale.y = cur * (1 + Math.sin(t * 3.1) * 0.015);                       // breathing
-        if (o.id === "grasshopper") o.pivot.position.y = Math.max(0, Math.sin(t * 2.2)) * 0.04;
         if (o.fly) o.pivot.position.y = o.fly + 0.3 + Math.sin(t * 1.4) * 0.12;
       }
       o.ring.material.color.setHex(o.color); o.ring.scale.setScalar(on ? 1.06 + Math.sin(t * 4) * 0.02 : 1);
