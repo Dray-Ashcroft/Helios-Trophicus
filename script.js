@@ -674,6 +674,9 @@
       x:0.45, y:0.21, z:0.32, scale:0.78, opacity:0.96 },
     { id:"tl3-lizard", label:"TL3 · Lizard", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Lizard%20-%20Insect.png",
       x:-0.3, y:0.25, z:0.45, scale:0.78, opacity:0.96 },
+    // Owl: a night hunter of mice, so a secondary consumer. Flies above the back-left of the tier (no picture: drawn card fallback).
+    { id:"tl3-owl", label:"TL3 · Owl", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"builtin:owl",
+      x:-0.34, y:0.5, z:-0.3, scale:0.85, opacity:0.98 },
     { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
       x:-0.36, y:0.25, z:0.12, scale:0.55, opacity:0.98 },
     // Second tertiary consumer: starts as a drawn placeholder card — long-press it on the pyramid to paste a picture link.
@@ -720,7 +723,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl4-eagle":"🦅","tl4-hawk":"🦅"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌻","tl1-young-tree":"🌳","tl2-rabbit":"🐁","tl2-herbivorous-insect":"🐛","tl2-caterpillar":"🦋","tl2-deer":"🦌","tl3-snake":"🐍","tl3-frog":"🐸","tl3-lizard":"🦎","tl3-owl":"🦉","tl4-eagle":"🦅","tl4-hawk":"🦅"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -845,6 +848,7 @@
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-20, clip:[3, 9] },   // the calm rear-and-sway stretch only
     "tl3-frog":               { file:"FoodChain/frog.glb",       size:0.98, facing:"z",  turn:20 },
     "tl3-lizard":             { file:"Pyramid/lizard.glb",       size:1.37, facing:"z",  turn:-40, clipName:"idle", posedBox:true },   // its mesh and skeleton are stored at different scales
+    "tl3-owl":                { file:"Pyramid/owl.glb",          size:1.45, facing:"z",  turn:15,  posedBox:true, fly:0.6 },   // great horned owl in flapping flight
     "tl4-eagle":              { file:"FoodChain/eagle.glb",      size:1.3,  facing:"x",  turn:-20, fly:0.5 },
     "tl4-hawk":               { file:"Pyramid/hawk.glb",         size:1.3,  facing:"z",  turn:25,  fly:0.72 }
   };
@@ -2935,7 +2939,7 @@
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
     "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a mouse (rodent skeleton)
     "tl2-caterpillar": buildInsectRemains, "tl2-deer": buildDeerRemains,   // the slot now holds a butterfly
-    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains,
+    "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-lizard": buildLizardRemains, "tl3-owl": buildEagleRemains,
     "tl4-eagle": buildEagleRemains, "tl4-hawk": buildEagleRemains
   };
 
