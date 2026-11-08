@@ -745,6 +745,12 @@
   .prod-op{ font-size:13px; color:var(--text-dim); }
   .prod-tl2 b{ color:#facc15; }
   .prod-litter b{ color:#c9a876; }
+  .prod-sun b{ color:#ffd479; }
+  .prod-tl3 b{ color:#fb923c; }
+  .prod-tl4 b{ color:#f87171; }
+  .prod-dec b{ color:#d8c7a4; }
+  .prod-nut{ background:rgba(143,227,199,0.14); }
+  .prod-nut b{ color:#8fe3c7; }
   .prod-set[hidden]{ display:none; }
   .prod-note{ margin-top:6px; font-size:10.5px; line-height:1.4; color:#a7b3c9; }
   .prod-readout [data-stage]{ transition:opacity .4s ease; }

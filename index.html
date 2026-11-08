@@ -74,9 +74,6 @@
     </div>
     <div class="header-tools">
       <div id="organismLockStatus" class="sr-only" aria-live="polite"></div>
-      <button class="tool-btn organism-editor-toggle" id="organismEditorToggle" type="button" aria-label="Edit organisms (hold 15 seconds to unlock)" title="Edit organisms (hold 15 seconds to unlock)" aria-expanded="false" aria-controls="organismEditorPanel">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6"></path><path d="M17.5 2.6a2.1 2.1 0 0 1 3 3L11.5 14.6l-4 1 1-4 9-9z"></path></svg>
-      </button>
       <button class="tool-btn dev-mortality-control" id="simulateMortalityBtn" type="button" aria-label="Simulate mortality (hold 10 seconds to restore placeholders)" title="Simulate mortality">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h3.5l2-5.5 3 11 2-5.5H22"></path></svg>
       </button>
@@ -98,6 +95,10 @@
   <div class="bottom-row">
     <div class="panel" id="infoPanel">
       <div class="prod-readout" id="prodReadout" role="status" aria-live="polite" hidden="">
+        <div class="prod-set" data-step="1" hidden="">
+          <div class="prod-row"><span class="prod-chip prod-sun" data-stage="1"><b>Sunlight</b> 100%</span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-sun" data-stage="2"><b>PAR</b> &lt;50%</span><span class="prod-op" data-stage="3">→</span><span class="prod-chip prod-npp" data-stage="3"><b>Captured</b> 2–10% of PAR</span></div>
+          <div class="prod-note" data-stage="1"><span data-stage="1">Of the sunlight reaching plants, less than half is photosynthetically active radiation (PAR, 400–700 nm).</span> <span data-stage="2">Plants capture only about 2–10% of the PAR in photosynthesis.</span> <span data-stage="3">That captured energy, 100 rel. J here, supports every level above.</span></div>
+        </div>
         <div class="prod-set" data-step="2">
         <div class="prod-row">
           <span class="prod-chip prod-gpp" data-stage="1"><b>GPP</b> 100</span>
@@ -117,6 +118,22 @@
             <span class="prod-chip prod-litter" data-stage="3"><b>Litter</b> 40</span>
           </div>
           <div class="prod-note" data-stage="1"><span data-stage="1">Herbivores can only eat what producers keep after respiration — the NPP, not the GPP.</span> <span data-stage="2">About 10 of it reaches TL2.</span> <span data-stage="3">The uneaten 40 becomes dead leaves and litter for the decomposers (step 6).</span></div>
+        </div>
+        <div class="prod-set" data-step="4" hidden="">
+          <div class="prod-row"><span class="prod-chip prod-tl2" data-stage="1"><b>TL2</b> 10</span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-r" data-stage="2"><b>R</b> 6 <i>heat</i></span><span class="prod-op" data-stage="3">+</span><span class="prod-chip prod-litter" data-stage="3"><b>Waste</b> 3</span><span class="prod-op" data-stage="3">+</span><span class="prod-chip prod-tl3" data-stage="3"><b>TL3</b> 1</span></div>
+          <div class="prod-note" data-stage="1"><span data-stage="1">The herbivores took in about 10.</span> <span data-stage="2">They use about 6 in their own respiration, lost as heat.</span> <span data-stage="3">About 3 leaves as faeces and dead bodies for the decomposers, and only about 1 (10%) reaches the secondary consumers.</span></div>
+        </div>
+        <div class="prod-set" data-step="5" hidden="">
+          <div class="prod-row"><span class="prod-chip prod-tl3" data-stage="1"><b>TL3</b> 1</span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-r" data-stage="2"><b>R</b> 0.6 <i>heat</i></span><span class="prod-op" data-stage="3">+</span><span class="prod-chip prod-litter" data-stage="3"><b>Waste</b> 0.3</span><span class="prod-op" data-stage="3">+</span><span class="prod-chip prod-tl4" data-stage="3"><b>TL4</b> 0.1</span></div>
+          <div class="prod-note" data-stage="1"><span data-stage="1">The secondary consumers took in about 1.</span> <span data-stage="2">About 0.6 is respired and lost as heat.</span> <span data-stage="3">About 0.3 goes to the decomposers and only about 0.1 reaches the top carnivores: too little to support a fifth level.</span></div>
+        </div>
+        <div class="prod-set" data-step="6" hidden="">
+          <div class="prod-row"><span class="prod-chip prod-litter" data-stage="1"><b>Dead matter</b> ~43</span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-dec" data-stage="2"><b>Decomposers</b></span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-r" data-stage="2"><b>Heat</b></span><span class="prod-op" data-stage="3">+</span><span class="prod-chip prod-nut" data-stage="3"><b>Nutrients</b></span></div>
+          <div class="prod-note" data-stage="1"><span data-stage="1">Leaf litter (40) and the waste and dead bodies of every level (about 3.3) reach the soil.</span> <span data-stage="2">Fungi, bacteria and soil animals break them down; their respiration releases the remaining energy as heat.</span> <span data-stage="3">What is left is inorganic nutrients, such as nitrogen, phosphorus and potassium, in the soil.</span></div>
+        </div>
+        <div class="prod-set" data-step="7" hidden="">
+          <div class="prod-row"><span class="prod-chip prod-nut" data-stage="1"><b>Nutrients</b> N · P · K</span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-dec" data-stage="2"><b>Roots</b></span><span class="prod-op" data-stage="2">→</span><span class="prod-chip prod-npp" data-stage="2"><b>TL1</b> producers</span><span class="prod-op" data-stage="3">·</span><span class="prod-chip prod-r" data-stage="3"><b>Energy</b> not recycled</span></div>
+          <div class="prod-note" data-stage="1"><span data-stage="1">The nutrients dissolve in the soil water.</span> <span data-stage="2">Producers absorb them through their roots and build them into new tissue.</span> <span data-stage="3">Matter cycles back to the producers, but energy does not: it flows one way and is lost as heat, so the ecosystem needs the Sun every day.</span></div>
         </div>
       </div>
       <div class="eco-graph-fold" id="ecoGraphFold">
@@ -183,34 +200,6 @@
   </div>
 </div>
 
-
-<div id="organismEditorPanel" role="dialog" aria-label="Organism asset editor" aria-hidden="true">
-  <div class="organism-editor-head">
-    <div class="organism-editor-title">Organism assets</div>
-    <button class="organism-editor-close" id="organismEditorClose" type="button" aria-label="Close organism editor">×</button>
-  </div>
-  <div class="organism-editor-help">
-    Paste a direct transparent PNG/WebP URL. Choose an organism here to update its image without changing pyramid geometry.
-  </div>
-  <div id="organismEditorList"></div>
-  <div class="organism-editor-foot">
-    <button id="organismEditorReset" type="button">Restore placeholders</button>
-    <button id="organismEditorDone" type="button">Done</button>
-  </div>
-</div>
-
-<div id="organismUrlBox" role="dialog" aria-label="Change organism image" hidden="">
-  <div class="org-url-head">
-    <img class="org-url-thumb" id="organismUrlThumb" alt="">
-    <div class="org-url-title"><span id="organismUrlName">Organism</span><span class="org-url-sub">Paste an image link (PNG or WebP with a transparent background works best)</span></div>
-  </div>
-  <input id="organismUrlInput" type="url" inputmode="url" placeholder="https://.../organism.png" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Image URL">
-  <div class="org-url-actions">
-    <button id="organismUrlOriginal" type="button">Original</button>
-    <button id="organismUrlCancel" type="button">Cancel</button>
-    <button id="organismUrlApply" type="button">Apply</button>
-  </div>
-</div>
 
 <div id="profilePanel" role="dialog" aria-label="Trophic level profile" aria-hidden="true">
   <div class="profile-tab-header" id="profileTabHeader">

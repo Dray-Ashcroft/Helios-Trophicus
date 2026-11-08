@@ -699,7 +699,8 @@
     defaultOrganismUrls[asset.id] = asset.imageUrl;
   });
   try {
-    var savedOrganismUrls = JSON.parse(window.localStorage.getItem(ORGANISM_URL_STORAGE_KEY) || "{}");
+    window.localStorage.removeItem(ORGANISM_URL_STORAGE_KEY);   // custom organism pictures are no longer used (no editor to undo them)
+    var savedOrganismUrls = {};
     ORGANISM_ASSETS.forEach(function(asset){
       var saved = savedOrganismUrls[asset.id];
       if (saved) saved = saved.replace(OLD_REPO_RAW, ASSET_REPO_RAW);   // links saved before the repo was renamed
@@ -1160,86 +1161,11 @@
     if (organismEditorOpen) renderOrganismEditor();   // refresh the open panel's previews too
   }
 
-  // Locked by default: opening the panel takes a full 15 s hold (long enough that it can't happen by
-  // accident), announced every 3 s for screen-reader users since a plain tap gives no other feedback.
-  // Closing it — Close, Done, or tapping the pencil again — always relocks: "locked" IS "closed" here,
-  // there is no separate flag to reset, so nothing can carry an unlocked state into a reload.
-  var organismEditorToggleEl = document.getElementById("organismEditorToggle");
+  // The organism editor (pencil button, 15 s unlock) and the picture-link box were removed: the pyramid always shows
+  // its 3D organisms. organismLockStatus stays: the mortality button announces through it.
   var organismLockStatusEl = document.getElementById("organismLockStatus");
-  var orgLockAnnounceAt = -1;
-  var orgEditorHold = bindHoldGesture(organismEditorToggleEl, function(){
-    organismLockStatusEl.textContent = "Unlocked";
-    setOrganismEditorOpen(true);
-  }, 15000, function(msLeft){
-    if (msLeft < 0){ orgLockAnnounceAt = -1; organismLockStatusEl.textContent = ""; return; }   // a cancelled hold shouldn't leave a stale countdown for screen readers
-    var secLeft = Math.ceil(msLeft / 1000);
-    if (secLeft !== orgLockAnnounceAt && secLeft % 3 === 0){ orgLockAnnounceAt = secLeft; organismLockStatusEl.textContent = "Hold " + secLeft + " more seconds to unlock"; }
-  });
-  organismEditorToggleEl.addEventListener("click", function(e){
-    if (orgEditorHold.fired){ orgEditorHold.fired = false; return; }   // the hold already unlocked and opened it
-    if (organismEditorOpen){ setOrganismEditorOpen(false); return; }   // open: a plain tap closes (and relocks)
-    if (e.detail === 0){ setOrganismEditorOpen(true); return; }        // keyboard activation (Enter/Space) isn't a holdable gesture
-    organismEditorToggleEl.classList.remove("locked-nudge"); void organismEditorToggleEl.offsetWidth; organismEditorToggleEl.classList.add("locked-nudge");
-  });
-  document.getElementById("organismEditorClose").addEventListener("click", function(){
-    setOrganismEditorOpen(false);
-  });
-  document.getElementById("organismEditorDone").addEventListener("click", function(){
-    setOrganismEditorOpen(false);
-  });
-  document.getElementById("organismEditorReset").addEventListener("click", restoreAllOrganismPlaceholders);
-
-  // ---- Long-press an organism picture on the pyramid -> small box to change its image link ----
-  var organismUrlBoxEl = document.getElementById("organismUrlBox");
-  var organismUrlInputEl = document.getElementById("organismUrlInput");
-  var organismUrlThumbEl = document.getElementById("organismUrlThumb");
-  var organismUrlBoxId = null;
-  function organismUrlBoxOpen(){ return !organismUrlBoxEl.hidden; }
-  function showOrganismUrlThumb(url){
-    organismUrlThumbEl.classList.remove("missing");
-    organismUrlThumbEl.src = url || "";
-    if (!url) organismUrlThumbEl.classList.add("missing");
-  }
-  organismUrlThumbEl.addEventListener("error", function(){ organismUrlThumbEl.classList.add("missing"); });
-  function openOrganismUrlBox(id){
-    var slot = organismSlots[id];
-    if (!slot) return;
-    organismUrlBoxId = id;
-    document.getElementById("organismUrlName").textContent = slot.asset.label.replace(/^TL\d · /, "");
-    var shown = slot.asset.imageUrl.indexOf("builtin:") === 0 ? "" : slot.asset.imageUrl;   // the drawn placeholder has no link to show
-    organismUrlInputEl.value = shown;
-    showOrganismUrlThumb(shown);
-    organismUrlBoxEl.classList.remove("invalid");
-    organismUrlBoxEl.hidden = false;
-    organismUrlInputEl.focus();
-    organismUrlInputEl.select();
-  }
-  function closeOrganismUrlBox(){
-    organismUrlBoxEl.hidden = true;
-    organismUrlBoxId = null;
-  }
-  function applyOrganismUrlBox(){
-    if (!organismUrlBoxId) return;
-    var v = organismUrlInputEl.value.trim();
-    if (/^(javascript|vbscript):/i.test(v) || /^data:(?!image\/)/i.test(v)){ organismUrlBoxEl.classList.add("invalid"); return; }
-    updateOrganismAssetUrl(organismUrlBoxId, v || defaultOrganismUrls[organismUrlBoxId]);   // blank = back to the original picture
-    if (organismEditorOpen) renderOrganismEditor();
-    closeOrganismUrlBox();
-  }
-  document.getElementById("organismUrlApply").addEventListener("click", applyOrganismUrlBox);
-  document.getElementById("organismUrlCancel").addEventListener("click", closeOrganismUrlBox);
-  document.getElementById("organismUrlOriginal").addEventListener("click", function(){
-    if (!organismUrlBoxId) return;
-    var orig = defaultOrganismUrls[organismUrlBoxId];
-    organismUrlInputEl.value = orig.indexOf("builtin:") === 0 ? "" : orig;   // blank + Apply = back to the placeholder card
-    showOrganismUrlThumb(organismUrlInputEl.value);
-    organismUrlBoxEl.classList.remove("invalid");
-  });
-  organismUrlInputEl.addEventListener("input", function(){ organismUrlBoxEl.classList.remove("invalid"); });
-  organismUrlInputEl.addEventListener("change", function(){ showOrganismUrlThumb(organismUrlInputEl.value.trim()); });
-  organismUrlInputEl.addEventListener("keydown", function(e){
-    if (e.key === "Enter"){ e.preventDefault(); applyOrganismUrlBox(); }
-  });
+  function organismUrlBoxOpen(){ return false; }
+  function closeOrganismUrlBox(){}
 
   // Which visible organism picture (if any) is under this screen point. Pictures are drawn on top
   // of the pyramid, so they win over the layer behind them.
@@ -3804,7 +3730,7 @@
   //      NPP once the step settles. Shown only while step 2 is on screen; Back/Next simply redraw it.
   //      Step 3 (TL1 -> TL2) follows on: NPP 50 -> TL2 receives 10 as the stream arrives (T = 4.3, when
   //      TL2 lights up), then the uneaten 40 is named as litter for the decomposers near the end of the step.
-  var PROD_STAGE_T = { 2: [0.2, 1.3, 2.1], 3: [3.0, 4.3, 5.8] };   // step-clock times at which stages 1, 2, 3 appear
+  var PROD_STAGE_T = { 1: [0, 0, 0], 2: [0.2, 1.3, 2.1], 3: [3.0, 4.3, 5.8], 4: [7.0, 8.3, 9.6], 5: [11.0, 12.3, 13.6], 6: [15.2, 17.2, 19.2], 7: [21.3, 22.6, 24.0] };   // every step has its card; step 1 shows at once   // step-clock times at which stages 1, 2, 3 appear
   var prodReadoutEl = document.getElementById("prodReadout");
   var prodSets = prodReadoutEl ? Array.prototype.slice.call(prodReadoutEl.querySelectorAll(".prod-set")) : [];
   var prodShownKey = "";
@@ -4649,8 +4575,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     if (heldMs >= LONG_PRESS_MS){
       longPress.fired = true;
       if (longPress.mesh) longPress.mesh.userData.pressGlowAmount = 0;
-      if (longPress.organismId) openOrganismUrlBox(longPress.organismId);
-      else openTrophicProfile(longPress.layerId);
+      openTrophicProfile(longPress.layerId);
       longPress.active = false;
     }
   }
@@ -4836,7 +4761,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     data.organisms.forEach(function(imp){
       var asset = imp && byId[imp.id];
       if (!asset) return; // unknown id (older/newer asset list) — skip rather than fail the whole import
-      if (typeof imp.imageUrl === "string" && imp.imageUrl && imp.imageUrl !== asset.imageUrl && imp.imageUrl.indexOf("supabase.co") === -1){   // older exports may carry dead Supabase links
+      if (false && typeof imp.imageUrl === "string" && imp.imageUrl && imp.imageUrl !== asset.imageUrl && imp.imageUrl.indexOf("supabase.co") === -1){   // older exports may carry dead Supabase links
         asset.imageUrl = imp.imageUrl;
         var slot = organismSlots[asset.id];
         if (slot) loadOrganismImage(asset, slot);
