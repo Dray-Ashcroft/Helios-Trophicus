@@ -37,7 +37,7 @@
   // Landscape (smart panel, laptop): a row climbing one low step per level, left to right.
   // Portrait (phone): a zig-zag stacked upwards, producer at the bottom, top carnivore at the top.
   var LAYOUTS = {
-    wide:{ pos:function(i){ return [(i - 2) * 4.3, i * 0.55]; }, sun:[-12.9, 3.7, -1.2], lift:[0, 1.15, 0.6], halfW:13.8, halfH:5.6, cy:1.9 },
+    wide:{ pos:function(i){ return [(i - 2) * 4.3, i * 0.55]; }, sun:[-12.6, 2.0, -1.2],   /* below the info card, beside the grass */ lift:[0, 1.15, 0.6], halfW:13.8, halfH:5.6, cy:1.9 },
     tall:{ pos:function(i){ return [(i % 2 ? 1.7 : -1.7), i * 2.55]; }, sun:[-3.2, 1.25, -1.2], sunTag:[0, 1.1, 0.6], lift:[0, 0.35, 1.3], halfW:4.3, halfH:7.5, cy:5.2 }
   };
   var layout = LAYOUTS.wide, layoutName = "";

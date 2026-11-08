@@ -63,8 +63,7 @@ Trophic levels · Food chains and food webs · Lindeman's 10% law · PAR · GPP,
 |:--|:--|
 | Drag · scroll or pinch | Rotate · zoom |
 | Tap | Select a layer or organism |
-| Hold a pyramid layer | Open its profile |
-| Hold an organism | Show your own picture in place of the model (**Original** brings the model back) |
+| Hold a pyramid layer or organism | Open that level’s profile |
 | ⌃ on a card | Fold the card away to free the screen |
 | Save · Export · Import | Save an HTML snapshot, or export and re-import the simulator's state as JSON |
 

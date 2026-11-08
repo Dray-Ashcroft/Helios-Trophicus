@@ -1633,6 +1633,12 @@
       obj.traverse(function(n){
         if (!n.isMesh) return;
         n.raycast = function(){};   // taps go to sunHitMesh only
+        // the food chain and food web render with sRGB output and the pyramid does not: reading the textures as linear
+        // shows their colours unchanged, so this Sun looks exactly like the other two instead of deep red
+        (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
+          ["map", "emissiveMap"].forEach(function(k){ if (m[k]){ m[k].encoding = THREE.LinearEncoding; m[k].needsUpdate = true; } });
+          m.needsUpdate = true;
+        });
         (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
           m.userData.baseEmissive = (m.emissiveIntensity != null) ? m.emissiveIntensity : 1; sunModelMats.push(m);
         });
@@ -1647,10 +1653,10 @@
 
     if (sunModel){   // slow turn; dim while solar input is off, full glow once switched on
       sunModel.rotation.y = elapsedTime * 0.19;
-      var dim = 0.3 + 1.1 * g;   // a little above 1 when on: the pyramid renders without sRGB output, which darkens textures
+      var dim = 0.72 + 0.28 * g;   // the same Sun as the other views; only a little dimmer while solar input is off
       for (var si = 0; si < sunModelMats.length; si++){
         sunModelMats[si].color.setScalar(dim);
-        sunModelMats[si].emissiveIntensity = sunModelMats[si].userData.baseEmissive * (0.18 + 0.82 * g);
+        sunModelMats[si].emissiveIntensity = sunModelMats[si].userData.baseEmissive * (0.55 + 0.45 * g);
       }
     }
 
@@ -4607,9 +4613,15 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     return hits.length ? hits[0].object : null;
   }
   function beginLongPressTracking(clientX, clientY){
-    var organismId = pickOrganismAt(clientX, clientY);
-    var mesh = organismId ? null : pickLayerMeshAt(clientX, clientY);   // holding a picture edits it; holding bare layer opens its profile
-    if (!mesh && !organismId){ longPress.active = false; return; }
+    // holding a layer, or any organism on it, opens that layer's profile (organism pictures are changed only in the editor)
+    var organismId = pickOrganismAt(clientX, clientY), mesh = null;
+    if (organismId){
+      var held = ORGANISM_ASSETS.filter(function(a){ return a.id === organismId; })[0];
+      mesh = held ? layerMeshes.filter(function(m){ return m.userData.layerId === held.trophicLevel; })[0] : null;
+      organismId = null;
+    }
+    if (!mesh) mesh = pickLayerMeshAt(clientX, clientY);
+    if (!mesh){ longPress.active = false; return; }
     longPress.active = true;
     longPress.fired = false;
     longPress.organismId = organismId;
