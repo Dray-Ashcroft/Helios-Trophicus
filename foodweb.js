@@ -22,7 +22,7 @@
     { id:"lupine",      name:"Lupine",      tl:1, x: 4.6, file:"Pyramid/lupine.glb",       size:1.4, facing:"z",
       note:"A legume: bacteria in its root nodules fix nitrogen, enriching the soil." },
     { id:"grasshopper", name:"Grasshopper", tl:2, x:-6.3, file:"FoodChain/grasshopper.glb", size:1.2, facing:"-x", turn:30 },
-    { id:"caterpillar", name:"Horned beetle", tl:2, x:-2.1, file:"Pyramid/caterpillar.glb",  size:1.6, facing:"x", turn:-20, posedBox:true,
+    { id:"caterpillar", name:"Horned beetle", tl:2, x:-2.1, file:"Pyramid/caterpillar.glb",  size:1.25, facing:"x", turn:-20, posedBox:true, back:0.3,
       note:"A plant-eating beetle: its hard forewings (elytra) cover the flying wings, and its horns are used for fighting rivals." },
     { id:"squirrel",    name:"Squirrel",    tl:2, x: 2.1, file:"Pyramid/squirrel.glb",     size:1.2, facing:"z", turn:-20 },
     { id:"deer",        name:"Deer",        tl:2, x: 6.3, file:"Pyramid/deer.glb",         size:1.8, facing:"x", turn:25,
@@ -207,6 +207,7 @@
     var pivot = new THREE.Group(); pivot.add(obj); pivot.scale.setScalar(n.size / Math.max(size.x, size.y, size.z));
     pivot.rotation.y = (({ "z":0, "x":-90, "-x":90 })[n.facing] + (n.turn || 0)) * D2R;
     if (n.fly) pivot.position.y = n.fly;
+    if (n.back) pivot.position.z = -n.back;   // sprawling legs stay inside the plinth's ring
     n.holder.add(pivot); n.pivot = pivot;
     if (gltf.animations && gltf.animations.length){
       var clip = gltf.animations[0];
