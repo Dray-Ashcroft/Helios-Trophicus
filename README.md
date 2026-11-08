@@ -44,7 +44,7 @@ Grass → Snail → Frog → Snake → Eagle, each on its own chunk of land.
 |:--|:--|:--|
 | TL4 | Eagle · Owl | Tertiary consumers: eat secondary consumers |
 | TL3 | Scorpion · Snake · Frog | Secondary consumers: eat primary consumers |
-| TL2 | Rat · Grasshopper · Ants · Rabbit | Primary consumers: eat producers |
+| TL2 | Rat · Grasshopper · Pigeon · Rabbit | Primary consumers: eat producers |
 | TL1 | Grass · Lupine · Tree | Producers: make food by photosynthesis |
 
 The food web adds a snail, a butterfly, a deer, a red fox, a white tiger and a Komodo dragon, with grass, a tree and lungwort as producers.
@@ -96,7 +96,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 | 🦗 Grasshopper (pyramid) | [Tsumaguro Grasshopper](https://sketchfab.com/3d-models/cc0-tsumaguro-grasshopper-7e14b593732340d49bd8164c08d09a8d) | ffish.asia / floraZia.com | CC0 1.0 |
 | 🐌 Snail (food chain, food web) | [Snail (Non-Commercial)](https://sketchfab.com/3d-models/snail-non-commercial-6d3d307258924e07a7f02a8427f5f018) | Nyilonelycompany | CC BY-NC 4.0 ¹ |
 | 🦋 Butterfly (food web) | [BUTTERFLY](https://skfb.ly/oGZZW) | Rukh3D | CC BY 4.0 |
-| 🐜 Ant (pyramid) | ANT | MAXDESIGN-3D | CC BY 4.0 |
+| 🕊️ Pigeon (pyramid) | Pigeon | kenchoo | CC BY 4.0 |
 | 🐁 Mouse (food web) | [Sand Mouse](https://skfb.ly/pKTC6) | soniarocha29702 | CC BY 4.0 |
 | 🐀 Black rat (pyramid) | [Black Rat (Free download)](https://skfb.ly/p9TYP) | Nestaeric | CC BY 4.0 |
 | 🐇 Rabbit (pyramid) | [RABBIT - Realistic 3D Model (DEMO FREE)](https://skfb.ly/pM9sw) | WildMesh 3D | CC BY-NC 4.0 ¹ |
