@@ -23,16 +23,16 @@
   // yaw  = turn applied after loading so each animal faces its food (towards the left) and a little towards the viewer
   // yawTall = the same on phones, where the chain zig-zags and the food can sit on the other side (the eagle's snake)
   var ORGS = [
-    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:100, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
+    { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:50, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
       eatenBy:"Snail" },
-    { id:"snail", tl:2, name:"Snail", role:"Primary consumer · herbivore", color:0xfacc15, energy:10, file:"snail.glb", size:1.5, yaw:-1.0, posedBox:true,
+    { id:"snail", tl:2, name:"Snail", role:"Primary consumer · herbivore", color:0xfacc15, energy:0, file:"snail.glb", size:1.5, yaw:-1.0, posedBox:true,
       food:"Grass and other leaves (a producer), rasped off with its radula, a tongue covered in tiny teeth.", eatenBy:"Frog" },
-    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
+    { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:0, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Snails, insects and other small animals.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"../Pyramid/snake.glb", size:2.3, yaw:2.87, clip:[3, 9],   // spectacled cobra (shared with the pyramid and food web): its calm rear-and-sway stretch
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0, file:"../Pyramid/snake.glb", size:2.3, yaw:2.87, clip:[3, 9],   // spectacled cobra (shared with the pyramid and food web): its calm rear-and-sway stretch
       food:"Frogs, toads and rodents. This is a spectacled cobra, India's Naja naja.", eatenBy:"Eagle" },
-    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:3.38, yawTall:-0.44, fly:1.35,
+    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0, file:"eagle.glb", size:2.3, yaw:3.38, yawTall:-0.44, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }
   ];
   // Landscape (smart panel, laptop): a row climbing one low step per level, left to right.
@@ -55,8 +55,11 @@
     var r = g.createRadialGradient(32,32,0,32,32,32); r.addColorStop(0,"rgba(255,255,255,1)"); r.addColorStop(0.35,"rgba(255,255,255,0.55)"); r.addColorStop(1,"rgba(255,255,255,0)");
     g.fillStyle = r; g.fillRect(0,0,64,64); return new THREE.CanvasTexture(c);
   }
-  function fmt(n){ return n.toLocaleString("en-IN", { maximumFractionDigits:2 }); }
-  var UNIT = " rel.&nbsp;J";   // same relative scale as the pyramid's energy panel (TL1 = 100)
+  // Energy follows the 10% law exactly as in the pyramid: the grass keeps NPP = 50 rel. J (GPP 100 minus its own
+  // respiration 50), and each link passes on 10% of the level below: 50 -> 5 -> 0.5 -> 0.05 -> 0.005.
+  for (var oi = 1; oi < ORGS.length; oi++) ORGS[oi].energy = Math.round(ORGS[oi - 1].energy * 0.10 * 1e6) / 1e6;
+  function fmt(n){ return n.toLocaleString("en-IN", { maximumFractionDigits:3 }); }   // 3 places so the eagle's 0.005 is not rounded up
+  var UNIT = " rel.&nbsp;J";   // same relative scale as the pyramid's energy panel (TL1 = NPP 50)
   function hex(c){ return "#" + ("000000" + c.toString(16)).slice(-6); }
   function loadScript(url){
     return new Promise(function(res, rej){ var s = document.createElement("script"); s.src = url; s.onload = res; s.onerror = function(){ rej(new Error("Could not load " + url)); }; document.head.appendChild(s); });
@@ -106,16 +109,16 @@
   var STEPS = [null,
     { arc:-1, to:0, title:"Sunlight → Grass", pass:"Fixed 100 · respired ~50 · stored ~50",
       text:"Grass, a producer, captures sunlight in photosynthesis and fixes <b>100 rel. J</b> (GPP). It uses about half in its own respiration, lost as <span class='fc-heat'>heat</span>. The rest, about 50 (NPP), is stored as plant biomass: the food for every level above." },
-    { arc:0, from:0, to:1, title:"Grass → Snail", pass:"Passed on 10 · lost 90",
-      text:"About <b>10 rel. J</b> reaches the snail: 10% of the 100 fixed by the grass. The other 90 never reaches it: the grass's own respiration (<span class='fc-heat'>heat</span>), parts that are not eaten, and leaves that die and fall as litter for decomposers." },
-    { arc:1, from:1, to:2, title:"Snail → Frog", pass:"Passed on 1 · lost 9",
-      text:"The frog gets about <b>1 rel. J</b>. The snail spent most of its 10 staying alive (moving, breathing, keeping its cells working), and respiration released that energy as <span class='fc-heat'>heat</span>. Its slime trail and the food it could not digest (droppings) carried more energy away to decomposers. Only what it built into its own body can pass to the frog." },
-    { arc:2, from:2, to:3, title:"Frog → Snake", pass:"Passed on 0.1 · lost 0.9",
-      text:"Only <b>0.1 rel. J</b> reaches the snake. The same pattern repeats at every link: about 90% is lost, mostly as <span class='fc-heat'>heat</span> from respiration." },
-    { arc:3, from:3, to:4, title:"Snake → Eagle", pass:"Passed on 0.01 · lost 0.09",
-      text:"The eagle at the top receives about <b>0.01 rel. J</b>, one ten-thousandth of what the grass fixed. Nothing eats the eagle in this chain; when it dies, decomposers use what remains." },
-    { title:"Why food chains are short", pass:"100 → 10 → 1 → 0.1 → 0.01",
-      text:"Each link keeps only about 10%, so after four or five links too little energy is left to support another level. This is also why there are many snails and very few eagles: the energy pyramid." }
+    { arc:0, from:0, to:1, title:"Grass → Snail", pass:"Passed on 5 · not passed on 45",
+      text:"About <b>5 rel. J</b> reaches the snail: 10% of the 50 the grass stored (its NPP). A herbivore can only eat what the plant keeps, not the 100 it fixed. The other 90% (45) never reaches the snail: parts that are not eaten, and leaves that die and fall as litter for decomposers." },
+    { arc:1, from:1, to:2, title:"Snail → Frog", pass:"Passed on 0.5 · not passed on 4.5",
+      text:"The frog gets about <b>0.5 rel. J</b>. The snail spent most of its 5 staying alive (moving, breathing, keeping its cells working), and respiration released that energy as <span class='fc-heat'>heat</span>. Its slime trail and the food it could not digest (droppings) carried more energy away to decomposers. Only what it built into its own body can pass to the frog." },
+    { arc:2, from:2, to:3, title:"Frog → Snake", pass:"Passed on 0.05 · not passed on 0.45",
+      text:"Only <b>0.05 rel. J</b> reaches the snake. The same pattern repeats at every link: about 90% is lost, mostly as <span class='fc-heat'>heat</span> from respiration." },
+    { arc:3, from:3, to:4, title:"Snake → Eagle", pass:"Passed on 0.005 · not passed on 0.045",
+      text:"The eagle at the top receives about <b>0.005 rel. J</b>, one ten-thousandth of the 50 the grass stored. Nothing eats the eagle in this chain; when it dies, decomposers use what remains." },
+    { title:"Why food chains are short", pass:"50 → 5 → 0.5 → 0.05 → 0.005",
+      text:"Each link passes on only about 10%, so after four or five links too little energy is left to support another level. The 10% law is a generalisation: real transfers vary between ecosystems, commonly about 5–20%. This is also why there are many snails and very few eagles: the energy pyramid." }
   ];
   var LAST_STEP = STEPS.length - 1;
   function stepNav(){
@@ -161,7 +164,7 @@
       '<div class="fc-info-role">' + o.role + '</div>' +
       '<dl><dt>Food</dt><dd>' + o.food + '</dd><dt>Eaten by</dt><dd>' + o.eatenBy + '</dd>' +
       '<dt>Energy</dt><dd>' + (prev ? fmt(o.energy) + UNIT + ': about 10% of the ' + fmt(prev.energy) + UNIT + ' in the ' + prev.name.toLowerCase() + ' level below.'
-                                     : fmt(o.energy) + UNIT + ' fixed by photosynthesis (GPP). About half is used in the grass’s own respiration; the rest (NPP) is stored as plant biomass, of which about 10 reaches herbivores.') + '</dd></dl>' +
+                                     : fmt(o.energy) + UNIT + ' stored as plant biomass (NPP). The grass fixed 100 in photosynthesis (GPP) and used about half in its own respiration; of the 50 it keeps, about 10% (5) reaches herbivores.') + '</dd></dl>' +
       '<button type="button" class="fc-back" id="fcBackBtn">' + (step ? 'Back to step ' + step : 'Back to overview') + '</button>';
     document.getElementById("fcBackBtn").addEventListener("click", function(){ selected = null; ORGS.forEach(function(x){ x.tag.classList.remove("on"); }); showIntro(); });
   }

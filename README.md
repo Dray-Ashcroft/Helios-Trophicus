@@ -53,7 +53,7 @@ Switch tabs with the three icons at the top.
 
 ### 🔗 Food Chain
 
-- Energy falls **100 → 10 → 1 → 0.1 → 0.01 rel. J**, with heat rising from every organism.
+- Energy falls **50 → 5 → 0.5 → 0.05 → 0.005 rel. J** (the grass keeps NPP 50 of the 100 it fixes; each link passes on about 10%), with heat rising from every organism.
 - **Tap an organism** to see its arrows: one from its food, one to what eats it.
 - **Walk through it step by step**, one feeding link at a time, ending with why food chains are short.
 
