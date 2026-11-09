@@ -16,11 +16,13 @@
   var TL_COLOR = { 1:0x4ade80, 2:0xfacc15, 3:0xfb923c, 4:0xf87171 };
   var TL_ROLE = { 1:"Producer", 2:"Primary consumer", 3:"Secondary consumer", 4:"Tertiary consumer" };
 
-  // rows climb by trophic level; facing = the model's own forward axis, turned to face the viewer
+  // rows climb by trophic level; producers ordered lungwort, grass, tree so each sits nearest the animals that eat it
+  // (lungwort under the snail and butterfly, grass in the middle for the snail, mouse and deer, tree beside the deer)
+  // facing = the model's own forward axis, turned to face the viewer
   var NODES = [
-    { id:"grass",       name:"Grass",       tl:1, x:-4.6, file:"FoodWeb/grass.glb",        size:1.8, facing:"z", ys:1.8 },   // a wide, low patch of thin blades: drawn taller so it reads at this scale
-    { id:"tree",        name:"Tree",        tl:1, x: 0.0, file:"FoodWeb/tree.glb",         size:2.3, facing:"z" },
-    { id:"lupine",      name:"Lungwort",    tl:1, x: 4.6, file:"FoodWeb/lungwort.glb",     size:1.5, facing:"z",
+    { id:"grass",       name:"Grass",       tl:1, x: 0.0, file:"FoodWeb/grass.glb",        size:1.8, facing:"z", ys:1.8 },   // a wide, low patch of thin blades: drawn taller so it reads at this scale
+    { id:"tree",        name:"Tree",        tl:1, x: 4.6, file:"FoodWeb/tree.glb",         size:2.3, facing:"z" },
+    { id:"lupine",      name:"Lungwort",    tl:1, x:-4.6, file:"FoodWeb/lungwort.glb",     size:1.5, facing:"z",
       note:"A spring wildflower: its flowers open pink and turn blue as they age, and their nectar feeds early bees and butterflies." },
     { id:"grasshopper", name:"Snail",       tl:2, x:-6.3, file:"FoodChain/snail.glb",       size:1.2, facing:"z", turn:40, posedBox:true, back:0.3,
       note:"A grazer: it rasps leaves with its radula, a tongue covered in tiny teeth, and glides on a film of mucus." },
