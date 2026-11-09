@@ -331,7 +331,8 @@
       L.meshes.forEach(function(m){ m.visible = L.glow > 0.01; }); L.flowing = on; });
     pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = p.rec.flowing ? Math.sin(p.t * Math.PI) * p.rec.glow : 0; });
     NODES.forEach(function(n){
-      var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12; n.tag.classList.toggle("dim", !on);
+      var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12;
+      n.tag.classList.toggle("off", (!!selected || showChain) && !on);   // tapped (or chain shown): only the connected labels stay
       n.glow.material.opacity = n === selected ? 0.55 + Math.sin(t * 4) * 0.1 : 0.3 * n.lit;   // the tapped one's glow pulses
       if (n.pivot && n.fly) n.pivot.position.y = n.fly + Math.sin(t * 1.3 + n.x) * 0.08;
     });

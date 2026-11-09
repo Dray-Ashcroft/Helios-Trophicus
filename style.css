@@ -753,7 +753,8 @@
   .fc-pass{ margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(198,234,90,.10); color:#d8ef8f; font-size:12.5px; font-weight:600; font-variant-numeric:tabular-nums; }
   .fc-tag, .fc-pct, .fc-sun-tag{ transition:opacity .35s ease; }
   .fc-tag.dim, .fc-pct.dim, .fc-sun-tag.dim{ opacity:.28; }
-  .fc-pct.off{ opacity:0; }   /* arrows (and their 10% tags) appear only when an organism or a step asks for them */
+  .fc-pct.off{ opacity:0; }
+  .fw-tag.off{ opacity:0; pointer-events:none; }   /* food web: labels of organisms not linked to the tapped one */   /* arrows (and their 10% tags) appear only when an organism or a step asks for them */
 
   @media (max-width:640px){ .view-btn{ padding:0 10px; font-size:12px; gap:4px; } .view-btn svg{ display:none; } }
 
