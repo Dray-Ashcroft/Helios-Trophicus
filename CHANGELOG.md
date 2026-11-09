@@ -4,7 +4,14 @@
 
 ---
 
-## RC XVI · Debug Pass · 9 Nov 2026 *(current)*
+## RC XVII · One Scale · 9 Nov 2026 *(current)*
+
+- Food chain uses the pyramid's 10% law: grass NPP 50 → snail 5 → frog 0.5 → snake 0.05 → eagle 0.005 rel. J
+- Profile pictures as WebP: about 5× smaller (16 MB → 3.2 MB), same resolution
+- Unused files removed: the grasshopper model and seven old profile pictures
+- Status pill reads "Solar input on — PAR reaching producers", so it is not mistaken for a step title
+
+## RC XVI · Debug Pass · 9 Nov 2026
 
 - Phones: the Reset view button no longer covers the food chain's Next step button (it now sits above the card)
 - Layer profiles: energy follows mortality like the graph (e.g. 4.8 rel. J with 5 shown as the full value)
