@@ -4,7 +4,13 @@
 
 ---
 
-## RC XVII · One Scale · 9 Nov 2026 *(current)*
+## RC XVIII · Woodland Mushrooms · 9 Nov 2026 *(current)*
+
+- Decomposers: five low-poly mushrooms replace the neon clusters; a clump of three and two growing alone
+- Each rises out of the soil in its turn in step 6 and leans a little, as in the wild
+- TL2 and TL3 profiles: ox beetle, rock pigeon, rat and scorpion pictures; scorpion icon for TL3
+
+## RC XVII · One Scale · 9 Nov 2026
 
 - Food chain uses the pyramid's 10% law: grass NPP 50 → snail 5 → frog 0.5 → snake 0.05 → eagle 0.005 rel. J
 - Profile pictures as WebP: about 5× smaller (16 MB → 3.2 MB), same resolution

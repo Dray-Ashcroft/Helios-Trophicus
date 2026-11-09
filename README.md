@@ -157,7 +157,7 @@ The food web adds a snail, a butterfly, a deer, a red fox, a white tiger and a K
 | 🦉 Owl (pyramid, food web) | [Owl](https://skfb.ly/pwnos) | kenchoo | CC BY-NC 4.0 ¹ |
 | 🦅 Eagle | [White Eagle Animation Fast Fly](https://sketchfab.com/3d-models/white-eagle-animation-fast-fly-30203bf39e5145f19c79e83c550139d3) | GremorySaiyan | CC BY 4.0 |
 | **Decomposers** | | | |
-| 🍄 Decomposer fungi (pyramid) | [Neon mushrooms - Day 1](https://skfb.ly/orwRY) | patrakeevasveta | CC BY 4.0 |
+| 🍄 Decomposer fungi (pyramid) | Low poly mushroom | Lucas | CC BY 4.0 |
 
 <sub>¹ Non-commercial use only. ² No derivatives: the frog is shared unaltered, apart from the file-format compression that CC 4.0 licences allow as a technical modification. Models keep their full original geometry; textures are packed to 2048 px WebP for faster loading. Creators retain ownership.</sub>
 
@@ -165,7 +165,7 @@ The food web adds a snail, a butterfly, a deer, a red fox, a white tiger and a K
 
 ## 🗒️ Changelog
 
-Version history, RC I to RC XVII: [CHANGELOG.md](CHANGELOG.md)
+Version history, RC I to RC XVIII: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
