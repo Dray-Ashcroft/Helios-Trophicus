@@ -146,7 +146,7 @@
       n.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map:glow, color:TL_COLOR[n.tl], transparent:true, opacity:0.3, depthWrite:false, blending:THREE.AdditiveBlending }));
       n.glow.scale.set(3.0, 1.0, 1); n.glow.position.y = -0.38; g.add(n.glow);
       n.holder = new THREE.Group(); g.add(n.holder);
-      n.lit = 1;
+      n.lit = 1; n.shadeK = 1;
     });
     // the Sun feeds every producer; it sits level with the producer row so its arrows stay below the TL2 labels
     glowTex = glow;
@@ -307,7 +307,7 @@
     pivot.rotation.y = (({ "z":0, "x":-90, "-x":90 })[n.facing] + (n.turn || 0)) * D2R;
     if (n.fly) pivot.position.y = n.fly;
     if (n.back) pivot.position.z = -n.back;   // sprawling legs stay inside the plinth's ring
-    n.holder.add(pivot); n.pivot = pivot;
+    n.holder.add(pivot); n.pivot = pivot; n.shadeK = -1;   // shade the new model to match at once
     n.h = (n.fly || 0) + size.y * pivot.scale.y; n.hw = Math.max(size.x, size.z) * pivot.scale.x / 2;   // its real outline, so arrows can steer round it
     if (gltf.animations && gltf.animations.length){
       var clip = gltf.animations[0];
@@ -365,6 +365,14 @@
     if (showChain) return CHAIN.indexOf(n.id) !== -1;
     return true;
   }
+  // dim an organism and its rock by scaling their own colours (no transparency, so nothing sorts wrongly)
+  function shade(n, k){
+    [n.holder, n.land].forEach(function(g){ g.traverse(function(o){ if (!o.isMesh) return;
+      (Array.isArray(o.material) ? o.material : [o.material]).forEach(function(m){ if (!m.color) return; var u = m.userData;
+        if (!u.c0){ u.c0 = m.color.clone(); if (m.emissive) u.e0 = m.emissive.clone(); }
+        m.color.copy(u.c0).multiplyScalar(k); if (u.e0) m.emissive.copy(u.e0).multiplyScalar(k); });
+    }); });
+  }
   var tmp = new THREE.Vector3();
   function frame(){
     if (!active) return; raf = requestAnimationFrame(frame);
@@ -379,7 +387,8 @@
       L.meshes.forEach(function(m){ m.visible = L.glow > 0.01; }); L.flowing = on; });
     pulses.forEach(function(p){ p.t = (p.t + dt * 0.3) % 1; p.sprite.position.copy(p.curve.getPoint(p.t)); p.sprite.material.opacity = p.rec.flowing ? Math.sin(p.t * Math.PI) * p.rec.glow : 0; });
     NODES.forEach(function(n){
-      var on = nodeLit(n); n.lit += ((on ? 1 : 0.25) - n.lit) * 0.12;
+      var on = nodeLit(n), goal = on ? 1 : 0.25; n.lit += (goal - n.lit) * 0.12; if (Math.abs(goal - n.lit) < 0.002) n.lit = goal;
+      var k = 0.08 + 0.92 * (n.lit - 0.25) / 0.75; if (Math.abs(k - n.shadeK) > 0.003){ shade(n, k); n.shadeK = k; }   // unconnected organisms and their rocks fade back
       n.tag.classList.toggle("off", (!!selected || showChain) && !on);   // tapped (or chain shown): only the connected labels stay
       n.glow.material.opacity = n === selected ? 0.55 + Math.sin(t * 4) * 0.1 : 0.3 * n.lit;   // the tapped one's glow pulses
       if (n.pivot && n.fly) n.pivot.position.y = n.fly + Math.sin(t * 1.3 + n.x) * 0.08;
@@ -415,6 +424,7 @@
         NODES.forEach(function(n){
           while (n.land.children.length){ var c = n.land.children.pop(); if (c.geometry) c.geometry.dispose(); }
           var chunk = g.scene.clone(); chunk.scale.setScalar(2.15); n.land.add(chunk);   // clones share geometry and textures
+          chunk.traverse(function(o){ if (o.isMesh) o.material = o.material.clone(); }); n.shadeK = -1;   // own material, so each rock can fade on its own
         });
       }).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); }).then(function(){ webTick(); });
       var webDone = 0, webTotal = NODES.length + 2;   // the organisms, the Sun and the land (top progress bar)
