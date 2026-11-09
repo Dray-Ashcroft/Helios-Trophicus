@@ -4826,4 +4826,19 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
 
   requestAnimationFrame(animate);
 
+  // Credits: the © beside the title opens and folds a glass card; Escape or a tap outside closes it
+  (function(){
+    var btn = document.getElementById("creditsBtn"), card = document.getElementById("creditsCard"), close = document.getElementById("creditsClose"), timer;
+    if (!btn || !card) return;
+    function set(open){
+      clearTimeout(timer); btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open){ card.hidden = false; requestAnimationFrame(function(){ card.classList.add("open"); }); close.focus({ preventScroll:true }); }
+      else { card.classList.remove("open"); timer = setTimeout(function(){ card.hidden = true; }, 230); }
+    }
+    btn.addEventListener("click", function(e){ e.stopPropagation(); set(card.hidden || !card.classList.contains("open")); });
+    close.addEventListener("click", function(){ set(false); btn.focus({ preventScroll:true }); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !card.hidden){ set(false); btn.focus({ preventScroll:true }); } });
+    document.addEventListener("pointerdown", function(e){ if (!card.hidden && !card.contains(e.target) && !btn.contains(e.target)) set(false); }, true);   // capture: the 3D views stop their own pointer events
+  })();
+
 })();

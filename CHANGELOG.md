@@ -4,7 +4,13 @@
 
 ---
 
-## RC XII · Clear Lines · 9 Nov 2026 *(current)*
+## RC XIII · Credits · 9 Nov 2026 *(current)*
+
+- A filled © beside the title opens a frosted-glass credits card in every view
+- Project Designer: Sai Prasad, M.Sc. Agricultural Entomology · ASRB NET
+- Every 3D model listed with its creator, link and licence; closes with ✕, Escape or a tap outside
+
+## RC XII · Clear Lines · 9 Nov 2026
 
 - Food web: tapping an organism shows only its connected labels; the other organisms and their rocks fade back
 - Each arrow lands at its own point on the rock instead of all meeting at one spot
