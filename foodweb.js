@@ -168,7 +168,7 @@
     // into the side of the feeder's rock. Both ends sit just outside the rocks, beside the name labels (which hang
     // below each rock), so no line passes through an animal or a label. A same-row link (if any) is a low arc
     // over the gap between the two rocks.
-    var EDGE = 1.12, PORT_GAP = 0.3;
+    var EDGE = 1.12, PORT_GAP = 0.4;
     // 1) route: which side of each rock a link uses, and where it heads beyond the rock
     var routes = LINKS.map(function(l){
       var a = byId[l[0]], b = byId[l[1]], side = Math.sign(b.x - a.x) || 1, r = { a:a, b:b };
@@ -199,22 +199,52 @@
         p.r[p.key] = new THREE.Vector3(p.n.x + p.s * EDGE * Math.sqrt(Math.max(0.6, 1 - off * off / 0.8)), p.n.y + 0.1 + off, 0.35);
       });
     });
-    // 3) draw
+    // 3) draw: start from the plain route, then bend it round any rock, organism or label in the way
     routes.forEach(function(r){
-      var a = r.a, b = r.b, p0 = r.p0, p2 = r.p2;
-      if (r.gapX !== undefined){
-        var q1 = new THREE.Vector3((r.gapX - 0.36 * p0.x - 0.16 * p2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
-        addArrow(new THREE.QuadraticBezierCurve3(p0, q1, p2), { from:a, to:b }, glow, 0.022);
-      } else if (Math.abs(p2.x - p0.x) < 1.4){   // nearly vertical: bow gently outward, away from the labels hanging below the rocks
-        var c = p0.clone().add(p2).multiplyScalar(0.5); c.x += (Math.sign(p2.x - b.x) || 1) * 0.7;
-        addArrow(new THREE.QuadraticBezierCurve3(p0, c, p2), { from:a, to:b }, glow, 0.022);
-      } else addArrow(new THREE.LineCurve3(p0, p2), { from:a, to:b }, glow, 0.022);
+      var a = r.a, b = r.b, p0 = r.p0, p2 = r.p2, c;
+      if (r.gapX !== undefined) c = new THREE.Vector3((r.gapX - 0.36 * p0.x - 0.16 * p2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
+      else if (Math.abs(p2.x - p0.x) < 1.4){ c = p0.clone().add(p2).multiplyScalar(0.5); c.x += (Math.sign(p2.x - b.x) || 1) * 0.7; }   // nearly vertical: bow outward
+      addArrow(clearPath(p0, c, p2, [a, b], false), { from:a, to:b }, glow, 0.022);
     });
+  }
+  // Obstacles, in the plane of the web: each organism's rock and model, and its name label hanging below the rock
+  function obstacles(){
+    var LH = layoutName === "tall" ? 1.25 : 1.0, LV = layoutName === "tall" ? 1.3 : 0.95, out = [];
+    NODES.forEach(function(n){
+      var hw = Math.max(1.05, Math.min(1.7, (n.hw || 0) * 0.85)), h = n.h || (n.fly ? n.fly + 0.5 : n.size * 0.5);
+      out.push({ n:n, x0:n.x - hw, x1:n.x + hw, y0:n.y - 0.4, y1:n.y + h });
+      out.push({ n:n, x0:n.x - LH, x1:n.x + LH, y0:n.y - 0.45 - LV, y1:n.y - 0.4 });
+    });
+    return out;
+  }
+  function hits(curve, skip, obs){
+    var s = 0, p = new THREE.Vector3(), M = 0.12;
+    for (var i = 2; i <= 30; i++){ curve.getPoint(i / 32, p);
+      for (var k = 0; k < obs.length; k++){ var o = obs[k]; if (skip.indexOf(o.n) !== -1) continue;
+        if (p.x > o.x0 - M && p.x < o.x1 + M && p.y > o.y0 - M && p.y < o.y1 + M){ s++; break; } } }
+    return s;
+  }
+  // Keep the plain route if it is clear; otherwise try bending it more and more to either side and take the
+  // gentlest bend that is clear (or, failing that, the one that touches least). Sunbeams that would cross other
+  // producers pass behind them instead, so the plants hide the beam where they overlap.
+  function clearPath(p0, c, p2, ends, sun){
+    var obs = obstacles(), mid = c || p0.clone().add(p2).multiplyScalar(0.5);
+    function mk(cp){ return cp ? new THREE.QuadraticBezierCurve3(p0, cp, p2) : new THREE.LineCurve3(p0, p2); }
+    var best = mk(c), bestS = hits(best, ends, obs); if (!bestS) return best;
+    if (sun){ var bc = mid.clone(); bc.z = -3.2; bc.y += 0.25; return mk(bc); }
+    var d = p2.clone().sub(p0), perp = new THREE.Vector3(-d.y, d.x, 0).normalize();
+    [0.4, 0.8, 1.2, 1.6, 2.0, 2.5].some(function(amt){
+      return [1, -1].some(function(sg){
+        var cv = mk(mid.clone().addScaledVector(perp, amt * sg)), s = hits(cv, ends, obs);
+        if (s < bestS){ best = cv; bestS = s; } return !s;
+      });
+    });
+    return best;
   }
   function ORGS_SUN_LINKS(glow){
     NODES.filter(function(n){ return n.tl === 1; }).forEach(function(n){   // thin sunbeams onto each producer's rock
       var p1 = new THREE.Vector3(n.x - EDGE_SUN, n.y + 0.15, 0.35), p0 = sunPos.clone(); p0.addScaledVector(p1.clone().sub(p0).normalize(), 0.85);
-      addArrow(new THREE.LineCurve3(p0, p1), { from:null, to:n, sun:true }, glow, 0.016);
+      addArrow(clearPath(p0, null, p1, [n], true), { from:null, to:n, sun:true }, glow, 0.016);
     });
   }
   var EDGE_SUN = 1.1;
@@ -278,6 +308,7 @@
     if (n.fly) pivot.position.y = n.fly;
     if (n.back) pivot.position.z = -n.back;   // sprawling legs stay inside the plinth's ring
     n.holder.add(pivot); n.pivot = pivot;
+    n.h = (n.fly || 0) + size.y * pivot.scale.y; n.hw = Math.max(size.x, size.z) * pivot.scale.x / 2;   // its real outline, so arrows can steer round it
     if (gltf.animations && gltf.animations.length){
       var clip = gltf.animations[0];
       if (n.clipName) gltf.animations.forEach(function(a){ if (a.name.toLowerCase().indexOf(n.clipName) !== -1) clip = a; });
@@ -393,6 +424,7 @@
     }).then(function(){
       var miss = NODES.filter(function(n){ return n.missing; }).map(function(n){ return n.name; });
       statusEl.hidden = !miss.length; if (miss.length) statusEl.textContent = "Could not load: " + miss.join(", ");
+      if (layoutName) applyLayout(layoutName);   // every model measured: re-route the arrows round their real outlines
       ready = true; building = false;
     }).catch(function(e){ building = false; statusEl.hidden = false; statusEl.textContent = "The 3D view could not start (" + e.message + ")."; console.warn(e); });
   }
