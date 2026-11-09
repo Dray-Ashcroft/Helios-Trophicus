@@ -4142,7 +4142,7 @@
     },
     secondaryConsumers: {
       layerId: 3,
-      icon: "\ud83d\udc38",
+      icon: "\ud83e\udd82",   // scorpion, matching the profile picture
       title: "Secondary Consumers",
       description: "Secondary consumers obtain energy by feeding on primary consumers.",
       media: [
