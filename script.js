@@ -4878,6 +4878,18 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
 
   requestAnimationFrame(animate);
 
+  // Food chain / food web on phones: the card sits at the bottom, so its height is shared as --fc-card-h and the
+  // Reset view button (.fc-side) sits just above it instead of over the card's step buttons
+  (function(){
+    var cards = document.querySelectorAll(".fc-panel");
+    function sync(card){ if (card.parentNode) card.parentNode.style.setProperty("--fc-card-h", card.offsetHeight + "px"); }
+    cards.forEach(function(card){
+      sync(card);
+      if (window.ResizeObserver) new ResizeObserver(function(){ sync(card); }).observe(card);
+      else { window.addEventListener("resize", function(){ sync(card); }); card.addEventListener("click", function(){ setTimeout(function(){ sync(card); }, 300); }); }
+    });
+  })();
+
   // Credits: the © beside the title opens and folds a glass card; Escape or a tap outside closes it
   (function(){
     var btn = document.getElementById("creditsBtn"), card = document.getElementById("creditsCard"), close = document.getElementById("creditsClose"), timer;

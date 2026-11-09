@@ -4,7 +4,15 @@
 
 ---
 
-## RC XV · Black Ox Beetle · 9 Nov 2026 *(current)*
+## RC XVI · Debug Pass · 9 Nov 2026 *(current)*
+
+- Phones: the Reset view button no longer covers the food chain's Next step button (it now sits above the card)
+- Layer profiles: energy follows mortality like the graph (e.g. 4.8 rel. J with 5 shown as the full value)
+- Primary consumers profile: three pictures (ox beetle, rock pigeon, rat)
+- Backup model and picture links point at the renamed repository
+- Tested: all models, the 7-step walkthrough, mortality and revive, profiles, export, import and snapshot, every organism in the food chain and food web, at phone, tablet, laptop and panel sizes
+
+## RC XV · Black Ox Beetle · 9 Nov 2026
 
 - Pyramid TL2: a black ox beetle (rhinoceros beetle) replaces the grasshopper; its adults feed on young palms and cane
 - Its own remains: a black shell with domed wing covers, the male's three horns and toothed digging forelegs

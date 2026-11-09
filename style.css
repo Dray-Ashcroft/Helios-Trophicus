@@ -726,6 +726,7 @@
     .fc-tag{ min-width:0; padding:4px 7px; } .fc-name{ font-size:12px; } .fc-role{ display:none; } .fc-energy{ font-size:11px; }
     .fc-legend{ display:none; }
     .fc-panel{ top:auto; bottom:max(12px, env(safe-area-inset-bottom)); max-height:34vh; overflow:auto; }
+    .fc-side{ bottom:calc(max(12px, env(safe-area-inset-bottom)) + var(--fc-card-h, 0px) + 10px); }   /* sits above the card (its height is set by script.js), not over its step buttons */
   }
 
   /* Material 3 circular determinate progress indicator while 3D models load (script.js renderLoadBar): active arc,
