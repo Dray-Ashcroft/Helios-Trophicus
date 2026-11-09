@@ -114,6 +114,12 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 
 ---
 
+## 🗒️ Changelog
+
+Version history, RC I to RC X: [CHANGELOG.md](CHANGELOG.md)
+
+---
+
 ## 📜 License
 
 Source code: **GNU GPL-3.0**. 3D models keep their own licences (above).
