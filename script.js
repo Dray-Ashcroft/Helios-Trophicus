@@ -3793,6 +3793,7 @@
     if (selBiomassEl) selBiomassEl.textContent = def ?
       ("Living biomass: " + formatBiomass(def.livingBiomass) + "% of start") : "Living biomass: —";
     updateEcoGraph();
+    if (def && typeof profileUI !== "undefined" && profileUI && profileUI.layerId === id && profileEnergyEl) profileEnergyEl.textContent = profileEnergyText(def);   // an open profile follows deaths and revivals
   }
 
   // =========================================================
@@ -4258,6 +4259,15 @@
     }
   }
 
+  // The level's energy as the graph shows it (only its living organisms), with the 10% law stated beside it.
+  // When some organisms have died, the full value under the law is given too, so the two never seem to disagree.
+  function profileEnergyText(def){
+    if (!def) return "";
+    var below = def.id > 1 ? TROPHIC_DATA[def.id - 2] : null, num = function(v){ return formatEnergy(v).replace(" rel. J", ""); };
+    var law = below ? Math.round(TRANSFER_EFFICIENCY * 100) + "% of TL" + below.id + "'s " + num(below.energy) : "NPP";
+    if (def.livingBiomass >= 99.95) return "Energy available: " + formatEnergy(def.energy) + (below ? " · " + law : " (NPP)");
+    return "Energy available: " + formatEnergy(def.energy * def.livingBiomass / 100) + " (" + num(def.energy) + " with every organism alive · " + law + ")";
+  }
   function renderProfile(layerId){
     var profile = profileByLayerId[layerId];
     if (!profile) return;
@@ -4265,9 +4275,7 @@
     profileTitleEl.textContent = profile.title;
     profileDescEl.textContent = profile.description;
     var def = TROPHIC_DATA.filter(function(d){ return d.id === layerId; })[0];
-    var below = def && def.id > 1 ? TROPHIC_DATA[def.id - 2] : null;   // the 10% law, stated with the level it came from
-    profileEnergyEl.textContent = def ? ("Energy available: " + formatEnergy(def.energy) +
-      (below ? " · " + Math.round(TRANSFER_EFFICIENCY * 100) + "% of TL" + below.id + "'s " + formatEnergy(below.energy).replace(" rel. J", "") : " (NPP)")) : "";
+    profileEnergyEl.textContent = profileEnergyText(def);
     renderMedia(profile);
   }
 
