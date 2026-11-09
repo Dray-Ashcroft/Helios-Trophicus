@@ -21,6 +21,7 @@
 
   // size = largest dimension in scene units (not to scale: a snail would vanish next to an eagle)
   // yaw  = turn applied after loading so each animal faces its food (towards the left) and a little towards the viewer
+  // yawTall = the same on phones, where the chain zig-zags and the food can sit on the other side (the eagle's snake)
   var ORGS = [
     { id:"grass", tl:1, name:"Grass", role:"Producer", color:0x4ade80, energy:100, file:"../Pyramid/grass.glb", size:1.9, yaw:0, tufts:[[-0.5, -0.25, 1, 0], [0.45, -0.4, 0.9, 1.9], [0.05, 0.45, 0.85, 4.1], [-0.7, 0.55, 0.7, 2.7], [0.8, 0.35, 0.75, 5.3]],
       food:"None: makes its own food by photosynthesis, using sunlight, water and carbon dioxide.",
@@ -29,9 +30,9 @@
       food:"Grass and other leaves (a producer), rasped off with its radula, a tongue covered in tiny teeth.", eatenBy:"Frog" },
     { id:"frog", tl:3, name:"Frog", role:"Secondary consumer · carnivore", color:0xfb923c, energy:1, file:"frog.glb", size:1.45, yaw:-1.0,
       food:"Snails, insects and other small animals.", eatenBy:"Snake" },
-    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"../Pyramid/snake.glb", size:2.3, yaw:0.3, clip:[3, 9],   // spectacled cobra (shared with the pyramid and food web): its calm rear-and-sway stretch
+    { id:"snake", tl:4, name:"Snake", role:"Tertiary consumer · carnivore", color:0xf87171, energy:0.1, file:"../Pyramid/snake.glb", size:2.3, yaw:2.87, clip:[3, 9],   // spectacled cobra (shared with the pyramid and food web): its calm rear-and-sway stretch
       food:"Frogs, toads and rodents. This is a spectacled cobra, India's Naja naja.", eatenBy:"Eagle" },
-    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:Math.PI-0.5, fly:1.35,
+    { id:"eagle", tl:5, name:"Eagle", role:"Quaternary consumer · top carnivore", color:0xc084fc, energy:0.01, file:"eagle.glb", size:2.3, yaw:3.38, yawTall:-0.44, fly:1.35,
       food:"Snakes (snake eagles specialise in them).", eatenBy:"Nothing: it is at the top of this chain." }
   ];
   // Landscape (smart panel, laptop): a row climbing one low step per level, left to right.
@@ -205,8 +206,10 @@
     buildHeat(glow);
   }
 
+  function yawOf(o){ return layoutName === "tall" && o.yawTall !== undefined ? o.yawTall : o.yaw; }
   function applyLayout(name){   // move the plinths, the Sun and rebuild the arrows for this screen shape
     layout = LAYOUTS[name]; layoutName = name;
+    ORGS.forEach(function(o){ if (o.pivot) o.pivot.rotation.y = yawOf(o); });   // face the food on this layout
     ORGS.forEach(function(o, i){ var p = layout.pos(i); o.x = p[0]; o.y = p[1]; o.group.position.set(o.x, o.y, 0);
       o.anchor = new THREE.Vector3(o.x, o.y + (o.fly ? o.fly + 0.4 : 0.6), 0); });
     ORGS.sun = new THREE.Vector3().fromArray(layout.sun); sunHolder.position.copy(ORGS.sun); sunHalo.position.copy(ORGS.sun);
@@ -294,7 +297,7 @@
     } else if (!bones.isEmpty()){   // rigged (eagle, snake): the skeleton, not the raw mesh box, says where the animal is drawn
       var bc = bones.getCenter(new THREE.Vector3()); obj.position.set(-bc.x, o.fly ? -bc.y : -bones.min.y, -bc.z);
     } else obj.position.set(-c.x, -box.min.y - (o.sink || 0) * size.y, -c.z);   // centred, standing on the plinth (the grass mat sits a little into it, hiding its cut edge)
-    pivot.scale.setScalar(k); pivot.rotation.y = o.yaw; o.k = k;
+    pivot.scale.setScalar(k); pivot.rotation.y = yawOf(o); o.k = k;
     if (o.fly) pivot.position.y = o.fly + 0.3;
     if (o.lift) o.holder.position.y = o.lift; if (o.dx) o.holder.position.x = o.dx;
     o.holder.add(pivot); o.pivot = pivot;

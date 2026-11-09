@@ -12,6 +12,7 @@
 - Walkthrough cards, graph, heat graph and layer profiles all show the same values
 - Cards explain that about 10% is passed on and about 90% is not, and that 10% is a generalisation (commonly 5–20%)
 - Fix: values below 0.1 no longer round up (0.05 showed as 0.1)
+- Food chain: the cobra now faces the frog and the eagle faces the snake (on phones too)
 
 ## RC XIII · Credits · 9 Nov 2026
 
