@@ -4127,7 +4127,9 @@
       title: "Primary Consumers",
       description: "Primary consumers obtain their energy by feeding directly on producers. They include plant-eating insects, birds and mammals, such as the black ox beetle, pigeon, rat and rabbit here.",
       media: [
-        { type:"image", url:"", title:"Adult ox beetle, a plant-eating primary consumer", caption:"Adult ox beetle, a plant-eating primary consumer" }
+        { type:"image", url:"", title:"Adult ox beetle, a plant-eating primary consumer", caption:"Adult ox beetle, a plant-eating primary consumer" },
+        { type:"image", url:"", title:"Rock pigeon eating seeds and grain", caption:"Rock pigeon eating seeds and grain" },
+        { type:"image", url:"", title:"Rabbit grazing on grass", caption:"Rabbit grazing on grass" }
       ]
     },
     secondaryConsumers: {
@@ -4174,7 +4176,8 @@
   // ---- Profile images: every example is an image placeholder with an optional URL ----
   // Keys are "<layerId>:<example index>". Saved in localStorage, exported in the project
   // JSON, and baked into HTML snapshots through PROFILE_IMAGE_DEFAULTS.
-  var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v2";   // v2: one example picture per level
+  var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v2";   // v2 layout: "<level>:<n>" with n counting this file's examples
+  var PROFILE_IMAGE_LAYOUT = 3;   // written into exports; 3 = TL2 has three examples, so "2:1" and "2:2" are real slots
   // Older saves and exports keyed several pictures per level ("2:0".."2:3"); only the ones kept carry over:
   // TL1 seed-to-plant, TL2 ox beetle (was the grasshopper), TL3 frog, TL4 eagle.
   var OLD_PROFILE_KEY_MAP = { "1:0":"1:0", "2:2":"2:0", "3:0":"3:0", "4:0":"4:0" };
@@ -4627,7 +4630,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     downloadTextFile("helios-trophicus-snapshot-"+exportTimestamp()+".html",html,"text/html;charset=utf-8");
   });
   var STATE_SCHEMA_VERSION = 1;
-  document.getElementById("exportJsonBtn").addEventListener("click",function(){var state={schemaVersion:STATE_SCHEMA_VERSION,project:"Oekos Matrix",exportedAt:new Date().toISOString(),selectedTrophicLevel:selectedId,solarState:{state:simState,energyDelivered:solarState.energyDelivered},trophicLevels:TROPHIC_DATA,organisms:ORGANISM_ASSETS,profileImages:profileImageUrls};downloadTextFile("helios-trophicus-state-"+exportTimestamp()+".json",JSON.stringify(state,null,2),"application/json;charset=utf-8");});
+  document.getElementById("exportJsonBtn").addEventListener("click",function(){var state={schemaVersion:STATE_SCHEMA_VERSION,project:"Oekos Matrix",exportedAt:new Date().toISOString(),selectedTrophicLevel:selectedId,solarState:{state:simState,energyDelivered:solarState.energyDelivered},trophicLevels:TROPHIC_DATA,organisms:ORGANISM_ASSETS,profileImages:profileImageUrls,profileImagesLayout:PROFILE_IMAGE_LAYOUT};downloadTextFile("helios-trophicus-state-"+exportTimestamp()+".json",JSON.stringify(state,null,2),"application/json;charset=utf-8");});
 
   // ---- Import state JSON: restores what can be restored safely and instantly —
   // organism image URLs, profile image URLs, which organisms have already died
@@ -4656,7 +4659,7 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     });
 
     if (data.profileImages && typeof data.profileImages === "object"){
-      var impImages = upgradeProfileImageKeys(data.profileImages);   // files exported before one-picture-per-level carry the full old set
+      var impImages = data.profileImagesLayout >= 3 ? data.profileImages : upgradeProfileImageKeys(data.profileImages);   // files exported before one-picture-per-level carry the full old set
       Object.keys(impImages).forEach(function(k){
         if (typeof impImages[k] === "string" && impImages[k].indexOf("supabase.co") === -1) profileImageUrls[k] = impImages[k];
       });
