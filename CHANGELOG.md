@@ -4,7 +4,16 @@
 
 ---
 
-## RC XIII · Credits · 9 Nov 2026 *(current)*
+## RC XIV · The 10% Law · 9 Nov 2026 *(current)*
+
+- Pyramid energy follows E(n+1) = E(n) × 0.10: TL1 50 → TL2 5 → TL3 0.5 → TL4 0.05 rel. J
+- TL1 is the producers' NPP (GPP 100 − respiration 50), so herbivores receive 10% of what plants keep, not of GPP
+- TL2–TL4 are calculated from TL1 by the formula; no hand-typed values left
+- Walkthrough cards, graph, heat graph and layer profiles all show the same values
+- Cards explain that about 10% is passed on and about 90% is not, and that 10% is a generalisation (commonly 5–20%)
+- Fix: values below 0.1 no longer round up (0.05 showed as 0.1)
+
+## RC XIII · Credits · 9 Nov 2026
 
 - A filled © beside the title opens a frosted-glass credits card in every view
 - Project Designer: Sai Prasad, M.Sc. Agricultural Entomology · ASRB NET

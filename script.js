@@ -32,12 +32,20 @@
   // functions above (not hand-typed), so the taper is always
   // mathematically consistent with the outer pyramid shell.
   // =========================================================
+  // Energy follows the 10% law (Lindeman): each level receives about 10% of the energy available at the level below,
+  //   E(n+1) = E(n) x 0.10
+  // TL1 is the producers' NPP (50 rel. J: GPP 100 minus their own respiration 50, as in walkthrough step 2), since
+  // herbivores can only eat what producers keep. Only TL1 is set here; TL2-TL4 are computed below (50 -> 5 -> 0.5 -> 0.05).
+  // 10% is a teaching generalisation: real transfer efficiencies vary between ecosystems, commonly about 5-20%.
+  var TL1_ENERGY = 50, TRANSFER_EFFICIENCY = 0.10;
   var TROPHIC_DATA = [
-    { id:1, label:"Trophic Level 1", energy:100,  livingBiomass:100, biomassRef:100, color:0x4ade80, glow:1.00, yBottom:0.4,  yTop:3.0  },
-    { id:2, label:"Trophic Level 2", energy:10,   livingBiomass:100, biomassRef:25, color:0xfacc15, glow:0.75, yBottom:3.8,  yTop:6.0  },
-    { id:3, label:"Trophic Level 3", energy:1,    livingBiomass:100, biomassRef:6, color:0xfb923c, glow:0.50, yBottom:6.8,  yTop:8.8  },
-    { id:4, label:"Trophic Level 4", energy:0.1,  livingBiomass:100, biomassRef:1.5, color:0xf87171, glow:0.30, yBottom:9.6,  yTop:11.2 }
+    { id:1, label:"Trophic Level 1", energy:TL1_ENERGY, livingBiomass:100, biomassRef:100, color:0x4ade80, glow:1.00, yBottom:0.4,  yTop:3.0  },
+    { id:2, label:"Trophic Level 2", energy:0,   livingBiomass:100, biomassRef:25, color:0xfacc15, glow:0.75, yBottom:3.8,  yTop:6.0  },
+    { id:3, label:"Trophic Level 3", energy:0,    livingBiomass:100, biomassRef:6, color:0xfb923c, glow:0.50, yBottom:6.8,  yTop:8.8  },
+    { id:4, label:"Trophic Level 4", energy:0,  livingBiomass:100, biomassRef:1.5, color:0xf87171, glow:0.30, yBottom:9.6,  yTop:11.2 }
   ];
+  for (var tli = 1; tli < TROPHIC_DATA.length; tli++)   // rounded to 6 places so binary floating point cannot creep in
+    TROPHIC_DATA[tli].energy = Math.round(TROPHIC_DATA[tli - 1].energy * TRANSFER_EFFICIENCY * 1e6) / 1e6;
   var GAP_ATTEN     = [1.0, 0.55, 0.30];
   var GAP_PARTICLES = [30, 16, 7];
   var GAP_SPEED     = [0.22, 0.19, 0.16];
@@ -2926,7 +2934,7 @@
   // picture, and Reset returns the whole ecosystem to its resting state.
   //
   //   1 PAR          Sun -> PAR reaches the producers      (existing Sun/PAR)
-  //   2 Producers    PAR is captured: chemical energy stored (TL1 = 100)
+  //   2 Producers    PAR is captured: chemical energy stored (GPP = 100; TL1 keeps NPP = 50)
   //   3 TL1 -> TL2   ~10 % passes on (TL2 = 10); heat is lost
   //   4 TL2 -> TL3   ~10 % again (TL3 = 1); heat is lost
   //   5 TL3 -> TL4   ~10 % again (TL4 = 0.1); heat is lost
@@ -3589,13 +3597,13 @@
     ageHeatParticles(delta);                                 // leftover heat finishes fading on its own
   }
 
-  // ---- Step 2 readout: GPP -> R -> NPP (illustrative teaching values in rel. J, matching TL1 = 100).
+  // ---- Step 2 readout: GPP -> R -> NPP (illustrative teaching values in rel. J; NPP 50 is TL1's energy).
   //      GPP = all energy producers fix in photosynthesis; R = their own respiration, lost as heat
   //      (commonly about half of GPP); NPP = GPP - R, the biomass left for herbivores and decomposers.
   //      Each part appears with the step clock: GPP as PAR is captured, R with the heat puff at T = 1.4,
   //      NPP once the step settles. Shown only while step 2 is on screen; Back/Next simply redraw it.
-  //      Step 3 (TL1 -> TL2) follows on: NPP 50 -> TL2 receives 10 as the stream arrives (T = 4.3, when
-  //      TL2 lights up), then the uneaten 40 is named as litter for the decomposers near the end of the step.
+  //      Step 3 (TL1 -> TL2) follows on: NPP 50 -> TL2 receives 10 % (5) as the stream arrives (T = 4.3, when
+  //      TL2 lights up), then the 90 % not passed on (45) is named as litter for the decomposers near the end of the step.
   var PROD_STAGE_T = { 1: [0, 0, 0], 2: [0.2, 1.3, 2.1], 3: [3.0, 4.3, 5.8], 4: [7.0, 8.3, 9.6], 5: [11.0, 12.3, 13.6], 6: [15.2, 17.2, 19.2], 7: [21.3, 22.6, 24.0] };   // every step has its card; step 1 shows at once   // step-clock times at which stages 1, 2, 3 appear
   var prodReadoutEl = document.getElementById("prodReadout");
   var prodSets = prodReadoutEl ? Array.prototype.slice.call(prodReadoutEl.querySelectorAll(".prod-set")) : [];
@@ -3743,7 +3751,7 @@
   var mortalityButtonEl = document.getElementById("simulateMortalityBtn");
 
   function formatEnergy(v){
-    return (v >= 1 ? v.toString() : v.toFixed(1)) + " rel. J";   // same relative unit as the graph and the food chain (TL1 = 100)
+    return (v >= 1 ? String(+v.toFixed(1)) : String(+v.toPrecision(2))) + " rel. J";   // 50, 5, 0.5, 0.05: same relative unit as the graph
   }
 
   function formatBiomass(v){
@@ -3768,7 +3776,7 @@
   // pyramid, not a second visualization competing with it.
   //
   // Every value comes from the simulation's own state:
-  //   - ENERGY: TROPHIC_DATA[i].energy — the fixed 100/10/1/0.1
+  //   - ENERGY: TROPHIC_DATA[i].energy — the 10% law, 50/5/0.5/0.05
   //     ecological-efficiency curve already driving the pyramid and
   //     the energy-level meter. Shown on a log scale (this data is
   //     already an exact power-of-ten decline) so the "generally
@@ -3864,11 +3872,12 @@
   // The energy a level does not pass on is NOT all heat: it splits three ways —
   //   passed to the next level  +  respiration heat (R)  +  detritus (dead bodies, litter, faeces)
   // and the detritus goes to the decomposers, whose respiration releases that energy as heat in the soil.
-  // Illustrative teaching shares of the energy entering each level:
-  //   TL1  R = 50 % of GPP (so NPP = 50, matching the step-2 readout); of NPP, 10 is eaten by TL2, 40 -> detritus
-  //   TL2-TL4  R = 60 % of what they take in; ~10 % passes up; the rest (~30 %, ~40 % at TL4) -> detritus
-  // With TL1 = 100: heat 50 · 6 · 0.6 · 0.06 rel. J (was 90 · 9 · 0.9 · 0.1 when ALL non-transferred energy counted as heat).
-  var RESPIRATION_SHARE = [0.5, 0.6, 0.6, 0.6];
+  // Illustrative teaching shares (they match the walkthrough cards):
+  //   TL1  energy = NPP = 50. Producers respire 50 % of GPP, so GPP = 100 and R = 50 = 1.0 x NPP.
+  //        Of the NPP, 10 % (5) is eaten by TL2 and 90 % (45) is not passed on -> litter for the decomposers
+  //   TL2-TL4  R = 60 % of what they take in; 10 % passes up; the rest (30 %, 40 % at TL4) -> detritus
+  // Heat: 50 · 3 · 0.3 · 0.03 rel. J.
+  var RESPIRATION_SHARE = [1.0, 0.6, 0.6, 0.6];
   function ecoGraphHeatValues(){
     return TROPHIC_DATA.map(function(def, i){ return def.energy * RESPIRATION_SHARE[i]; });
   }
@@ -4223,7 +4232,9 @@
     profileTitleEl.textContent = profile.title;
     profileDescEl.textContent = profile.description;
     var def = TROPHIC_DATA.filter(function(d){ return d.id === layerId; })[0];
-    profileEnergyEl.textContent = def ? ("Energy available: " + formatEnergy(def.energy)) : "";
+    var below = def && def.id > 1 ? TROPHIC_DATA[def.id - 2] : null;   // the 10% law, stated with the level it came from
+    profileEnergyEl.textContent = def ? ("Energy available: " + formatEnergy(def.energy) +
+      (below ? " · " + Math.round(TRANSFER_EFFICIENCY * 100) + "% of TL" + below.id + "'s " + formatEnergy(below.energy).replace(" rel. J", "") : " (NPP)")) : "";
     renderMedia(profile);
   }
 

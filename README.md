@@ -165,7 +165,7 @@ The food web adds a snail, a butterfly, a deer, a red fox, a white tiger and a K
 
 ## 🗒️ Changelog
 
-Version history, RC I to RC XIII: [CHANGELOG.md](CHANGELOG.md)
+Version history, RC I to RC XIV: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
