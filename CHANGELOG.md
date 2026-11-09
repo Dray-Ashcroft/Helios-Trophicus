@@ -4,11 +4,16 @@
 
 ---
 
-## RC X · Fast and Clean · 9 Nov 2026 *(current)*
+## RC XI · Fungi on Cue · 9 Nov 2026 *(current)*
+
+- Mushrooms grow out of the ground only in step 6 (Decomposers), stay for step 7, and sink back when stepping back
+- Circular Material 3 loading indicator beside the view switch, shared by all three views
+
+## RC X · Fast and Clean · 9 Nov 2026
 
 - No more old pictures flashing up before the 3D models: the layers stay clean until each model arrives
 - Organism pictures are no longer downloaded; about 360 lines of unused code removed
-- Material 3 progress bar along the top edge, shared by all three views
+- Material 3 loading bar along the top edge (replaced by a circular indicator in RC XI)
 - Food chain and food web draw at once; each organism appears as it loads
 - View switch moved to the top-right corner on laptops and smart panels
 

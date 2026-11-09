@@ -790,14 +790,20 @@
   function addScript(src){ return new Promise(function(res, rej){ var tag = document.createElement("script"); tag.src = src; tag.onload = res; tag.onerror = rej; document.head.appendChild(tag); }); }
   // "Loading 3D organisms n/N" under the solar status, so a slow classroom connection does not look like a fault
   var modelLoad = { total:0, done:0, el:null };
-  // One Material 3 linear progress bar along the top edge (#loadBar), shared by the three views: each reports
+  // One Material 3 circular progress indicator (#loadRing), shared by the three views: each reports
   // window.oekosLoad(view, done, total) and the bar shows the progress of the view on screen, fading out at 100%.
   var LOADS = {};
   function visibleView(){ var b = document.body.classList; return b.contains("view-chain") ? "chain" : b.contains("view-web") ? "web" : "pyramid"; }
   function renderLoadBar(){
-    var el = document.getElementById("loadBar"); if (!el) return;
+    var el = document.getElementById("loadRing"); if (!el) return;
     var st = LOADS[visibleView()], frac = st && st.total ? Math.min(1, st.done / st.total) : 1;
-    el.style.setProperty("--p", frac.toFixed(3));
+    // Material 3 circular determinate indicator: the active arc grows clockwise from the top, the track fills the
+    // rest, with a small gap at each end of the arc (r = 16, so the circumference is about 100.5)
+    var C = 2 * Math.PI * 16, gap = frac > 0 && frac < 1 ? 5 : 0, arc = Math.max(0.01, frac * C - (frac < 1 ? gap : 0));
+    var ind = el.querySelector(".lr-ind"), trk = el.querySelector(".lr-trk");
+    ind.setAttribute("stroke-dasharray", arc.toFixed(2) + " " + C.toFixed(2));
+    trk.setAttribute("stroke-dasharray", Math.max(0, (1 - frac) * C - 2 * gap).toFixed(2) + " " + C.toFixed(2));
+    trk.setAttribute("stroke-dashoffset", (-(frac * C + gap)).toFixed(2));
     el.setAttribute("aria-valuenow", Math.round(frac * 100));
     el.classList.toggle("on", !!st && st.done < st.total);
   }
@@ -1960,7 +1966,7 @@
       }).catch(function(e){ console.warn("Mushroom model unavailable, keeping the drawn mushrooms:", e); });
     });
   })();
-  function updateMushrooms(delta){ for (var i = 0; i < mushMixers.length; i++) mushMixers[i].update(delta); }
+  function updateMushrooms(delta){ if (habGrowth > 0.001) for (var i = 0; i < mushMixers.length; i++) mushMixers[i].update(delta); }   // sway only while they are up
 
   // ---- mycelium: thin branching threads on the soil, revealed outward ----
   var mycSegs = [];
@@ -2052,7 +2058,7 @@
     soilBed.scale.y = sy;
     soilBedMat.color.setRGB(1 - 0.16 * G, 1 - 0.18 * G, 1 - 0.20 * G);   // slightly darker, richer soil
     for (var i = 0; i < fungi.length; i++){
-      var f = fungi[i], s = f.size * (0.78 + 0.5 * habEase(G * 1.5 - f.delay));   // fungi swell, staggered
+      var f = fungi[i], s = f.size * 1.2 * habEase(G * 1.5 - f.delay);   // no fungi at rest: they push up through the soil during step 6, staggered
       var y0 = soilHeight(f.x, f.z) * sy;
       habQ.setFromEuler(habE.set(f.tx, 0, f.tz));
       habP.set(f.x, y0, f.z);
@@ -2064,10 +2070,11 @@
     }
     stems.instanceMatrix.needsUpdate = true;
     caps.instanceMatrix.needsUpdate = true;
-    for (var mc = 0; mc < mushClusters.length; mc++){         // the neon mushroom clusters swell the same way
-      var cl = mushClusters[mc], cg = cl.k * (0.8 + 0.45 * habEase(G * 1.5 - cl.spec.delay));
-      cl.root.position.set(cl.spec.x, soilHeight(cl.spec.x, cl.spec.z) * sy - 0.01, cl.spec.z);
-      cl.root.scale.setScalar(cg);
+    for (var mc = 0; mc < mushClusters.length; mc++){         // the neon clusters grow out of the ground only in the Decomposers step (6)
+      var cl = mushClusters[mc], e = habEase(G * 1.5 - cl.spec.delay), cg = cl.k * 1.2 * e;
+      cl.root.visible = e > 0.002;
+      cl.root.position.set(cl.spec.x, soilHeight(cl.spec.x, cl.spec.z) * sy - 0.01 - (1 - e) * 0.12, cl.spec.z);   // rising up out of the soil
+      cl.root.scale.set(cg, cg * (0.35 + 0.65 * e), cg);   // stems stretch up as the caps open
     }
     for (var c = 0; c < CRUMB_N; c++){
       var cd = crumbData[c], cs = cd.base * (0.25 + 0.75 * habEase(G * 1.5 - cd.delay));
