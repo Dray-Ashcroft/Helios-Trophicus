@@ -1775,10 +1775,10 @@
       textEl.textContent = "Solar input off — tap the Sun";
     } else if (simState === SIM_STATE.PRODUCER_ENERGISED){
       el.classList.add("on");
-      textEl.textContent = "PAR — Photosynthetically Active Radiation reaching producers";
+      textEl.textContent = "Solar input on — PAR reaching producers";   // the Sun's state, not a step title (it stays on through every step)
     } else {
       el.classList.add("on");
-      textEl.textContent = "PAR travelling to producers";
+      textEl.textContent = "Solar input on — PAR travelling to producers";
     }
   }
 
