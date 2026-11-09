@@ -279,6 +279,8 @@
     // fit all four rows between the header and the bottom of the screen
     var want = (w / h < 0.9) ? "tall" : "wide"; if (want !== layoutName) applyLayout(want);
     var hdr = document.querySelector("#ui .header"), top = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0, bottom = 0;
+    var vsw = document.querySelector("#ui .header .view-switch");   // wide screens: the switch moved to the corner, keep the same breathing room under the title
+    if (vsw && getComputedStyle(vsw).position === "fixed") top += vsw.offsetHeight + 8;
     if (layoutName === "tall"){ var pr = infoEl.parentNode.getBoundingClientRect(); if (pr.height && pr.top > h * 0.4) bottom = h - pr.top; }   // the info panel docks at the bottom on phones
     var avail = Math.max(h * 0.4, h - top - bottom - 8);
     var halfW = layout.halfW, halfH = layout.halfH, vf = camera.fov * D2R, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
@@ -347,9 +349,10 @@
 
   function build(){
     if (ready || building) return Promise.resolve(); building = true;
-    buildDom(); statusEl.textContent = "Loading 3D organisms…"; statusEl.hidden = false;
+    buildDom();
     return Promise.all([ THREE.GLTFLoader ? null : addScript(JS + "loaders/GLTFLoader.js"), window.MeshoptDecoder ? null : addScript(JS + "libs/meshopt_decoder.js") ]).then(function(){
       buildScene(); resize(); bindInput();
+      if (active){ clock.getDelta(); cancelAnimationFrame(raf); frame(); }   // draw at once: rocks and Sun first, each organism appears as it loads
       loadGLB("FoodChain/sun.glb").then(function(g){
         var obj = g.scene; obj.updateMatrixWorld(true);
         var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
@@ -357,15 +360,18 @@
         obj.traverse(function(o){ if (o.isMesh) o.frustumCulled = false; });
         while (sunMesh.children.length) sunMesh.remove(sunMesh.children[0]); sunMesh.add(pv);
         if (g.animations && g.animations.length){ var mx = new THREE.AnimationMixer(obj); mx.clipAction(g.animations[0]).play(); mixers.push(mx); }
-      }).catch(function(e){ console.warn("Sun model unavailable, keeping the sphere:", e); });
+      }).catch(function(e){ console.warn("Sun model unavailable, keeping the sphere:", e); }).then(function(){ webTick(); });
       loadGLB("Platform/land.glb").then(function(g){   // "Chunk Of Land 1", baked with the middle of its flat top at the origin and width 1
         g.scene.traverse(function(o){ if (o.isMesh){ o.frustumCulled = false; if (o.material.map) o.material.map.anisotropy = 4; } });
         NODES.forEach(function(n){
           while (n.land.children.length){ var c = n.land.children.pop(); if (c.geometry) c.geometry.dispose(); }
           var chunk = g.scene.clone(); chunk.scale.setScalar(2.15); n.land.add(chunk);   // clones share geometry and textures
         });
-      }).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); });
-      return Promise.all(NODES.map(function(n){ return loadGLB(n.file).then(function(g){ placeModel(n, g); }).catch(function(e){ console.warn("Food web model unavailable:", n.file, e); n.missing = true; }); }));
+      }).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); }).then(function(){ webTick(); });
+      var webDone = 0, webTotal = NODES.length + 2;   // the organisms, the Sun and the land (top progress bar)
+      function webTick(){ webDone++; if (window.oekosLoad) window.oekosLoad("web", webDone, webTotal); }
+      if (window.oekosLoad) window.oekosLoad("web", 0, webTotal);
+      return Promise.all(NODES.map(function(n){ return loadGLB(n.file).then(function(g){ placeModel(n, g); }).catch(function(e){ console.warn("Food web model unavailable:", n.file, e); n.missing = true; }).then(webTick); }));
     }).then(function(){
       var miss = NODES.filter(function(n){ return n.missing; }).map(function(n){ return n.name; });
       statusEl.hidden = !miss.length; if (miss.length) statusEl.textContent = "Could not load: " + miss.join(", ");
@@ -379,7 +385,7 @@
     document.getElementById("foodWebView").hidden = !on;
     if (on){ var sub = document.querySelector(".header .subtitle"); if (sub){ if (!sub.dataset.pyramid) sub.dataset.pyramid = sub.textContent; sub.textContent = "Food web · who eats whom"; } }
     active = on; cancelAnimationFrame(raf);
-    if (on) build().then(function(){ if (!active || !renderer) return; resize(); clock.getDelta(); frame(); });
+    if (on) build().then(function(){ if (!active || !renderer) return; resize(); clock.getDelta(); cancelAnimationFrame(raf); frame(); });
   }
   function init(){
     if (inited) return; inited = true;

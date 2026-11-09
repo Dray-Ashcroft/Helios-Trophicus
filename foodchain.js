@@ -428,16 +428,19 @@
   // ---------------------------------------------------------------- build & toggle
   function build(){
     if (ready || building) return Promise.resolve(); building = true;
-    buildDom(); statusEl.textContent = "Loading 3D organisms…"; statusEl.hidden = false;
+    buildDom();
     var loaderReady = Promise.all([ THREE.GLTFLoader ? null : loadScript(LOADER_URL), window.MeshoptDecoder ? null : loadScript(MESHOPT_URL) ]);
     return loaderReady.then(function(){
       buildScene(); resize(); bindInput();
+      if (active){ clock.getDelta(); cancelAnimationFrame(raf); frame(); }   // draw at once: rocks and Sun first, each organism appears as it loads
       var jobs = ORGS.filter(function(o){ return o.file; }).map(function(o){
         return loadGLB(o.file).then(function(g){ placeModel(o, g); })
           .catch(function(e){ console.warn("Food chain model unavailable:", o.file, e); o.missing = true; });
       });
       jobs.push(loadGLB("sun.glb").then(placeSun).catch(function(e){ console.warn("Sun model unavailable, keeping the plain sphere:", e); }));
       jobs.push(loadGLB("../Platform/land.glb").then(placeLand).catch(function(e){ console.warn("Land platform unavailable, keeping the plain discs:", e); }));
+      var done = 0, total = jobs.length; if (window.oekosLoad) window.oekosLoad("chain", 0, total);   // the top progress bar
+      jobs.forEach(function(j){ j.then(function(){ done++; if (window.oekosLoad) window.oekosLoad("chain", done, total); }); });
       return Promise.all(jobs);
     }).then(function(){
       var miss = ORGS.filter(function(o){ return o.missing; }).map(function(o){ return o.name; });
@@ -458,7 +461,7 @@
     var v = document.getElementById("foodChainView"); v.hidden = !chain;
     active = chain; cancelAnimationFrame(raf);
     if (chain){
-      build().then(function(){ if (!active || !renderer) return; resize(); clock.getDelta(); frame(); });
+      build().then(function(){ if (!active || !renderer) return; resize(); clock.getDelta(); cancelAnimationFrame(raf); frame(); });
     }
   }
 

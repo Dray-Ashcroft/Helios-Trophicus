@@ -790,14 +790,20 @@
   function addScript(src){ return new Promise(function(res, rej){ var tag = document.createElement("script"); tag.src = src; tag.onload = res; tag.onerror = rej; document.head.appendChild(tag); }); }
   // "Loading 3D organisms n/N" under the solar status, so a slow classroom connection does not look like a fault
   var modelLoad = { total:0, done:0, el:null };
-  function updateModelLoadPill(){
-    if (!modelLoad.el){
-      modelLoad.el = document.createElement("div"); modelLoad.el.className = "model-load"; modelLoad.el.setAttribute("aria-live", "polite");
-      var anchor = document.getElementById("solarStatus"); if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(modelLoad.el, anchor.nextSibling);
-    }
-    modelLoad.el.textContent = "Loading 3D organisms " + modelLoad.done + "/" + modelLoad.total;
-    modelLoad.el.classList.toggle("done", modelLoad.done >= modelLoad.total);
+  // One Material 3 linear progress bar along the top edge (#loadBar), shared by the three views: each reports
+  // window.oekosLoad(view, done, total) and the bar shows the progress of the view on screen, fading out at 100%.
+  var LOADS = {};
+  function visibleView(){ var b = document.body.classList; return b.contains("view-chain") ? "chain" : b.contains("view-web") ? "web" : "pyramid"; }
+  function renderLoadBar(){
+    var el = document.getElementById("loadBar"); if (!el) return;
+    var st = LOADS[visibleView()], frac = st && st.total ? Math.min(1, st.done / st.total) : 1;
+    el.style.setProperty("--p", frac.toFixed(3));
+    el.setAttribute("aria-valuenow", Math.round(frac * 100));
+    el.classList.toggle("on", !!st && st.done < st.total);
   }
+  window.oekosLoad = function(view, done, total){ LOADS[view] = { done: done, total: total }; renderLoadBar(); };
+  document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click", function(){ setTimeout(renderLoadBar, 0); }); });
+  function updateModelLoadPill(){ window.oekosLoad("pyramid", modelLoad.done, modelLoad.total); }
   function loadPyramidGLB(file){
     if (!gltfLoaderReady){
       var base = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/";
