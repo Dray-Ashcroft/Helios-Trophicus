@@ -651,75 +651,42 @@
 
   // Twelve replaceable image slots: 3 producers, 4 primary consumers,
   // 3 secondary consumers, and 2 tertiary consumers.
-  var OLD_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Solus-En.Orb/refs/heads/main/";
-  var ASSET_REPO_RAW = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/";
   var ORGANISM_ASSETS = [
-    { id:"tl1-grass-cluster", label:"TL1 · Grass", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Bushes%2C%20Grasses.png",
+    { id:"tl1-grass-cluster", label:"TL1 · Grass", trophicLevel:1, biomassContribution:5, status:"living",
       x:-0.45, y:0.43, z:-0.3, scale:1.65, opacity:0.98 },
-    { id:"tl1-wildflower-cluster", label:"TL1 · Lungwort", trophicLevel:1, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/cereals.png",
+    { id:"tl1-wildflower-cluster", label:"TL1 · Lungwort", trophicLevel:1, biomassContribution:3, status:"living",
       x:0.62, y:0.31, z:-0.25, scale:1.4, opacity:0.96 },
-    { id:"tl1-young-tree", label:"TL1 · Tree", trophicLevel:1, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers/Tree.png",
+    { id:"tl1-young-tree", label:"TL1 · Tree", trophicLevel:1, biomassContribution:5, status:"living",
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
-    { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"builtin:rat",
+    { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
-    { id:"tl2-herbivorous-insect", label:"TL2 · Grasshopper", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Grasshopper.png",
+    { id:"tl2-herbivorous-insect", label:"TL2 · Grasshopper", trophicLevel:2, biomassContribution:2, status:"living",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
-    { id:"tl2-caterpillar", label:"TL2 · Pigeon", trophicLevel:2, biomassContribution:2, status:"living", imageUrl:"builtin:pigeon",
+    { id:"tl2-caterpillar", label:"TL2 · Pigeon", trophicLevel:2, biomassContribution:2, status:"living",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
-    { id:"tl2-deer", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer/Rabbit.png",
+    { id:"tl2-deer", label:"TL2 · Rabbit", trophicLevel:2, biomassContribution:5, status:"living",
       x:-0.44, y:0.65, z:-0.26, scale:1.15, opacity:0.96 },
-    { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Snake%20Squirrel.png",
+    { id:"tl3-snake", label:"TL3 · Snake", trophicLevel:3, biomassContribution:5, status:"living",
       x:0.02, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },   // back centre; TL3 is a triangle: snake behind, scorpion and frog in front
-    { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumer/Frog%20-%20Insect.png",
+    { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living",
       x:0.45, y:0.21, z:0.32, scale:0.78, opacity:0.96 },
     // Scorpion: hunts insects such as grasshoppers, so a secondary consumer. Front-left of the tier (no picture: drawn card fallback).
-    { id:"tl3-scorpion", label:"TL3 · Scorpion", trophicLevel:3, biomassContribution:2, status:"living", imageUrl:"builtin:scorpion",
+    { id:"tl3-scorpion", label:"TL3 · Scorpion", trophicLevel:3, biomassContribution:2, status:"living",
       x:-0.3, y:0.3, z:0.42, scale:0.8, opacity:0.98 },
-    { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living", imageUrl:"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers/Eagle%20-%20Snake.png",
+    { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living",
       x:-0.36, y:0.25, z:0.12, scale:0.55, opacity:0.98 },
     // Second tertiary consumer: a great horned owl. Besides rats and mice it takes snakes, frogs and even hawks and other
     // owls, and little hunts an adult, so it stands at the top beside the eagle. No picture yet: drawn card fallback.
-    { id:"tl4-owl", label:"TL4 · Owl", trophicLevel:4, biomassContribution:6, status:"living", imageUrl:"builtin:owl",
+    { id:"tl4-owl", label:"TL4 · Owl", trophicLevel:4, biomassContribution:6, status:"living",
       x:0.30, y:0.68, z:0.12, scale:0.50, opacity:0.98 }
   ];
 
-  var organismTextureLoader = new THREE.TextureLoader();
-  organismTextureLoader.setCrossOrigin("anonymous");
   var embeddedOrganisms = [];
   var organismSlots = {};
-  var organismEditorInputs = {};
-  var organismEditorPreviews = {};
-  var organismEditorOpen = false;
-  var ORGANISM_URL_STORAGE_KEY = "ecosystem-organism-image-urls-v1";
-  var defaultOrganismUrls = {};
+  try { window.localStorage.removeItem("ecosystem-organism-image-urls-v1"); } catch (e) {}   // custom organism pictures are no longer used
 
-  ORGANISM_ASSETS.forEach(function(asset){
-    // The original image for each slot now lives in this repo (Solus-Assets/...), so
-    // "Restore placeholders" and the long-press "Original" button bring these back.
-    defaultOrganismUrls[asset.id] = asset.imageUrl;
-  });
-  try {
-    window.localStorage.removeItem(ORGANISM_URL_STORAGE_KEY);   // custom organism pictures are no longer used (no editor to undo them)
-    var savedOrganismUrls = {};
-    ORGANISM_ASSETS.forEach(function(asset){
-      var saved = savedOrganismUrls[asset.id];
-      if (saved) saved = saved.replace(OLD_REPO_RAW, ASSET_REPO_RAW);   // links saved before the repo was renamed
-      // Old saved links to the deleted Supabase storage can never load again, and old "builtin:"
-      // values only stood in for those missing images — ignore both so the repo images show.
-      if (saved && saved.indexOf("supabase.co") === -1 && saved.indexOf("builtin:") !== 0) asset.imageUrl = saved;
-    });
-  } catch (e) {
-    // localStorage can be unavailable for some file:// browser contexts.
-  }
-
-  function saveOrganismUrls(){
-    try {
-      var urls = {};
-      ORGANISM_ASSETS.forEach(function(asset){ urls[asset.id] = asset.imageUrl; });
-      window.localStorage.setItem(ORGANISM_URL_STORAGE_KEY, JSON.stringify(urls));
-    } catch (e) {}
-  }
-
+  // Each organism slot is an invisible sprite: the tap / hold target that its 3D model follows. It is drawn only if the
+  // model cannot load, and then as this card drawn in the browser (no download), so no picture flashes up first.
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
@@ -734,48 +701,6 @@
     if(!slot.builtinTexture)slot.builtinTexture=makeBuiltinPlaceholderTexture(asset);
     slot.material.map=slot.builtinTexture;slot.sprite.scale.set(slot.maxImageHeight*1.5,slot.maxImageHeight,1);slot.sprite.visible=asset.status!=="deadMatter";
   }
-  function loadOrganismImage(asset, slot){
-    if(asset.imageUrl.indexOf("builtin:")===0){applyBuiltinPlaceholder(asset,slot);return;}
-    var requestedUrl = asset.imageUrl;
-    var oldTexture = slot.material.map;
-    slot.sprite.userData.imageUrl = requestedUrl;
-    organismTextureLoader.load(
-      requestedUrl,
-      function(texture){
-        if (asset.imageUrl !== requestedUrl){
-          texture.dispose();
-          return;
-        }
-        if (oldTexture && oldTexture !== texture && oldTexture !== slot.builtinTexture) oldTexture.dispose();   // the drawn fallback card is kept for reuse
-        texture.needsUpdate = true;
-        slot.material.map = texture;
-        var image = texture.image;
-        var ratio = (image && image.height) ? image.width / image.height : 1;
-        slot.sprite.scale.set(slot.maxImageHeight * ratio, slot.maxImageHeight, 1);
-        slot.sprite.visible = asset.status !== "deadMatter";
-        updateOrganismEditorPreview(asset.id, requestedUrl, true);
-      },
-      undefined,
-      function(){
-        // A link that won't load falls back to the drawn placeholder card instead of vanishing,
-        // so there is always something on the pyramid to long-press and fix.
-        if (asset.imageUrl === requestedUrl){
-          if (oldTexture && oldTexture !== slot.builtinTexture) oldTexture.dispose();
-          applyBuiltinPlaceholder(asset, slot);
-        }
-        updateOrganismEditorPreview(asset.id, requestedUrl, false);
-        console.warn("Organism asset unavailable:", requestedUrl);
-      }
-    );
-  }
-
-  function updateOrganismEditorPreview(id, url, loaded){
-    var preview = organismEditorPreviews[id];
-    if (!preview) return;
-    preview.src = url;
-    preview.classList.toggle("missing", !loaded);
-  }
-
   function addOrganismAsset(asset){
     var layer = layers[asset.trophicLevel - 1];
     if (!layer) return;
@@ -806,7 +731,6 @@
       organismId:asset.id,
       trophicLevel:asset.trophicLevel,
       status:asset.status,
-      imageUrl:asset.imageUrl,
       asset:asset
     };
     sprite.visible = false;
@@ -820,7 +744,8 @@
       baseOpacity:asset.opacity,
       deadMatter:null
     };
-    loadOrganismImage(asset, organismSlots[asset.id]);
+    applyBuiltinPlaceholder(asset, organismSlots[asset.id]);
+    material.colorWrite = false;   // invisible until (unless) its model fails to load
   }
   ORGANISM_ASSETS.forEach(addOrganismAsset);
 
@@ -957,20 +882,14 @@
       }
       organismModels[id] = entry;
       slot.material.colorWrite = false;   // the picture card becomes an invisible tap target
-    }).catch(function(e){ console.warn("Organism model unavailable, keeping the picture card:", cfg.file, e); });
+    }).catch(function(e){ slot.material.colorWrite = true; console.warn("Organism model unavailable, showing its drawn card:", cfg.file, e); });
   });
 
   var fadeColor = new THREE.Color();
-  function pictureKey(url){ var u = url || ""; try { u = decodeURIComponent(u); } catch (e) {} return u.replace(/^.*Solus-Assets\//, ""); }
-  // A teacher who sets their own picture for an organism (long-press or the editor) sees that picture
-  // instead of the model; "Original" / "Restore placeholders" bring the model back.
-  function hasCustomPicture(asset){ return !!asset.imageUrl && pictureKey(asset.imageUrl) !== pictureKey(defaultOrganismUrls[asset.id]); }
   function updateOrganismModels(elapsedTime, delta){
     Object.keys(organismModels).forEach(function(id){
       var m = organismModels[id], sp = m.slot.sprite, cfg = m.cfg, layer = layers[m.slot.asset.trophicLevel - 1];
-      var custom = hasCustomPicture(m.slot.asset);
-      m.slot.material.colorWrite = custom;   // the card is drawn only when it carries the teacher's own picture
-      m.root.visible = sp.visible && !custom;
+      m.root.visible = sp.visible;
       if (!m.root.visible) return;
       var y = cfg.fly ? layer.yBottom + (layer.yTop - layer.yBottom) * cfg.fly + Math.sin(elapsedTime * 1.3 + m.phase) * 0.08 : layer.yBottom + 0.04;
       var inward = cfg.fly ? 0.6 : 1;   // birds hover nearer the tier's centre line so they stay over their small top tier
@@ -995,94 +914,7 @@
     });
   }
 
-  function updateOrganismAssetUrl(id, url){
-    var asset = ORGANISM_ASSETS.filter(function(item){ return item.id === id; })[0];
-    var slot = organismSlots[id];
-    if (!asset || !slot) return;
-    asset.imageUrl = (url || "").trim();
-    if (!asset.imageUrl) {
-      slot.sprite.visible = false;
-      if (slot.material.map){
-        slot.material.map.dispose();
-        slot.material.map = null;
-      }
-      updateOrganismEditorPreview(id, "", false);
-    } else {
-      loadOrganismImage(asset, slot);
-    }
-    saveOrganismUrls();
-  }
-
-  function renderOrganismEditor(){
-    var list = document.getElementById("organismEditorList");
-    if (!list) return;
-    list.innerHTML = "";
-    organismEditorInputs = {};
-    organismEditorPreviews = {};
-    ORGANISM_ASSETS.forEach(function(asset){
-      var row = document.createElement("div");
-      row.className = "organism-editor-row";
-      row.dataset.organismId = asset.id;
-
-      var preview = document.createElement("img");
-      preview.className = "organism-editor-preview missing";
-      preview.alt = asset.label + " preview";
-      preview.src = asset.imageUrl;
-      preview.addEventListener("load", function(){ preview.classList.remove("missing"); });
-      preview.addEventListener("error", function(){ preview.classList.add("missing"); });
-      row.appendChild(preview);
-
-      var meta = document.createElement("div");
-      meta.className = "organism-editor-meta";
-      var label = document.createElement("label");
-      label.className = "organism-editor-label";
-      label.textContent = asset.label;
-      meta.appendChild(label);
-
-      var input = document.createElement("input");
-      input.className = "organism-editor-input";
-      input.type = "url";
-      input.placeholder = "https://.../organism.webp";
-      input.value = asset.imageUrl;
-      input.setAttribute("aria-label", asset.label + " image URL");
-      input.addEventListener("change", function(){
-        updateOrganismAssetUrl(asset.id, input.value);
-      });
-      input.addEventListener("keydown", function(e){
-        if (e.key === "Enter"){
-          e.preventDefault();
-          updateOrganismAssetUrl(asset.id, input.value);
-          input.blur();
-        }
-      });
-      meta.appendChild(input);
-      row.appendChild(meta);
-      list.appendChild(row);
-      organismEditorInputs[asset.id] = input;
-      organismEditorPreviews[asset.id] = preview;
-    });
-  }
-
-  function focusOrganismEditor(id){
-    var input = organismEditorInputs[id];
-    if (!input) return;
-    input.focus();
-    input.select();
-  }
-
-  function setOrganismEditorOpen(isOpen){
-    organismEditorOpen = !!isOpen;
-    var panel = document.getElementById("organismEditorPanel");
-    if (!panel) return;
-    panel.classList.toggle("open", organismEditorOpen);
-    var toggleBtn = document.getElementById("organismEditorToggle");            // icon shows the open state
-    if (toggleBtn){ toggleBtn.classList.toggle("active", organismEditorOpen); toggleBtn.setAttribute("aria-expanded", organismEditorOpen ? "true" : "false"); }
-    if (organismEditorOpen){ renderOrganismEditor(); a11yOpen(panel, document.getElementById("organismEditorClose")); }
-    else { a11yClose(panel); }
-  }
-
-  // Press-and-hold gesture for a DOM control (used below to restore organism placeholders and to
-  // unlock the image-URL editor). Same 600 ms threshold/10px tolerance as the pyramid's own long-press,
+  // Press-and-hold gesture for a DOM control (used below to restore organisms killed by mortality). Same 600 ms threshold/10px tolerance as the pyramid's own long-press,
   // so holding feels consistent everywhere. Returns { fired } — a click handler checks and clears this
   // to tell a completed hold apart from the ordinary click that follows the pointer release.
   function bindHoldGesture(el, onHold, ms, onProgress){
@@ -1113,7 +945,7 @@
 
   // Undoes what Simulate mortality did to ONE organism — status, sprite visibility/opacity/tint, the
   // level's living-biomass share, the floating debris fragment, and the body that fell to the soil — all
-  // without touching asset.imageUrl, so whatever image (built-in or a custom URL) it had stays exactly as is.
+  // so the organism and its model come back as they were.
   function reviveOrganism(asset){
     if (asset.status === "living") return false;
     var slot = organismSlots[asset.id];
@@ -1139,7 +971,7 @@
     return true;
   }
 
-  // Long-press action: bring back every organism mortality removed, images untouched.
+  // Long-press action: bring back every organism mortality removed.
   function reviveDeadOrganisms(){
     var any = false;
     ORGANISM_ASSETS.forEach(function(asset){ if (reviveOrganism(asset)) any = true; });
@@ -1147,25 +979,9 @@
     return any;
   }
 
-  // The panel's explicit "Restore placeholders" button: also revives (a dead organism's placeholder was
-  // missing too), then additionally resets every image back to the built-in placeholder.
-  function restoreAllOrganismPlaceholders(){
-    ORGANISM_ASSETS.forEach(function(asset){
-      reviveOrganism(asset);
-      asset.imageUrl = defaultOrganismUrls[asset.id];
-      if (organismSlots[asset.id]) loadOrganismImage(asset, organismSlots[asset.id]);
-    });
-    saveOrganismUrls();
-    updateBiomassUI(selectedId);
-    updateMortalityControl();
-    if (organismEditorOpen) renderOrganismEditor();   // refresh the open panel's previews too
-  }
-
   // The organism editor (pencil button, 15 s unlock) and the picture-link box were removed: the pyramid always shows
   // its 3D organisms. organismLockStatus stays: the mortality button announces through it.
   var organismLockStatusEl = document.getElementById("organismLockStatus");
-  function organismUrlBoxOpen(){ return false; }
-  function closeOrganismUrlBox(){}
 
   // Which visible organism picture (if any) is under this screen point. Pictures are drawn on top
   // of the pyramid, so they win over the layer behind them.
@@ -3863,10 +3679,8 @@
   // ---- Escape closes whichever panel/popover is currently open, topmost first ----
   document.addEventListener("keydown", function(e){
     if (e.key !== "Escape") return;
-    if (organismUrlBoxOpen()){ closeOrganismUrlBox(); return; }
     var mediaBar = document.getElementById("mediaUrlBar");
     if (mediaBar && !mediaBar.hidden){ closeMediaUrlBar(); return; }
-    if (organismEditorOpen){ setOrganismEditorOpen(false); return; }
     if (profileUI.state !== PROFILE_STATE.CLOSED){ closeProfile(); return; }
     var legendPop = document.getElementById("legendPopover"), legendBtn = document.getElementById("legendToggleBtn");
     if (legendPop && !legendPop.hidden){ legendPop.hidden = true; if (legendBtn) legendBtn.classList.remove("active"); return; }
@@ -3879,7 +3693,6 @@
   document.addEventListener("keydown", function(e){
     if (e.key !== "Tab") return;
     if (introOverlayEl && !introOverlayEl.hidden){ a11yTrapTab(introOverlayEl, e); return; }
-    if (organismEditorOpen){ a11yTrapTab(document.getElementById("organismEditorPanel"), e); return; }
     if (profileUI.state !== PROFILE_STATE.CLOSED){ a11yTrapTab(profileEl, e); return; }
   });
 
@@ -3888,7 +3701,7 @@
   document.addEventListener("keydown", function(e){
     var el = document.activeElement, tag = el && el.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || (el && el.isContentEditable)) return;
-    if (organismEditorOpen || profileUI.state !== PROFILE_STATE.CLOSED) return;
+    if (profileUI.state !== PROFILE_STATE.CLOSED) return;
     if (introOverlayEl && !introOverlayEl.hidden) return;
     var ROT_STEP = 0.12, TILT_STEP = 0.07, ZOOM_STEP = 2.4;
     switch (e.key){
@@ -4230,16 +4043,6 @@
 
     var sunHits = raycaster.intersectObject(sunHitMesh, false);
     if (sunHits.length){ activateSun(); return; }
-
-    // Organism picking exists only inside the editor. In normal mode the
-    // existing trophic-layer selection remains the only canvas pick path.
-    if (organismEditorOpen){
-      var organismHits = raycaster.intersectObjects(embeddedOrganisms, false);
-      if (organismHits.length){
-        focusOrganismEditor(organismHits[0].object.userData.organismId);
-        return;
-      }
-    }
 
     var hits = raycaster.intersectObjects(layerMeshes, false);
     if (hits.length) selectLayer(hits[0].object.userData.layerId);
@@ -4723,12 +4526,6 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
   // Swap the current image links into a copy of the source (works on this script's text or on a
   // single-file page), so a saved snapshot opens with the same pictures without this browser's storage.
   function bakeImageUrls(text){
-    ORGANISM_ASSETS.forEach(function(asset){
-      var re = new RegExp('(id:"' + asset.id + '"[^}]*?imageUrl:)"(?:[^"\\\\]|\\\\.)*"');
-      text = text.replace(re, function(m, head){
-        return head + JSON.stringify(snapshotUrl(asset.imageUrl || "")).replace(/<\//g, "<\\/");
-      });
-    });
     // Bake the profile image URLs too (the definition line is matched by shape, so re-saving a snapshot works).
     var bakedProfileUrls = {};
     Object.keys(profileImageUrls).forEach(function(k){ bakedProfileUrls[k] = snapshotUrl(profileImageUrls[k]); });
@@ -4798,17 +4595,11 @@ var mediaPrevBtnEl = document.getElementById("mediaPrevBtn"), mediaNextBtnEl = d
     data.organisms.forEach(function(imp){
       var asset = imp && byId[imp.id];
       if (!asset) return; // unknown id (older/newer asset list) — skip rather than fail the whole import
-      if (false && typeof imp.imageUrl === "string" && imp.imageUrl && imp.imageUrl !== asset.imageUrl && imp.imageUrl.indexOf("supabase.co") === -1){   // older exports may carry dead Supabase links
-        asset.imageUrl = imp.imageUrl;
-        var slot = organismSlots[asset.id];
-        if (slot) loadOrganismImage(asset, slot);
-      }
       if ((imp.status === "deadMatter" || imp.status === "dying") && asset.status === "living"){
         var s = organismSlots[asset.id];
         if (s){ finishMortality(asset, s); touchedLevels[asset.trophicLevel] = true; }
       }
     });
-    saveOrganismUrls();
 
     if (data.profileImages && typeof data.profileImages === "object"){
       var impImages = upgradeProfileImageKeys(data.profileImages);   // files exported before one-picture-per-level carry the full old set
