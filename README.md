@@ -6,7 +6,7 @@
 
 <p align="center"><em>Ecological Interaction Simulator</em></p>
 
-<p align="center"><a href="https://solus-en-orb.stark-kodex.workers.dev"><strong>Explore the Simulation →</strong></a></p>
+<p align="center"><a href="https://oekos-matrix.stark-kodex.workers.dev/"><strong>Explore the Matrix</strong></a></p>
 
 ---
 
@@ -14,9 +14,9 @@ An interactive 3D simulator for teaching how energy moves through an ecosystem. 
 
 ---
 
-## ✦ Three Views
+## ✦ Three Tab Architecture
 
-Switch views with the three icons at the top.
+Switch Tabs with the three icons at the top.
 
 ### 🔺 Energy Pyramid
 Four trophic levels, each with its own 3D organisms.
@@ -71,12 +71,9 @@ Trophic levels · Food chains and food webs · Lindeman's 10% law · PAR · GPP,
 
 ## ⚙️ Technology
 
-HTML · CSS · JavaScript · Three.js · Cloudflare
-
-Runs entirely in the browser with no build step. To run it locally, serve the folder with any static server (for example `npx serve`) rather than opening `index.html` directly, so the 3D models can load.
-
-**Project Designer:** Sai Prasad  
-**Code:** Perplexity Sonar 2 (architecture) · OpenAI GPT-5.6 (refinement) · Claude Opus 4.8 (implementation)
+HTML · CSS · JavaScript · Three.js · Cloudflare pages
+**Project Designer:** Sai Prasad (Biology Lecturer, M.Sc. Ag.Entomology, ASRB NET)  
+**Code:** Perplexity Sonar 2 (Scientific reasoning) · OpenAI GPT-5.6 (Realistic image) · Claude Opus 5.5 (Architecture & Implementation)
 
 ---
 
