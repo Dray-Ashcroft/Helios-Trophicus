@@ -4,7 +4,13 @@
 
 ---
 
-## RC XIV · The 10% Law · 9 Nov 2026 *(current)*
+## RC XV · Black Ox Beetle · 9 Nov 2026 *(current)*
+
+- Pyramid TL2: a black ox beetle (rhinoceros beetle) replaces the grasshopper; its adults feed on young palms and cane
+- Its own remains: a black shell with domed wing covers, the male's three horns and toothed digging forelegs
+- Credits card and README updated (ThatMelGuy, CC BY 4.0)
+
+## RC XIV · The 10% Law · 9 Nov 2026
 
 - Pyramid energy follows E(n+1) = E(n) × 0.10: TL1 50 → TL2 5 → TL3 0.5 → TL4 0.05 rel. J
 - TL1 is the producers' NPP (GPP 100 − respiration 50), so herbivores receive 10% of what plants keep, not of GPP

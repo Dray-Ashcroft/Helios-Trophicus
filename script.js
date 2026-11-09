@@ -668,7 +668,7 @@
       x:0.08, y:0.29, z:0.47, scale:1.65, opacity:0.98 },
     { id:"tl2-rabbit", label:"TL2 · Rat", trophicLevel:2, biomassContribution:5, status:"living",
       x:0.05, y:0.15, z:0.33, scale:1.15, opacity:0.98 },
-    { id:"tl2-herbivorous-insect", label:"TL2 · Grasshopper", trophicLevel:2, biomassContribution:2, status:"living",
+    { id:"tl2-herbivorous-insect", label:"TL2 · Black ox beetle", trophicLevel:2, biomassContribution:2, status:"living",
       x:0.43, y:0.15, z:-0.27, scale:0.86, opacity:0.96 },
     { id:"tl2-caterpillar", label:"TL2 · Pigeon", trophicLevel:2, biomassContribution:2, status:"living",
       x:0.14, y:0.55, z:-0.38, scale:0.86, opacity:0.96 },
@@ -678,7 +678,7 @@
       x:0.02, y:0.67, z:-0.4, scale:0.92, opacity:0.98 },   // back centre; TL3 is a triangle: snake behind, scorpion and frog in front
     { id:"tl3-frog", label:"TL3 · Frog", trophicLevel:3, biomassContribution:3, status:"living",
       x:0.45, y:0.21, z:0.32, scale:0.78, opacity:0.96 },
-    // Scorpion: hunts insects such as grasshoppers, so a secondary consumer. Front-left of the tier (no picture: drawn card fallback).
+    // Scorpion: hunts insects such as beetles, so a secondary consumer. Front-left of the tier (no picture: drawn card fallback).
     { id:"tl3-scorpion", label:"TL3 · Scorpion", trophicLevel:3, biomassContribution:2, status:"living",
       x:-0.3, y:0.3, z:0.42, scale:0.8, opacity:0.98 },
     { id:"tl4-eagle", label:"TL4 · Eagle", trophicLevel:4, biomassContribution:8, status:"living",
@@ -698,7 +698,7 @@
   function makeBuiltinPlaceholderTexture(asset){
     var c=document.createElement("canvas"); c.width=360; c.height=240; var ctx=c.getContext("2d");
     var colors={1:"#4ade80",2:"#facc15",3:"#fb923c",4:"#f87171"};
-    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌸","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🦗","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
+    var icons={"tl1-grass-cluster":"🌿","tl1-wildflower-cluster":"🌸","tl1-young-tree":"🌳","tl2-rabbit":"🐀","tl2-herbivorous-insect":"🪲","tl2-caterpillar":"🕊️","tl2-deer":"🐇","tl3-snake":"🐍","tl3-frog":"🐸","tl3-scorpion":"🦂","tl4-eagle":"🦅","tl4-owl":"🦉"};
     ctx.fillStyle="#0b1220";ctx.fillRect(0,0,360,240);ctx.strokeStyle=colors[asset.trophicLevel];ctx.lineWidth=6;ctx.strokeRect(10,10,340,220);
     ctx.font="82px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(icons[asset.id]||"●",180,95);
     ctx.font="700 22px Roboto, 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";ctx.fillStyle="#e7ecf5";ctx.fillText(asset.label.replace(/^TL\d · /,""),180,166);
@@ -776,7 +776,7 @@
     "tl1-wildflower-cluster": { file:"FoodWeb/lungwort.glb",     size:1.5,  facing:"z",  turn:0 },
     "tl1-young-tree":         { file:"FoodWeb/tree.glb",         size:2.35, facing:"z",  turn:0 },
     "tl2-rabbit":             { file:"Pyramid/rat.glb",          size:1.5,  facing:"z",  turn:-25, posedBox:true, clipName:"idle_a2" },   // black rat, idle
-    "tl2-herbivorous-insect": { file:"FoodChain/grasshopper.glb", size:1.1, facing:"-x", turn:35 },
+    "tl2-herbivorous-insect": { file:"Pyramid/beetle.glb",       size:1.1,  facing:"x",  turn:35,  posedBox:true },   // black ox beetle (rhinoceros beetle), idle: adults bore into and feed on young palms and cane
     "tl2-caterpillar":        { file:"Pyramid/pigeon.glb",       size:1.15, facing:"z", turn:35,  posedBox:true },   // rock pigeon: eats seeds and grain
     "tl2-deer":               { file:"Pyramid/rabbit.glb",       size:1.35, facing:"z", turn:40,  posedBox:true },   // rabbit, idle (slot id kept from the deer); eaten by the snake, owl and eagle above
     "tl3-snake":              { file:"Pyramid/snake.glb",        size:1.35, facing:"z",  turn:-110, clip:[3, 9] },   // the calm rear-and-sway stretch only
@@ -2557,6 +2557,36 @@
     });
     return { bones: k.build(), tissue: null, boneHex: 0xb79a63, target: 0.62, sink: 0.006, husk: true };
   }
+  // ---------- BEETLE: the hard black shell of a black ox beetle (Strategus, a rhinoceros beetle) ----------
+  // Beetle remains are mostly the hardened exoskeleton: domed elytra (wing covers) closed over the abdomen, the big
+  // pronotum with the male's horns (two long side horns and a short middle one), short antennae ending in a leafy
+  // club, and stout legs, the front tibiae toothed for digging. Built facing +z like the other insects.
+  function buildBeetleRemains(){
+    var k = new BoneKit(0x2a2420, 0.04), dark = new THREE.Color(0x14100d), i;
+    k.ball(P3(0, 0.035, 0.30), 0.055, 0.04, 0.05, dark);                                    // head
+    k.ball(P3(0, 0.065, 0.19), 0.105, 0.07, 0.085);                                          // pronotum (shield behind the head)
+    k.rod(P3(0, 0.1, 0.23), P3(0, 0.135, 0.29), 0.012, false, dark);                         // short middle horn
+    [-1, 1].forEach(function(s){
+      k.rod(P3(s * 0.06, 0.09, 0.23), P3(s * 0.085, 0.13, 0.35), 0.016, true, dark).rod(P3(s * 0.085, 0.13, 0.35), P3(s * 0.07, 0.115, 0.45), 0.009, false, dark);   // long side horn
+      k.rod(P3(s * 0.03, 0.025, 0.33), P3(s * 0.06, 0.025, 0.37), 0.004).ball(P3(s * 0.066, 0.025, 0.378), 0.012, 0.008, 0.016, dark);   // antenna + leafy club
+      k.ball(P3(s * 0.052, 0.075, -0.06), 0.058, 0.068, 0.19);                              // elytron (wing cover), domed
+    });
+    k.ball(P3(0, 0.03, -0.05), 0.1, 0.03, 0.19, dark);                                       // abdomen, under the elytra
+    k.ball(P3(0, 0.11, 0.1), 0.016, 0.006, 0.02);                                            // scutellum
+    [-1, 1].forEach(function(s){
+      var legs = [[P3(s*0.08,0.02,0.17), P3(s*0.16,0.03,0.24), P3(s*0.23,0,0.31), P3(s*0.27,0,0.37)],
+                  [P3(s*0.09,0.02,0.03), P3(s*0.2,0.035,0.05), P3(s*0.28,0,-0.01), P3(s*0.33,0,-0.05)],
+                  [P3(s*0.09,0.02,-0.07), P3(s*0.19,0.035,-0.15), P3(s*0.26,0,-0.27), P3(s*0.29,0,-0.34)]];
+      legs.forEach(function(l, li){
+        k.rod(l[0], l[1], 0.014, true);                                                      // femur (stout)
+        k.rod(l[1], l[2], 0.011, true);                                                      // tibia
+        if (li === 0) for (i = 0; i < 3; i++) k.ball(l[1].clone().lerp(l[2], 0.45 + i * 0.22).add(P3(s * 0.012, 0, 0.008)), 0.008, 0.006, 0.006, dark);   // digging teeth
+        var d = l[3].clone().sub(l[2]);
+        for (var t = 0; t < 3; t++) k.rod(l[2].clone().addScaledVector(d, t / 3), l[2].clone().addScaledVector(d, (t + 1) / 3), 0.004, true);   // tarsus
+      });
+    });
+    return { bones: k.build(), tissue: null, boneHex: 0x2a2420, target: 0.62, sink: 0.006, husk: true };
+  }
   // ---------- SCORPION: moulted / empty exoskeleton (arachnid: 8 legs, pincers, segmented tail with a sting) ----------
   function buildScorpionRemains(){
     var k = new BoneKit(0x6a3c22, 0.04), dark = new THREE.Color(0x2e1a10), i;
@@ -2742,7 +2772,7 @@
   }
 
   // Remains footprint per organism (scene units). The models are not to scale, but their remains keep a sensible
-  // order of size on the soil: rabbit > rat > pigeon > frog > scorpion, grasshopper.
+  // order of size on the soil: rabbit > rat > pigeon > frog > scorpion, beetle.
   var RM_TARGET = { "tl2-deer":0.95, "tl2-rabbit":0.8, "tl2-caterpillar":0.62, "tl2-herbivorous-insect":0.42,
                     "tl3-frog":0.5, "tl3-scorpion":0.45, "tl3-snake":1.15, "tl4-eagle":0.9, "tl4-owl":0.85 };
 
@@ -2825,7 +2855,7 @@
     "tl1-grass-cluster": function(){ return buildPlantRemains("grass"); },
     "tl1-wildflower-cluster": function(){ return buildPlantRemains("flower"); },
     "tl1-young-tree": function(){ return buildPlantRemains("tree"); },
-    "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildInsectRemains,   // the slot now holds a rat (rodent skeleton)
+    "tl2-rabbit": buildSquirrelRemains, "tl2-herbivorous-insect": buildBeetleRemains,   // the slot now holds a rat (rodent skeleton)
     "tl2-caterpillar": buildPigeonRemains, "tl2-deer": buildRabbitRemains,   // the slot now holds a pigeon
     "tl3-snake": buildSnakeRemains, "tl3-frog": buildFrogRemains, "tl3-scorpion": buildScorpionRemains,
     "tl4-eagle": buildEagleRemains, "tl4-owl": buildEagleRemains
@@ -4095,7 +4125,7 @@
       layerId: 2,
       icon: "\ud83d\udc3e",
       title: "Primary Consumers",
-      description: "Primary consumers obtain their energy by feeding directly on producers. They include plant-eating insects, birds and mammals, such as the grasshopper, pigeon, rat and rabbit here.",
+      description: "Primary consumers obtain their energy by feeding directly on producers. They include plant-eating insects, birds and mammals, such as the black ox beetle, pigeon, rat and rabbit here.",
       media: [
         { type:"image", url:"", title:"Grasshopper feeding on grass", caption:"Grasshopper feeding on grass" }
       ]
