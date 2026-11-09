@@ -4127,7 +4127,7 @@
       title: "Primary Consumers",
       description: "Primary consumers obtain their energy by feeding directly on producers. They include plant-eating insects, birds and mammals, such as the black ox beetle, pigeon, rat and rabbit here.",
       media: [
-        { type:"image", url:"", title:"Grasshopper feeding on grass", caption:"Grasshopper feeding on grass" }
+        { type:"image", url:"", title:"Adult ox beetle, a plant-eating primary consumer", caption:"Adult ox beetle, a plant-eating primary consumer" }
       ]
     },
     secondaryConsumers: {
@@ -4176,7 +4176,7 @@
   // JSON, and baked into HTML snapshots through PROFILE_IMAGE_DEFAULTS.
   var PROFILE_IMAGE_STORAGE_KEY = "ecosystem-profile-image-urls-v2";   // v2: one example picture per level
   // Older saves and exports keyed several pictures per level ("2:0".."2:3"); only the ones kept carry over:
-  // TL1 seed-to-plant, TL2 grasshopper (was "2:2"), TL3 frog, TL4 eagle.
+  // TL1 seed-to-plant, TL2 ox beetle (was the grasshopper), TL3 frog, TL4 eagle.
   var OLD_PROFILE_KEY_MAP = { "1:0":"1:0", "2:2":"2:0", "3:0":"3:0", "4:0":"4:0" };
   function upgradeProfileImageKeys(obj, isOld){   // isOld: known to be the old layout (a v1 save); otherwise detected from the keys
     var old = isOld || Object.keys(obj).some(function(k){ return +k.split(":")[1] > 0; });
@@ -4184,7 +4184,7 @@
     var out = {}; Object.keys(OLD_PROFILE_KEY_MAP).forEach(function(k){ if (k in obj) out[OLD_PROFILE_KEY_MAP[k]] = obj[k]; });
     return out;
   }
-  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Grasshopper%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
+  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Ox%20Beetle%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
   var profileImageUrls = {};
   Object.keys(PROFILE_IMAGE_DEFAULTS).forEach(function(k){ profileImageUrls[k] = PROFILE_IMAGE_DEFAULTS[k]; });
   try {
