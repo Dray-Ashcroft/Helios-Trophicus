@@ -168,29 +168,44 @@
     // into the side of the feeder's rock. Both ends sit just outside the rocks, beside the name labels (which hang
     // below each rock), so no line passes through an animal or a label. A same-row link (if any) is a low arc
     // over the gap between the two rocks.
-    var EDGE = 1.12;
-    LINKS.forEach(function(l){
-      var a = byId[l[0]], b = byId[l[1]], side = Math.sign(b.x - a.x) || 1;
-      if (a.tl === b.tl){
-        var p0 = new THREE.Vector3(a.x + 0.75 * side, a.y + 0.2, 0.35), p2 = new THREE.Vector3(b.x - 0.75 * side, b.y + 0.2, 0.35);
-        var p1 = p0.clone().add(p2).multiplyScalar(0.5); p1.y += 0.9;
-        addArrow(new THREE.QuadraticBezierCurve3(p0, p1, p2), { from:a, to:b }, glow, 0.022);
-        return;
-      }
-      if (b.tl - a.tl >= 2){   // skips a row (mouse -> owl): curve through the nearest gap in the row between, and reach
+    var EDGE = 1.12, PORT_GAP = 0.3;
+    // 1) route: which side of each rock a link uses, and where it heads beyond the rock
+    var routes = LINKS.map(function(l){
+      var a = byId[l[0]], b = byId[l[1]], side = Math.sign(b.x - a.x) || 1, r = { a:a, b:b };
+      if (b.tl - a.tl >= 2){   // skips a row (mouse -> owl): curve through the nearest gap in the row between
         var mids = NODES.filter(function(n){ return n.tl === a.tl + 1; }).map(function(n){ return n.x; }).sort(function(u, v){ return u - v; });
         var gapX = 0, best = 1e9;   // nearest gap to the food that is not directly under the feeder (its label hangs there)
         for (var g = 0; g < mids.length - 1; g++){ var gx = (mids[g] + mids[g + 1]) / 2; var sc = Math.abs(gx - a.x) + 0.01 * Math.abs(gx - b.x); if (Math.abs(gx - b.x) > EDGE && sc < best){ best = sc; gapX = gx; } }   // ties go to the gap nearer the feeder
-        var sa = Math.sign(gapX - a.x) || 1, sb = Math.sign(gapX - b.x) || 1;   // the feeder's rock from the gap side, beside its label
-        var q0 = new THREE.Vector3(a.x + EDGE * sa, a.y + 0.1, 0.35), q2 = new THREE.Vector3(b.x + EDGE * sb, b.y + 0.1, 0.35);
-        var q1 = new THREE.Vector3((gapX - 0.36 * q0.x - 0.16 * q2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
-        addArrow(new THREE.QuadraticBezierCurve3(q0, q1, q2), { from:a, to:b }, glow, 0.022);
-        return;
+        r.gapX = gapX; r.sa = Math.sign(gapX - a.x) || 1; r.sb = Math.sign(gapX - b.x) || 1;
+        r.aimA = { x:gapX, y:a.y + layout.row }; r.aimB = { x:gapX, y:b.y - layout.row };
+      } else {   // next row up: each end on the side facing the other rock (same column: both on the same side)
+        r.sa = side; r.sb = (a.x === b.x) ? side : -side; r.aimA = b; r.aimB = a;
       }
-      // same column: both ends on the same side, so the line stays clear of the labels
-      var endSide = (a.x === b.x) ? -side : side;
-      var p0 = new THREE.Vector3(a.x + EDGE * side, a.y + 0.1, 0.35), p2 = new THREE.Vector3(b.x - EDGE * endSide, b.y + 0.1, 0.35);
-      if (Math.abs(p2.x - p0.x) < 1.4){   // nearly vertical: bow gently outward, away from the labels hanging below the rocks
+      return r;
+    });
+    // 2) ports: links sharing one side of a rock each get their own point, stacked in the order their partners lie
+    // (highest partner on top), so they fan out around the rock instead of meeting at one spot and never cross
+    var ports = {};
+    routes.forEach(function(r){
+      [["p0", r.a, r.sa, r.aimA], ["p2", r.b, r.sb, r.aimB]].forEach(function(e){
+        var k = e[1].id + (e[2] > 0 ? ">" : "<");
+        (ports[k] = ports[k] || []).push({ r:r, key:e[0], n:e[1], s:e[2], ang:Math.atan2(e[3].y - e[1].y, Math.abs(e[3].x - e[1].x) + 1e-3) });
+      });
+    });
+    Object.keys(ports).forEach(function(k){
+      var P = ports[k]; P.sort(function(u, v){ return v.ang - u.ang; });
+      P.forEach(function(p, i){
+        var off = ((P.length - 1) / 2 - i) * PORT_GAP;   // round the rim of the rock, as on an ellipse
+        p.r[p.key] = new THREE.Vector3(p.n.x + p.s * EDGE * Math.sqrt(Math.max(0.6, 1 - off * off / 0.8)), p.n.y + 0.1 + off, 0.35);
+      });
+    });
+    // 3) draw
+    routes.forEach(function(r){
+      var a = r.a, b = r.b, p0 = r.p0, p2 = r.p2;
+      if (r.gapX !== undefined){
+        var q1 = new THREE.Vector3((r.gapX - 0.36 * p0.x - 0.16 * p2.x) / 0.48, b.y - 1.5, 0.35);   // puts the curve through the gap
+        addArrow(new THREE.QuadraticBezierCurve3(p0, q1, p2), { from:a, to:b }, glow, 0.022);
+      } else if (Math.abs(p2.x - p0.x) < 1.4){   // nearly vertical: bow gently outward, away from the labels hanging below the rocks
         var c = p0.clone().add(p2).multiplyScalar(0.5); c.x += (Math.sign(p2.x - b.x) || 1) * 0.7;
         addArrow(new THREE.QuadraticBezierCurve3(p0, c, p2), { from:a, to:b }, glow, 0.022);
       } else addArrow(new THREE.LineCurve3(p0, p2), { from:a, to:b }, glow, 0.022);
