@@ -14,7 +14,7 @@
   "use strict";
 
   var MODEL_DIR = "Solus-Assets/FoodChain/";
-  var MODEL_DIR_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/FoodChain/";
+  var MODEL_DIR_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/FoodChain/";
   var LOADER_URL = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js";
   var MESHOPT_URL = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js";   // models are meshopt-compressed
   var ENERGY_COLOR = 0xc6ea5a, HEAT_COLOR = 0xff9b54, BG = 0x05070d;

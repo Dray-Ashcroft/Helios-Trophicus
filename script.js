@@ -766,7 +766,7 @@
   // Models are drawn in a second pass on top of the near-opaque tiers, as the cards were.
   // =========================================================
   var MODEL_BASE = "Solus-Assets/";
-  var MODEL_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/";
+  var MODEL_FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/";
   var D2R = Math.PI / 180;
   // size = largest dimension (scene units; not to scale). facing = the model's own forward axis.
   // turn = extra yaw so they do not all stare the same way. fly = hovers at this fraction of its tier's height instead of standing on the floor.
@@ -4187,7 +4187,7 @@
     var out = {}; Object.keys(OLD_PROFILE_KEY_MAP).forEach(function(k){ if (k in obj) out[OLD_PROFILE_KEY_MAP[k]] = obj[k]; });
     return out;
   }
-  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Ox%20Beetle%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Pigeon%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Primary%20Consumer%20Energion/Rat%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
+  var PROFILE_IMAGE_DEFAULTS = {"1:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Producers%20Energion/Seed%20Germination%20PAR.png","2:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Primary%20Consumer%20Energion/Ox%20Beetle%20Energion.png","2:1":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Primary%20Consumer%20Energion/Pigeon%20Energion.png","2:2":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Primary%20Consumer%20Energion/Rat%20Energion.png","3:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Secondary%20Consumers%20Energion/Frog%20-%20Insect%20Energion.png","4:0":"https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/Tertiary%20Consumers%20Energion/Eagle%20Energion.png"}; // baked by "Save HTML Snapshot"
   var profileImageUrls = {};
   Object.keys(PROFILE_IMAGE_DEFAULTS).forEach(function(k){ profileImageUrls[k] = PROFILE_IMAGE_DEFAULTS[k]; });
   try {

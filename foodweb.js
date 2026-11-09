@@ -10,7 +10,7 @@
 (function(){
   "use strict";
 
-  var BASE = "Solus-Assets/", FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Helios-Trophicus/main/Solus-Assets/";
+  var BASE = "Solus-Assets/", FALLBACK = "https://raw.githubusercontent.com/Dray-Ashcroft/Oekos-Matrix/main/Solus-Assets/";
   var JS = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/";
   var ENERGY = 0xc6ea5a, BG = 0x05070d, D2R = Math.PI / 180;
   var TL_COLOR = { 1:0x4ade80, 2:0xfacc15, 3:0xfb923c, 4:0xf87171 };
