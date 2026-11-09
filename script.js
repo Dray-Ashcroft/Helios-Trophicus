@@ -772,9 +772,9 @@
   // turn = extra yaw so they do not all stare the same way. fly = hovers at this fraction of its tier's height instead of standing on the floor.
   var ORGANISM_MODELS = {
     // producers: the food web's full-quality models (shared files, downloaded once for both views)
-    "tl1-grass-cluster":      { file:"FoodWeb/grass.glb",        size:2.1,  facing:"z",  turn:0,   ys:1.8 },   // a wide, low patch of thin blades: drawn taller so it reads
+    "tl1-grass-cluster":      { file:"FoodWeb/grass.glb",        size:2.1,  facing:"z",  turn:0,   ys:1.8, linear:true },   // a wide, low patch of thin blades: drawn taller so it reads
     "tl1-wildflower-cluster": { file:"FoodWeb/lungwort.glb",     size:1.5,  facing:"z",  turn:0 },
-    "tl1-young-tree":         { file:"FoodWeb/tree.glb",         size:2.35, facing:"z",  turn:0 },
+    "tl1-young-tree":         { file:"FoodWeb/tree.glb",         size:2.35, facing:"z",  turn:0,   linear:true },
     "tl2-rabbit":             { file:"Pyramid/rat.glb",          size:1.5,  facing:"z",  turn:-25, posedBox:true, clipName:"idle_a2" },   // black rat, idle
     "tl2-herbivorous-insect": { file:"Pyramid/beetle.glb",       size:1.1,  facing:"x",  turn:35,  posedBox:true },   // black ox beetle (rhinoceros beetle), idle: adults bore into and feed on young palms and cane
     "tl2-caterpillar":        { file:"Pyramid/pigeon.glb",       size:1.15, facing:"z", turn:35,  posedBox:true },   // rock pigeon: eats seeds and grain
@@ -843,6 +843,13 @@
     if (!slot) return;
     loadPyramidGLB(cfg.file).then(function(gltf){
       var obj = gltf.scene; obj.updateMatrixWorld(true);
+      if (cfg.linear) obj.traverse(function(n){   // the pyramid renders without sRGB output: read the textures as linear so mid greens
+        if (!n.isMesh) return;                    // do not sink to near-black (as for the Sun and the mushrooms)
+        (Array.isArray(n.material) ? n.material : [n.material]).forEach(function(m){
+          ["map", "emissiveMap"].forEach(function(k){ if (m[k]){ m[k].encoding = THREE.LinearEncoding; m[k].needsUpdate = true; } });
+          m.needsUpdate = true;
+        });
+      });
       var box = new THREE.Box3().setFromObject(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
       var bones = new THREE.Box3(), bp = new THREE.Vector3();
       obj.traverse(function(n){ if (n.isBone){ n.getWorldPosition(bp); bones.expandByPoint(bp); } });

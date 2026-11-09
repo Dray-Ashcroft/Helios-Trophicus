@@ -10,6 +10,7 @@
 - Profile pictures as WebP: about 5× smaller (16 MB → 3.2 MB), same resolution
 - Unused files removed: the grasshopper model and seven old profile pictures
 - Status pill reads "Solar input on — PAR reaching producers", so it is not mistaken for a step title
+- Fix: the pyramid's grass and tree showed almost black (sRGB textures read without colour correction); they now show their true colours, as in the food web
 
 ## RC XVI · Debug Pass · 9 Nov 2026
 
