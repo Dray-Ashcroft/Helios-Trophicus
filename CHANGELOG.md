@@ -4,7 +4,14 @@
 
 ---
 
-## RC XI · Fungi on Cue · 9 Nov 2026 *(current)*
+## RC XII · Clear Lines · 9 Nov 2026 *(current)*
+
+- Food web: tapping an organism shows only its connected labels; the other organisms and their rocks fade back
+- Each arrow lands at its own point on the rock instead of all meeting at one spot
+- Arrows bend round rocks, organisms and labels in their way; sunbeams pass behind nearer plants
+- Producers reordered lungwort, grass, tree, so each sits nearest the animals that eat it (shorter links)
+
+## RC XI · Fungi on Cue · 9 Nov 2026
 
 - Mushrooms grow out of the ground only in step 6 (Decomposers), stay for step 7, and sink back when stepping back
 - Circular Material 3 loading indicator beside the view switch, shared by all three views

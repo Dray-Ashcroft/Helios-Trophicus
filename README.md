@@ -116,7 +116,7 @@ Runs entirely in the browser with no build step. To run it locally, serve the fo
 
 ## 🗒️ Changelog
 
-Version history, RC I to RC XI: [CHANGELOG.md](CHANGELOG.md)
+Version history, RC I to RC XII: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
